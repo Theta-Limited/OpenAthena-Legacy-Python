@@ -1,5 +1,5 @@
 # OpenAerialForwardArtilleryObservation
-Learning python API's by making an experimental line-of-sight + avionics sensors + geodata synthesis calculator
+Learning python API's by making an experimental line-of-sight + avionics sensor + geodata synthesis calculator
 
 This is only an academic exercise, I may eventually try to implement this for simple programming experience with Python API's and to test the viability of the software premise and the accuracy of consumer electronic sensors (probably not though)
 
