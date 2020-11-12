@@ -1,7 +1,7 @@
 # OpenAerialForwardArtilleryObservation
 Learning python API's by making an experimental line-of-sight + avionics sensors + geodata synthesis calculator
 
-This is an academic exercise, may eventually implement for programming experience and to test viability the accuracy of consumer electronic sensors (probably not though)
+This is only an academic exercise, may eventually implement for programming experience and to test viability the accuracy of consumer electronic sensors (probably not though)
 
 # Premise
 Multi-copter rotary-wing aircraft (e.g. quadroters, drones, etc.) typically have an onboard 3D A-GPS/GLONASS/whatever for position/alt., a magnetometer for compass heading/azimuth,  and a sensitive barometer (atmospheric pressure sensor) for accurate absolute altitude relative to sea level. 
