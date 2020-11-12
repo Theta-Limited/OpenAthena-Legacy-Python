@@ -4,7 +4,7 @@ Learning python API's by making an experimental line-of-sight + avionics sensors
 This is only an academic exercise, may eventually implement for programming experience and to test viability the accuracy of consumer electronic sensors (probably not though)
 
 # Premise
-Multi-copter rotary-wing aircraft (e.g. quadroters, drones, etc.) typically have an onboard 3D A-GPS/GLONASS/whatever for position/alt., a magnetometer for compass heading/azimuth,  and a sensitive barometer (atmospheric pressure sensor) for accurate absolute altitude relative to sea level. 
+Multi-copter rotary-wing aircraft (e.g. quadroters, drones, etc.) typically have an onboard 3D A-GPS sensor for position/alt., a magnetometer for compass heading/azimuth,  and a sensitive barometer (atmospheric pressure sensor) for accurate absolute altitude relative to sea level. 
 
 They also typically have an "accelerometer" which allows it to stay (very?) level with the ground while in flight, and a camera. 
 
