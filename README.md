@@ -22,4 +22,4 @@ Especially when employed with GPS-guided munitions (artillery, stuff dropped out
 Also, much more practical but much less fun-sounding, it could be used for very quick measuring and surveying for civic engineering (or something), and many other commercial purposes. 
 
 # US Arms export control notice
-If you are in a country that is under Arms Export Controls from the United States, you may only use this for practical purposes and may not use this software in conflict.
+If you are in a country that is under restriction from the United States under the Arms Export Control Act, you may only use this for practical purposes and may not use this software in conflict.
