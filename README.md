@@ -17,7 +17,7 @@ If an invisible, imaginary mathematical line was "paramaterized" from the aircra
 # Uses
 Especially when employed with GPS-guided munitions (artillery, stuff dropped outta planes, whatever) this would greatly aid the safety and processes of the [forward artillery observer](https://en.wikipedia.org/wiki/Artillery_observer) while reducing the risk of operator error (mismeasurement, miscalculation, etc.) and subsequent risk to civilian lives.  
 
-Also, much more practical but much less fun-sounding, it could be used for very quick measuring and surveying for civic engineering (or something). 
+Also, much more practical but much less fun-sounding, it could be used for very quick measuring and surveying for civic engineering (or something), and many other commercial purposes. 
 
 # US Arms export control notice
 If you are in a country that is under Arms Export Controls from the United States, you may only use this for practical purposes and may not use this software in conflict.
