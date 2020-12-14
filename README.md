@@ -6,6 +6,9 @@ This is only an academic exercise, I may eventually try to implement this for si
 I'm surprised no one else has made something like this
 
 # Premise
+
+![whiteboard concept diagram](https://github.com/mkrupczak3/OpenAerialForwardArtilleryObservation/raw/main/IMG_20201213_194755.jpg)
+
 Multi-copter rotary-wing aircraft (e.g. quadroters, drones, etc.) typically have an onboard 3D A-GPS sensor for position/alt., a magnetometer for compass heading/azimuth,  and a sensitive barometer (atmospheric pressure sensor) for accurate absolute altitude relative to sea level. 
 
 They also typically have an "accelerometer" which allows it to stay (very?) level with the ground while in flight, and a camera. 
