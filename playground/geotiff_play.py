@@ -1,14 +1,26 @@
 import time
 import matplotlib.pyplot as plt
 from osgeo import gdal
+# import numpy
+# import sys
+
+# geotiff_play
+# based on:
+#    https://stackoverflow.com/questions/24956653/read-elevation-using-gdal-python-from-geotiff
+
+
+
 
 print("Hello World!")
 print("I'm geotiff_play.py")
 print("Which File would you like to read?")
 
-geofile = input("Enter the GeoTIF filename: ")
+# geofile = input("Enter the GeoTIF filename: ")
+geofile = 'Rome-30m-DEM.tif'
 
 print("Okay, grabbing the GeoTIF file named: ", geofile)
+
+
 geodata = gdal.Open(geofile)
 
 # @TODO wtf is this?
@@ -18,7 +30,13 @@ elevation = band.ReadAsArray()
 
 print("The shape of the elevation data is: ", elevation.shape)
 time.sleep(3)
+
+
+
 print("The raw Elevation data is: ")
+
+# numpy.set_printoptions(threshold=sys.maxsize)
+
 time.sleep(1)
 print(".")
 time.sleep(1)
@@ -27,6 +45,9 @@ time.sleep(1)
 print(".")
 time.sleep(1)
 print(elevation)
+
+
+
 
 # plt.imshow(elevation, cmap=plt.get_cmap('viridisDE'))
 # plt.show()
