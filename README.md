@@ -6,7 +6,7 @@ This is only an academic exercise, I may eventually try to implement this for si
 I'm surprised no one else has made something like this
 
 # Current status
-run ./playrground/geotiff_play.py for a demonstration of geotiff parsing and a render of the City of Rome in Italy and its outlying terrain. Chart labels represent longitude and latitude (counterintuitively, the x and y axis are backwards in the standard description of a position via latitude longitude)
+run ./playrground/geotiff_play.py for a demonstration of geotiff parsing and a render of the City of Rome in Italy and its outlying terrain. Chart labels represent longitude and latitude (counterintuitively, the x and y axis are backwards in the standard description of a position via [latitude , longitude])
 
 
 Using decimal lat/long, because no one has time for parsing degrees, minutes, seconds format.
