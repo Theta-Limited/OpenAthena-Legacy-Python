@@ -1,0 +1,5 @@
+# .gitignore
+*.pyc
+*~
+\#*\#
+.\#*headless_output.xt
