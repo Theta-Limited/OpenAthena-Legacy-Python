@@ -12,7 +12,7 @@ run ./playrground/geotiff_play.py for a demonstration of geotiff parsing and a r
 Using decimal lat/long, because no one has time for parsing degrees, minutes, seconds format.
 
 ```
-user@mypc:~/projects/OpenAerialForwardArtilleryObservation$
+user@mypc:~/projects/OpenAerialForwardArtilleryObservation/playground$
 python geotiff_play.py
 ```
 ![render of terrain around Rome](playground/render_cli_screenshot.png)
