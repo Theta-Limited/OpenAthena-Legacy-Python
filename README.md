@@ -19,7 +19,7 @@ Using decimal lat/long, because no one has time for parsing degrees, minutes, se
 
 # Premise
 
-![whiteboard concept diagram](https://github.com/mkrupczak3/OpenAerialForwardArtilleryObservation/raw/main/IMG_20201213_194755.jpg)
+![whiteboard concept diagram](IMG_20201213_194755.jpg)
 
 Multi-copter rotary-wing aircraft (e.g. quadroters, drones, etc.) typically have an onboard 3D A-GPS sensor for position/alt., a magnetometer for compass heading/azimuth,  and a sensitive barometer (atmospheric pressure sensor) for accurate absolute altitude relative to sea level.
 
