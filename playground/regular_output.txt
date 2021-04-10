@@ -1,0 +1,17 @@
+(base) bobjoe@kusanagi:~/projects/OpenAerialForwardArtilleryObservation/playground$ python geotiff_play.py
+Hello World!
+I'm geotiff_play.py
+Which File would you like to read?
+Okay, grabbing the GeoTIF file named:  Rome-30m-DEM.tif
+The shape of the elevation data is:  (720, 1080)
+The raw Elevation data is:
+.
+.
+.
+[[133 132 131 ... 126 131 134]
+ [131 131 130 ... 120 122 127]
+ [129 128 127 ... 110 114 119]
+ ...
+ [ 10  10  10 ... 221 223 225]
+ [ 10  10  10 ... 226 230 232]
+ [  9   9  10 ... 234 236 237]]
