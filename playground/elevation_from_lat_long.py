@@ -9,6 +9,8 @@ def maFromGDAL(filename):
     dataset = gdal.Open(filename, gdal.GA_ReadOnly)
 
     if dataset is None:
+        print('Dataset is None')
+        print('This shouldn\'t happen...')
         raise Exception()
 
     # Get the georeferencing metadata.
@@ -20,6 +22,8 @@ def maFromGDAL(filename):
     # We need to know the geographic bounds and resolution of our dataset.
     if geotransform is None:
         dataset = None
+        print('geotransform is None')
+        print('This shouldn\'t happen...')
         raise Exception()
 
     # Get the first band.
@@ -61,6 +65,7 @@ def valueAtMapPos(image, gt, pos):
     y = int(pp[1])
 
     if x < 0 or y < 0 or x >= image.shape[1] or y >= image.shape[0]:
+        print('Something is wrong with coord or dataset')
         raise Exception()
 
     # Note how we reference the y column first. This is the way numpy arrays
@@ -69,8 +74,8 @@ def valueAtMapPos(image, gt, pos):
 
 try:
     image, geotransform = maFromGDAL('Rome-30m-DEM.tif')
+    # print('GOT HERE')
     val = valueAtMapPos(image, geotransform, (434323.0, 2984745.0))
-    print('GOT HERE')
     print(val)
 except:
     print('Something went wrong.')

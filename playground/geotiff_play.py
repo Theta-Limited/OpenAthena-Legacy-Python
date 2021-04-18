@@ -56,8 +56,15 @@ nrows, ncols = elevation.shape
 # If dxdy or dydx aren't 0, then this will be incorrect
 x0, dx, dxdy, y0, dydx, dy = geodata.GetGeoTransform()
 
+# This should help with type conversion
+# mx+b ?
 x1 = x0 + dx * ncols
 y1 = y0 + dy * nrows
+
+# # Dumb identity scalar for debugging
+# # Doesn't work, don't use this
+# x1 = 1
+# y1 = 1
 
 plt.imshow(elevation, cmap='gist_earth', extent=[x0, x1, y1, y0])
 plt.show()
