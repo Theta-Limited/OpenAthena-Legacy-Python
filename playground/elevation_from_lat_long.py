@@ -75,7 +75,7 @@ def valueAtMapPos(image, gt, pos):
 try:
     image, geotransform = maFromGDAL('Rome-30m-DEM.tif')
     # print('GOT HERE')
-    val = valueAtMapPos(image, geotransform, (434323.0, 2984745.0))
+    val = valueAtMapPos(image, geotransform, (12.5, 42))
     print(val)
 except:
     print('Something went wrong.')

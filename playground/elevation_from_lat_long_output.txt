@@ -1,2 +1,2 @@
 matthew@mypc:~/projects/OpenAerialForwardArtilleryObservation/playground$ python3 elevation_from_lat_long.py
-Something went wrong.
+35
