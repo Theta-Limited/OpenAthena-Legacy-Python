@@ -24,7 +24,7 @@ def maFromGDAL(filename):
 
     # Get the first band.
     band = dataset.GetRasterBand(1)
-    # We need to nodata value for our MaskedArray later.
+    # We need to nodata value for our MakedArray later.
     nodata = band.GetNoDataValue()
     # Load the entire dataset into one numpy array.
     image = band.ReadAsArray(0, 0, band.XSize, band.YSize)
@@ -68,8 +68,9 @@ def valueAtMapPos(image, gt, pos):
     return image[y, x]
 
 try:
-    image, geotransform = maFromGDAL('myimage.tif')
+    image, geotransform = maFromGDAL('Rome-30m-DEM.tif')
     val = valueAtMapPos(image, geotransform, (434323.0, 2984745.0))
-    print val
+    print('GOT HERE')
+    print(val)
 except:
     print('Something went wrong.')

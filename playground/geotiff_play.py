@@ -8,9 +8,6 @@ from osgeo import gdal
 # based on:
 #    https://stackoverflow.com/questions/24956653/read-elevation-using-gdal-python-from-geotiff
 
-
-
-
 print("Hello World!")
 print("I'm geotiff_play.py")
 print("Which File would you like to read?")
