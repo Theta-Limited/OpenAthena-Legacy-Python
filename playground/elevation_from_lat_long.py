@@ -1,7 +1,11 @@
-import osgeo.gdal as gdal
-import osgeo.osr as osr
+# #Deprecated
+# import osgeo.gdal as gdal
+# import osgeo.osr as osr
+from osgeo import gdal
+from osgeo import osr
 import numpy as np
 from numpy import ma
+import sys
 
 # via stackoverflow: https://gis.stackexchange.com/a/29639
 
@@ -73,9 +77,19 @@ def valueAtMapPos(image, gt, pos):
     return image[y, x]
 
 try:
-    image, geotransform = maFromGDAL('Rome-30m-DEM.tif')
-    # print('GOT HERE')
-    val = valueAtMapPos(image, geotransform, (12.5, 42))
-    print(val)
+    print(str(sys.argv))
+    if (len(sys.argv) == 2):
+        print('GOT HERE')
+        # geofilename = "Rome-30m-DEM.tif"
+        geofilename = sys.argv[1]
+        print(sys.argv[1])
+        geofile = gdal.Open(geofilename)
+        print("Okay, grabbing the GeoTIF file named: ", geofilename)
+
+        image, geotransform = maFromGDAL(geofilename)
+        val = valueAtMapPos(image, geotransform, (12.5, 42))
+        print(val)
+    else:
+        print('ERROR: please provide just the name of a geotiff file')
 except:
     print('Something went wrong.')
