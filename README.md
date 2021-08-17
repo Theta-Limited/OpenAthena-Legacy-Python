@@ -1,3 +1,22 @@
+# Limitations of Indirect Fire in existing combined arms doctrine
+While the importance of indirect fire (e.g. mortars, artillery, rockets) is well known to historians, combatants, and those studied in methods of warfare, it remains an imprecise, blunt, and destructive tool relegated merely as a support role in current combined arms doctrine. 
+
+Mastery of combined arms through maneuver warfare and air superiority remain the determinate factors of supremacy in current doctrine, preventing the effective application of indirect fire. This is in large part due to the lack of precision and immediacy that are critical for its usage against a highly-mobile adversary.
+
+As former U.S. Army Chief of Staff Gen. Mark A. Milley wrote in the forward to U.S. Army Training and Doctrine Command Pamphlet 525-3-1, [The U.S. Army in Multi-Domain Operations 2028](https://adminpubs.tradoc.army.mil/pamphlets/TP525-3-1.pdf): “emerging technologies” are “driving a fundamental change in the character of war.” They have “the potential to revolutionize battlefields unlike anything since the integration of machine guns, tanks, and aviation which began the era of combined arms warfare.”
+
+# A new introduction to combined arms doctrine
+
+Retired French army general and theory-crafter Guy Hubin writes in [_Perspectives tactiques_](https://warontherocks.com/2021/02/kill-the-homothetic-army-gen-guy-hubins-vision-of-the-future-battlefield/) that the possibility of precision indirect fires is one such fundamental change in the character of war driven by emerging technologies.
+
+With recent advancements in consumer technology and publicly-available terrain datasets, the possibility arises of using inexpensive, low-altitude, un-manned fixed or rotary-wing aircraft to augment the capability of indirect fire. They can achieve this by improving indirect fire's accuracy in usage and providing precise, immediate information on targets to operators of a broad range of existing indirect fire weaponry.
+
+# Adapting to an upset in combined arms doctrine
+
+TODO
+
+
+
 # OpenAerialForwardArtilleryObservation
 Learning python API's by making an experimental line-of-sight + avionics sensor + geodata synthesis calculator
 
@@ -32,12 +51,14 @@ Given that the lat/long and altitude of the rotary-wing aircraft is known, its a
 
 If an invisible, imaginary mathematical line was "paramaterized" from the aircraft's camera towards the ground at its angle of declanation, the point farthest along this line but closest to any geographic lat/long/alt data point is likely to be the target which the camera is aiming at. This would provide the aircraft operator with a rough latitude, longitude, and elevation of the target to which the camera is aiming in an extremely short period of time.
 
-# Uses
+# Military Uses
 Especially when employed with GPS-guided munitions (artillery, stuff dropped outta planes, whatever) this would greatly aid the safety and processes of the [forward artillery observer](https://en.wikipedia.org/wiki/Artillery_observer) using soley inexpensive consumer electronics, all while reducing the risk of operator error (mismeasurement, miscalculation, etc.) and subsequent risk of friendly-fire incidents and risk to civilian lives.
 
 In addition, a passive optical-based approach to target identification does not trigger the active protection system(s) of targets, including armored vehicles. This can be highly beneficial depending on the usage environment.
 
-Also, much more practical but much less fun-sounding, it could be used for search and rescue operations, measuring and surveying for civic engineering (or something), and many other commercial purposes.
+# Civilian Uses
+
+Also, much more practical but much less fun-sounding, it can be used for search and rescue operations, wildfire detection and management, measuring and surveying for civic engineering, and many other commercial purposes.
 
 # US Arms export control notice
-If you are using this software in a country that is under restriction from the United States under the Arms Export Control Act, you may only use this for practical purposes and may not use this software in conflict.
+This software falls under the [Dual Use Technology](https://en.wikipedia.org/wiki/Dual-use_technology#United_States) category under applicable U.S. arms export laws. If you are using this software in a country that is under restriction from the United States under the Arms Export Control Act, you may only use this for civilian purposes and may not use this software in conflict. This author is not responsible for unauthorized usage of this open source project
