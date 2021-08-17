@@ -11,8 +11,13 @@ Retired French army general and theory-crafter Guy Hubin writes in [_Perspective
 
 With recent advancements in consumer technology and publicly-available terrain datasets, the possibility arises of using inexpensive, low-altitude, un-manned fixed or rotary-wing aircraft to augment the capability of indirect fire. They can achieve this by improving indirect fire's accuracy in usage and providing precise, immediate information on targets to operators of a broad range of existing indirect fire weaponry.
 
-# Adapting to an upset in combined arms doctrine
+# An upset in combined arms doctrine
 
+Low cost remote-controlled consumer aircraft can thus provide an upset to existing combined arms doctrine. Such aircraft are easy to operate by infantry units and inexpensive to replace. Meanwhile, they provide an effective counter to concentrated infantry and armored units of an adversary accustomed to fighting under current combined arms dotrine. 
+
+Due to the low altitude operation and inexpensive nature of such aircraft, they can counter such units even when higher-altitude air supremacy is not held or may not be achieved against an adversary. In such a way, low altitude consumer aircraft upset the role of military aircraft as the only effective foil to ground-based combined arms. Air supremacy becomes less important, especially in situations where the adversary is unable to enforce an airborne presence or provide close air support.
+
+# Adapting to an upset
 TODO
 
 # Premise
