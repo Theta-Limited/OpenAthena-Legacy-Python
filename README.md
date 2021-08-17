@@ -1,5 +1,5 @@
 # Limitations of Indirect Fire in existing combined arms doctrine
-While the importance of indirect fire (e.g. mortars, artillery, rockets) is well known to historians, combatants, and those studied in methods of warfare, it remains an imprecise, blunt, and destructive tool relegated merely as a support role in current combined arms doctrine. 
+While the importance of indirect fire (e.g. mortars, artillery, rockets) is well known to historians, combatants, and those studied in methods of warfare, it remains an imprecise, blunt, and destructive tool relegated merely to a support role in current combined arms doctrine. 
 
 Mastery of combined arms through maneuver warfare and air superiority remain the determinate factors of supremacy in current doctrine, preventing the effective application of indirect fire. This is in large part due to the lack of precision and immediacy that are critical for its usage against a highly-mobile adversary.
 
