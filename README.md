@@ -17,6 +17,8 @@ Low cost remote-controlled consumer aircraft can thus provide an upset to existi
 
 Due to the low altitude operation and inexpensive nature of such aircraft, they can counter such units even when higher-altitude air supremacy is not held or may not be achieved against an adversary. In such a way, low altitude consumer aircraft upset the role of military aircraft as the only effective foil to ground-based combined arms. Air supremacy becomes less important, especially in situations where the adversary is unable to field enough military aircraft to enforce an airborne presence or provide close air support.
 
+Additionally, the combination of existing combined arms with new precision indirect fire capabilities may allow a unit to move more rapidly and gain ground at frightening speeds using classic fire-and-movement tactics. The advantage provided by precision indirect fire is that it can supress a target from beyond line of sight, reducing the burden of infantry units to supress a target while a friendly unit is in motion. Well executed maneuvers under such conditions may outpace a conventional force's ability to react, resupply, and reposition its own defenses. 
+
 # Adapting to an upset
 TODO
 
