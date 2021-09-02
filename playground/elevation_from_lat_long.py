@@ -70,6 +70,8 @@ def valueAtMapPos(image, gt, pos):
 
     if x < 0 or y < 0 or x >= image.shape[1] or y >= image.shape[0]:
         print('Something is wrong with coord or dataset')
+        print(x)
+        print(y)
         raise Exception()
 
     # Note how we reference the y column first. This is the way numpy arrays
@@ -80,14 +82,15 @@ try:
     print(str(sys.argv))
     if (len(sys.argv) == 2):
         print('GOT HERE')
-        # geofilename = "Rome-30m-DEM.tif"
-        geofilename = sys.argv[1]
-        print(sys.argv[1])
-        geofile = gdal.Open(geofilename)
-        print("Okay, grabbing the GeoTIF file named: ", geofilename)
 
+        geofilename = sys.argv[1]
+        # print(sys.argv[1])
+        # geofile = gdal.Open(geofilename)
+
+        print("Okay, grabbing the GeoTIF file named: ", geofilename)
         image, geotransform = maFromGDAL(geofilename)
-        val = valueAtMapPos(image, geotransform, (12.5, 42))
+        # Something here is bugged but I can't figure out how/why
+        val = valueAtMapPos(image, geotransform, (12.61, 41.82))
         print(val)
     else:
         print('ERROR: please provide just the name of a geotiff file')
