@@ -65,6 +65,7 @@ def mapToPixel(gt, pos):
 
 def valueAtMapPos(image, gt, pos):
     pp = mapToPixel(gt, pos)
+    # May have mixed up x and y here
     x = int(pp[0])
     y = int(pp[1])
 
