@@ -13,7 +13,7 @@ With recent advancements in consumer technology and publicly-available terrain d
 
 # An upset in combined arms doctrine
 
-Low cost remote-controlled consumer aircraft can thus provide an upset to existing combined arms doctrine. Such aircraft are easy to operate by infantry units and inexpensive to replace. Meanwhile, when combined with indirect fire they provide an effective counter to concentrated infantry and armored units of an adversary accustomed to fighting under current combined arms dotrine.
+Low cost remote-controlled consumer aircraft can thus provide an upset to existing combined arms doctrine. Such aircraft are easy to operate by infantry units and inexpensive to replace. Meanwhile, when combined with indirect fire they provide an effective counter to concentrated infantry and armored units of an adversary accustomed to fighting under current combined arms doctrine.
 
 Due to the low altitude operation and inexpensive nature of such aircraft, they can counter such units even when higher-altitude air supremacy is not held or may not be achieved against an adversary. In such a way, low altitude consumer aircraft upset the role of military aircraft as the only effective foil to ground-based combined arms. Air supremacy becomes less important, especially in situations where the adversary is unable to field enough military aircraft to enforce an airborne presence or provide close air support.
 
@@ -34,7 +34,7 @@ Ideally for this purpose, the camera would point at horizon level during normal 
 
 Given that the lat/long and altitude of the rotary-wing aircraft is known, its azimuth is known, and it is possible to obtain accurate worldwide elevation data (within ~30m ?) from [this api](https://pypi.org/project/elevation/), it should be a very simple math problem to calculate the position and altitude of the object aimed at by the camera.
 
-If an invisible, imaginary mathematical line was "paramaterized" from the aircraft's camera towards the ground at its angle of declanation, the point farthest along this line but closest to any geographic lat/long/alt data point is likely to be the target which the camera is aiming at. This would provide the aircraft operator with a rough latitude, longitude, and elevation of the target to which the camera is aiming in an extremely short period of time.
+If an invisible, imaginary mathematical line was "paramaterized" from the aircraft's camera towards the ground at its angle of declanation, the point closest along this line to the aircraft yet reasonably near any geographic lat/long/alt data point is likely to be the target which the camera is aiming at. This would provide the aircraft operator with a rough latitude, longitude, and elevation of the target to which the camera is aiming in an extremely short period of time.
 
 
 # Current status
