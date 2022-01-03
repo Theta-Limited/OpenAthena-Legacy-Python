@@ -23,7 +23,7 @@ Additionally, the combination of existing combined arms with new precision indir
 
 Low altitude air supremacy must be considered equally as essential as that of high altitude in existing combined arms doctrine.
 
-Infantry and mechanized units must guard against artillery-observing aircraft with specialized low-altitude anti-air or electronic countermeasures (ECM) platforms that can deter such aircraft just as easily as they can be deployed
+Infantry and mechanized units must guard against artillery-observing aircraft. Specialized low-altitude anti-air or electronic countermeasures (ECM) must be developed. Such platforms should be able to deter such aircraft just as easily as they can be deployed
 
 Effort should be made into producing inexpensive 'bird of prey' aircraft that can enforce low-altitude air supremacy and deny an adversary's aerial artillery observation
 
