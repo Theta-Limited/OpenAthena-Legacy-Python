@@ -20,7 +20,12 @@ Due to the low altitude operation and inexpensive nature of such aircraft, they 
 Additionally, the combination of existing combined arms with new precision indirect fire capabilities may allow a unit to move more rapidly and gain ground at frightening speeds using classic fire-and-movement tactics. The advantage provided by precision indirect fire is that it can supress a target from beyond line of sight, reducing the burden of infantry units to supress a target while a friendly unit is in motion. Well executed maneuvers under such conditions may outpace a conventional force's ability to react, resupply, and reposition its own defenses.
 
 # Adapting to an upset
-TODO
+
+Low altitude air supremacy must be considered equally as essential as that of high altitude in existing combined arms doctrine.
+
+Infantry and mechanized units must guard against artillery-observing aircraft with specialized low-altitude anti-air platforms that can deter such aircraft just as easily as they can be deployed
+
+Effort should be made into producing inexpensive 'bird of prey' aircraft that can enforce low-altitude air supremacy and deny an adversary's aerial artillery observation
 
 # Premise
 
