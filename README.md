@@ -1,5 +1,5 @@
 # Limitations of Indirect Fire in existing combined arms doctrine
-While the importance of indirect fire (e.g. mortars, artillery, rockets) is well known to historians, combatants, and those studied in methods of warfare, it remains an imprecise, blunt, and destructive tool relegated merely to a support role in current combined arms doctrine.
+While the importance of indirect fire (e.g. mortars, artillery, rockets) is well known to military historians, present-day soldiers, and others studied in methods of warfare, it remains an imprecise, blunt, and destructive tool relegated merely to a support role in current combined arms doctrine.
 
 Mastery of combined arms through maneuver warfare and air superiority remain the determinate factors of supremacy in current doctrine, preventing the effective application of indirect fire. This is in large part due to the lack of precision and immediacy that are critical for its usage against a highly-mobile adversary.
 
@@ -13,9 +13,9 @@ With recent advancements in consumer technology and publicly-available terrain d
 
 # An upset in combined arms doctrine
 
-Low cost remote-controlled consumer aircraft can thus provide an upset to existing combined arms doctrine. Such aircraft are easy to operate by infantry units and inexpensive to replace. Meanwhile, when combined with indirect fire they provide an effective counter to concentrated infantry and armored units of an adversary accustomed to fighting under current combined arms doctrine.
+This project portends the possibility of one such upset to existing combined arms doctrine. Low cost remote-controlled consumer-grade aircraft are the instrument of such a change in the character of warfare. Such aircraft are easy to operate by infantry units and inexpensive to replace. Meanwhile, when combined with indirect fire they provide an effective counter to concentrated infantry and armored units of an adversary accustomed to fighting under current combined arms doctrine.
 
-Due to the low altitude operation and inexpensive nature of such aircraft, they can counter such units even when higher-altitude air supremacy is not held or may not be achieved against an adversary. In such a way, low altitude consumer aircraft upset the role of military aircraft as the only effective foil to ground-based combined arms. Air supremacy becomes less important, especially in situations where the adversary is unable to field enough military aircraft to enforce an airborne presence or provide close air support.
+Due to the low altitude operation and inexpensive nature of such aircraft, they can counter such units even when higher-altitude air supremacy is not held or may not be achieved against an adversary. In such a fashion, low altitude consumer aircraft upset the role of military aircraft as the only effective foil to ground-based combined arms. Air supremacy becomes less important, especially in situations where the adversary is unable to field enough military aircraft to enforce an airborne presence or provide close air support.
 
 Additionally, the combination of existing combined arms with new precision indirect fire capabilities may allow a unit to move more rapidly and gain ground at frightening speeds using classic fire-and-movement tactics. The advantage provided by precision indirect fire is that it can supress a target from beyond line of sight, reducing the burden of infantry units to supress a target while a friendly unit is in motion. Well executed maneuvers under such conditions may outpace a conventional force's ability to react, resupply, and reposition its own defenses.
 
