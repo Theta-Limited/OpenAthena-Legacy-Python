@@ -13,7 +13,7 @@ With recent advancements in consumer technology and publicly-available terrain d
 
 # An upset in combined arms doctrine
 
-This project portends the possibility of one such upset to existing combined arms doctrine. Low cost remote-controlled consumer-grade aircraft are the instrument of such a change in the character of warfare. Such aircraft are easy to operate by infantry units and inexpensive to replace. Meanwhile, when combined with indirect fire they provide an effective counter to concentrated infantry and armored units of an adversary accustomed to fighting under current combined arms doctrine.
+This project portends the possibility of one such upset to existing combined arms doctrine. Low cost remote-controlled consumer-grade aircraft are the instrument of such a change in the character of warfare. Such aircraft are easy to operate by infantry units and inexpensive to replace. Meanwhile, when used to guide indirect fire, such aircraft may provide an effective counter to concentrated infantry and armored units of an adversary accustomed to fighting under current combined arms doctrine.
 
 Due to the low altitude operation and inexpensive nature of such aircraft, they can counter such units even when higher-altitude air supremacy is not held or may not be achieved against an adversary. In such a fashion, low altitude consumer aircraft upset the role of military aircraft as the only effective foil to ground-based combined arms. Air supremacy becomes less important, especially in situations where the adversary is unable to field enough military aircraft to enforce an airborne presence or provide close air support.
 
