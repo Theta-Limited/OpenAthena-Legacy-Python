@@ -10,4 +10,4 @@
 
     It is also interesting to note from two tables taken from studies conducted on Bougainville and in Italy that more casualties in the South Pacific were caused by rifle or machinegun fire than in the North African theater:
 
-![causative agents table](./Causative_Agents_casualties_WWII.png)
+![causative agents table](./Causative_Agents_Casualties_WWII.png)
