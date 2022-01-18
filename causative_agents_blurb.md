@@ -4,7 +4,7 @@ Nevertheless, many interesting facts can be brought out from the material availa
 
 1. Small arms fire accounted for between 14 and 31 percent of the total casualties, depending upon the theater of action: The Mediterranean theater, 14.0 percent; the European theater, 23.4 percent; and the Pacific theaters, 30.7 percent.
 
-2. Artillery and mortar fire together accounted for 65 percent of the total casualties in the European and Mediterranean theaters, 64.0 and 69.1, respectively. In the Pacific, they accounted for 47.0 percent.
+2. **Artillery and mortar fire together accounted for 65 percent of the total casualties in the European and Mediterranean theaters**, 64.0 and 69.1, respectively. In the Pacific, they accounted for 47.0 percent.
 
 The report showed the relative effectiveness of causative agents, which inflicted casualties on 217,070 living wounded of the First and Third U.S. Armies, European Theater of Operations, 1944-45 (table 14).
 
