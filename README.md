@@ -11,6 +11,21 @@ Retired French army general and theory-crafter Guy Hubin writes in [_Perspective
 
 With recent advancements in consumer technology and publicly-available terrain datasets, the possibility arises of using inexpensive, low-altitude, un-manned fixed or rotary-wing aircraft to augment the capability of indirect fire. They can achieve this by improving indirect fire's accuracy in usage and providing precise, immediate information on targets to operators of a broad range of existing indirect fire weaponry.
 
+# Proof of concept
+Aerial forward artillery observation with small consumer aircraft, even if not employed specifically in this technique, has proven to be very effective in application during the 2022 war in Ukraine.
+
+Examples:
+
+forward artillery observation for counter-battery fire: [Osinttechnical/status/1511867981596434434](https://twitter.com/Osinttechnical/status/1511867981596434434)
+[alt video link](counter-battery-example.mp4)
+
+forward artillery observation for combined arms disruption: [UAWeapons/status/1509247556164935691](https://twitter.com/UAWeapons/status/1509247556164935691)
+[alt video link](anti-combined-arms-example.mp4)
+
+forward artillery observation for logistics disruption:
+[Osinttechnical/status/1511683706511052808](https://twitter.com/Osinttechnical/status/1511683706511052808)
+[alt video link](anti-logistics-example.mp4)
+
 # An upset in combined arms doctrine
 
 This project portends the possibility of one such upset to existing combined arms doctrine. Low cost remote-controlled consumer-grade aircraft are the instrument of such a change in the character of warfare. Such aircraft are easy to operate by infantry units and inexpensive to replace. Meanwhile, when used to guide indirect fire, such aircraft may provide an effective counter to concentrated infantry and armored units of an adversary accustomed to fighting under current combined arms doctrine.
@@ -42,21 +57,6 @@ Given that the lat/long and altitude of the rotary-wing aircraft is known, its a
 If an invisible, imaginary mathematical line was "paramaterized" from the aircraft's camera towards the ground at its angle of declanation, the point closest along this line to the aircraft yet reasonably near any geographic lat/long/alt data point is likely to be the target which the camera is aiming at. This would provide the aircraft operator with a rough latitude, longitude, and elevation of the target to which the camera is aiming in an extremely short period of time.
 
 While untested, such a rapid positional resolution may prove ideal for use by precision indirect fire teams
-
-# Proof of concept
-Aerial forward artillery observation with small consumer aircraft, even if not employed specifically in this technique, have proven to be very effective in application during the 2022 war in Ukraine.
-
-Examples:
-
-forward artillery observation for counter-battery fire: [Osinttechnical/status/1511867981596434434](https://twitter.com/Osinttechnical/status/1511867981596434434)
-[alt video link](counter-battery-example.mp4)
-
-forward artillery observation for combined arms disruption: [UAWeapons/status/1509247556164935691](https://twitter.com/UAWeapons/status/1509247556164935691)
-[alt video link](anti-combined-arms-example.mp4)
-
-forward artillery observation for logistics disruption:
-[Osinttechnical/status/1511683706511052808](https://twitter.com/Osinttechnical/status/1511683706511052808)
-[alt video link](anti-logistics-example.mp4)
 
 # Current status
 run python geotiff_play.py (while in the playground directory) for a demonstration of geotiff parsing and a render of the City of Rome in Italy and its outlying terrain. Chart labels represent longitude and latitude (counterintuitively, the x and y axis are backwards in the standard description of a position via [latitude , longitude])
