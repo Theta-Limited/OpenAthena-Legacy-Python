@@ -43,6 +43,20 @@ If an invisible, imaginary mathematical line was "paramaterized" from the aircra
 
 While untested, such a rapid positional resolution may prove ideal for use by precision indirect fire teams
 
+# Proof of concept
+Aerial forward artillery observation with small consumer aircraft, even if not employed specifically in this technique, have proven to be very effective in application during the 2022 war in Ukraine.
+
+Examples:
+
+forward artillery observation for counter-battery fire: [Osinttechnical/status/1511867981596434434](https://twitter.com/Osinttechnical/status/1511867981596434434)
+[alt video link](counter-battery-example.mp4)
+
+forward artillery observation for combined arms disruption: [UAWeapons/status/1509247556164935691](https://twitter.com/UAWeapons/status/1509247556164935691)
+[alt video link](anti-combined-arms-example.mp4)
+
+forward artillery observation for logistics disruption:
+[Osinttechnical/status/1511683706511052808](https://twitter.com/Osinttechnical/status/1511683706511052808)
+[alt video link](anti-logistics-example.mp4)
 
 # Current status
 run python geotiff_play.py (while in the playground directory) for a demonstration of geotiff parsing and a render of the City of Rome in Italy and its outlying terrain. Chart labels represent longitude and latitude (counterintuitively, the x and y axis are backwards in the standard description of a position via [latitude , longitude])
