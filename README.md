@@ -19,6 +19,8 @@ Examples:
 forward artillery observation for counter-battery fire: [Osinttechnical/status/1511867981596434434](https://twitter.com/Osinttechnical/status/1511867981596434434)
 [alt video link](counter-battery-example.mp4)
 
+forward artillery observation for indirect-fire adjustment: [Osinttechnical/status/1516473926150463494](https://twitter.com/Osinttechnical/status/1516473926150463494) [alt video link](fire-adjustment-example.mp4)
+
 forward artillery observation for combined arms disruption: [UAWeapons/status/1509247556164935691](https://twitter.com/UAWeapons/status/1509247556164935691)
 [alt video link](anti-combined-arms-example.mp4)
 
