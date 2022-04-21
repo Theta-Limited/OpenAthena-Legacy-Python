@@ -66,5 +66,6 @@ y1 = y0 + dy * nrows
 # x1 = 1
 # y1 = 1
 
+# https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.imshow.html
 plt.imshow(elevation, cmap='gist_earth', extent=[x0, x1, y1, y0])
 plt.show()
