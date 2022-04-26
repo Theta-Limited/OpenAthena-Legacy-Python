@@ -61,7 +61,7 @@ def resolveTarget(y, x, z, azimuth, theta):
     deltay = None
 
     direction = azimuthToUnitCircleRad(azimuth)
-    deltax, deltay = math.sin(direction), math.cos(direction)
+    deltax, deltay = math.cos(direction), math.sin(direction)
 
 
     deltaz = None
@@ -75,6 +75,9 @@ def resolveTarget(y, x, z, azimuth, theta):
     #     if not, something is wrong
     sumOfSquares = deltax*deltax + deltay*deltay + deltaz*deltaz
     print(f'sum of squares is: {sumOfSquares}')
+    print(f'deltax is {deltax}')
+    print(f'deltay is {deltay}')
+    print(f'deltaz is {deltaz}')
 
 # convert from azimuth notation (0 is up [+y], inc. clockwise) to
 #     math notation(0 is right [+x], inc. counter-clockwise)
@@ -84,9 +87,9 @@ def azimuthToUnitCircleRad(azimuth):
     # reverse direction of increment
     direction = (-1 * azimuth)
     # rotate 90deg, move origin from +y to +x
-    direction -= (0.5 * math.pi)
+    direction += (0.5 * math.pi)
     direction = normalize(direction)
-
+    print(f'direction is: {math.degrees(direction)}')
     return direction
 
 # if a given angle is not between 0 and 2pi,
