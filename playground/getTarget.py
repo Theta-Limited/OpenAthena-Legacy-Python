@@ -19,8 +19,9 @@ See ../fn_diagram.jpg
 import time
 import math
 
-# get the pos of current subject of UAS camera
-#     implementation can be changed later
+"""get the pos of current subject of UAS camera
+       implementation can be changed later
+"""
 def getTarget():
     # note that by convention, coord pairs are usually (lat,long)
     #     i.e. (y,x)
@@ -31,6 +32,7 @@ def getTarget():
     theta = inputNumber("Please enter angle of declanation (degrees down from forward) in decimal form: ", 0, 90)
 
     target = resolveTarget(y, x, z, azimuth, theta)
+
 
 # handle user input of data, using message for prompt
 #   guaranteed to return a float
@@ -49,35 +51,60 @@ def inputNumber(message, lowerBound, upperBound):
             return userInput
             break
 
-# returns a tuple (y, x, z) location of target
+"""given sensor data, returns a tuple (y, x, z) location of target
+
+Parameters
+----------
+y : float
+    latitude of aircraft
+x : float
+    longitude of aircraft
+z : float
+    altitude of aircraft, meters from sea level
+    accuracy is greatly improved on most aircraft with
+    barometric sensor, sometimes ultrasonic sensors too
+azimuth : float
+    azimuth represents the direction of the aircraft's camera
+    measured in degrees
+    starting from North @ 0°, increasing clockwise (e.g. 90° is East)
+    usually an integer value, but must be between 0.0 and 360.0
+theta : float
+    theta represents the angle of declanation of the aircraft's camera
+    measured in degrees
+    starting at 0° as ideal level with the horizon, increasing as it aims downward
+    must be between 0.0 (straight forward) and 90.0 (straight downward)
+
+"""
 def resolveTarget(y, x, z, azimuth, theta):
 
     # convert azimuth and theta from degrees to radians
     azimuth, theta = math.radians(azimuth), math.radians(theta)
 
+    # direction, convert to unit circle (just like math class)
+    direction = azimuthToUnitCircleRad(azimuth)
+
     # from Azimuth, determine rate of x and y change
     #     per unit travel (level with horizon for now)
-    deltax = None
-    deltay = None
-
-    direction = azimuthToUnitCircleRad(azimuth)
     deltax, deltay = math.cos(direction), math.sin(direction)
 
-
-    deltaz = None
-    # pythagoran theorem, deltaz^2 + sqrt(deltax^2 + deltay^2) = 1^2
     deltaz = -1 * math.sin(theta) #neg because direction is downward
+
+
     # determines by how much of travel per unit is actually horiz
+    # pythagoran theorem, deltaz^2 + deltax^2 + deltay^2 = 1
     horizScalar = math.cos(theta)
     deltax, deltay = horizScalar * deltax, horizScalar * deltay
+
 
     # at this point, deltax^2 + deltay^2 + deltaz^2 = 1
     #     if not, something is wrong
     sumOfSquares = deltax*deltax + deltay*deltay + deltaz*deltaz
-    print(f'sum of squares is: {sumOfSquares}')
-    print(f'deltax is {deltax}')
-    print(f'deltay is {deltay}')
-    print(f'deltaz is {deltaz}')
+    print(f'sum of squares is 1.0 : {sumOfSquares == 1.0}')
+    print(f'deltax is {round(deltax, 4)}')
+    print(f'deltay is {round(deltay, 4)}')
+    print(f'deltaz is {round(deltaz, 4)}')
+
+    # @TODO: Grab terrain data, trace terrain going forward from aircraft azimuth until point closest to center line of aircraft camera's view frustum, use this point as target location and altitude
 
 # convert from azimuth notation (0 is up [+y], inc. clockwise) to
 #     math notation(0 is right [+x], inc. counter-clockwise)
