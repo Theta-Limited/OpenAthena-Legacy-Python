@@ -60,17 +60,33 @@ If an invisible, imaginary mathematical line was "paramaterized" from the aircra
 
 While untested, such a rapid positional resolution may prove ideal for use by precision indirect fire teams
 
+# Install
+
+All you need to do is run `pip3 install gdal matplotlib`, then run `playground/geotiff_play.py` with python3:
+```bash
+pip3 install gdal matplotlib
+
+git clone https://github.com/mkrupczak3/OpenAthena.git
+cd OpenAthena
+python3 playground/geotiff_play.py
+```
+
+"pip3" and "python3" may just be called "pip" and "python" depending on the configuration of your system
+
 # Current status
+
 run python geotiff_play.py (while in the playground directory) for a demonstration of geotiff parsing and a render of the City of Rome in Italy and its outlying terrain. Chart labels represent longitude and latitude (counterintuitively, the x and y axis are backwards in the standard description of a position via [latitude , longitude])
 
 
-Using decimal lat/long, because no one has time for parsing degrees, minutes, seconds format.
+
 
 ```
-user@mypc:~/projects/OpenAerialForwardArtilleryObservation/playground$
-python geotiff_play.py
+user@mypc:~/projects/OpenAthena/$
+python playground/geotiff_play.py
 ```
 ![render of terrain around Rome](playground/render_cli_screenshot.png)
+
+then, exit the picture window that appears. You will now be prompted in the comman line interface for a latitude and longitude, enter the nearest coordinates and the program will give you the approximate elevation
 
 # Military Uses
 Especially when employed with precision smart munitions (e.g. [artillery](https://asc.army.mil/web/portfolio-item/ammo-excalibur-xm982-m982-and-m982a1-precision-guided-extended-range-projectile/), aerial, etc.) this would greatly aid the safety and processes of the [forward artillery observer](https://en.wikipedia.org/wiki/Artillery_observer) using soley inexpensive consumer electronics, all while reducing the risk of operator error (mismeasurement, miscalculation, etc.) and subsequent risk of friendly-fire incidents and risk to civilian lives.
