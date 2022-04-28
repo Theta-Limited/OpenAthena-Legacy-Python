@@ -2,7 +2,7 @@ import time
 import matplotlib.pyplot as plt
 from osgeo import gdal
 import math
-from getTarget import inputNumber
+from getTarget import *
 # import numpy
 # import sys
 
