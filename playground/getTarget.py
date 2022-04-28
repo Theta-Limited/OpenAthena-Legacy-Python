@@ -20,6 +20,7 @@ import time
 import matplotlib.pyplot as plt
 from osgeo import gdal
 import math
+from math import sin, asin, cos, atan2
 from geotiff_play import *
 
 """get the pos of current subject of UAS camera
@@ -33,7 +34,7 @@ def getTarget():
     while geoFile is None:
         geofilename = str(input("Enter the GeoTIFF filename: "))
         geofilename.strip()
-        if geofilefilename.isdecimal() or geofilename.isnumeric():
+        if geofilename.isdecimal() or geofilename.isnumeric():
             print(f'ERROR: filename {geofilename} does not contain at least 1 non-digit character')
             print('Please try again')
             continue
@@ -58,7 +59,7 @@ def getTarget():
     # I'm making the assumption that the image isn't rotated/skewed/etc.
     # This is not the correct method in general, but let's ignore that for now
     # If dxdy or dydx aren't 0, then this will be incorrect
-    x0, dx, dxdy, y0, dydx, dy = geodata.GetGeoTransform()
+    x0, dx, dxdy, y0, dydx, dy = geoFile.GetGeoTransform()
 
     # we cannot deal with rotated or skewed images in current version
     if dxdy != 0 or dydx != 0:
@@ -171,6 +172,11 @@ def resolveTarget(y, x, z, azimuth, theta, elevationData, xParams, yParams):
     print(f'deltay is {round(deltay, 4)}')
     print(f'deltaz is {round(deltaz, 4)}')
 
+    x0 = xParams[0]
+    x1 = xParams[1]
+
+    y0 = yParams[0]
+    y1 = yParams[1]
 
     dx = xParams[2]
     #meters of acceptable distance between constructed line and datapoint
@@ -192,13 +198,24 @@ def resolveTarget(y, x, z, azimuth, theta, elevationData, xParams, yParams):
         # deltaz should always be negative
         curZ += deltaz
         avgAlt = (avgAlt + curZ) / 2
-
+        #@TODO There is currently a bug with the direction/azimuth here
+        #Process works correctly but goes the wrong x direction sometimes
         curY, curX = inverse_haversine((curY,curX), math.cos(theta)*increment, azimuth, avgAlt)
+        #check for Out Of Bounds after each iteration
+        if curY > y0 or curY < y1 or curX < x0 or curX > x1:
+            print(f'FATAL ERROR: resolveTarget ran out of bounds at {curY}, {curX}, {curZ}m')
+            errOut = "FATAL ERROR: Please ensure target location is within geoTIFF dataset bounds"
+            print(errOut, file=sys.stderr)
+            sys.exit(errOut)
+        #
+        #end iteration
+    #end loop
     #
     #When the loop ends, curY, curX, and curZ are closeish to the target
     #may be a bit biased to slightly long (beyond the target)
     #this algorithm is extremely crude, NOT ACCURATE!
     #    could use refinement
+
     print(f'Final Alt dist: {altDiff}')
     print(f'Target lat: {curY}')
     print(f'Target lon: {curX}')

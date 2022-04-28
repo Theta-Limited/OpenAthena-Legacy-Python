@@ -130,7 +130,7 @@ def getAltFromLatLon(lat, lon, xParams, yParams, elevation):
         xlist.append(xinit)
         xinit += dx
     xL, xR = binarySearchNearest(xlist, lon)
-    print(f'xL: {xlist[xL]} xR: {xlist[xR]}')
+    # print(f'xL: {xlist[xL]} xR: {xlist[xR]}')
     # :(
     ylist = []
     yinit = y0
@@ -138,7 +138,7 @@ def getAltFromLatLon(lat, lon, xParams, yParams, elevation):
         ylist.append(yinit)
         yinit += dy
     yT, yB = binarySearchNearest(ylist, lat)
-    print(f'yT: {ylist[yT]} yB: {ylist[yB]}')
+    # print(f'yT: {ylist[yT]} yB: {ylist[yB]}')
     # we have 4 datapoints nearest to the desired precise location
     # for now we will take a mean of their altitude (elevation)
     # but (@TODO) in the future we should find the point on the 3D plane defined by
@@ -149,7 +149,7 @@ def getAltFromLatLon(lat, lon, xParams, yParams, elevation):
     # https://www.usna.edu/Users/oceano/pguth/md_help/html/approx_equivalents.htm
     e1, e2, e3, e4 = elevation[yT][xL], elevation[yB][xL], elevation[yT][xR], elevation[yB][xR]
     meanE = (e1 + e2 + e3 + e4) / 4
-    print(f'e1: {e1} e2: {e2} e3: {e3} e4: {e4}')
+    # print(f'e1: {e1} e2: {e2} e3: {e3} e4: {e4}')
     return meanE
 
 
