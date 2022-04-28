@@ -65,17 +65,17 @@ While untested, such a rapid positional resolution may prove ideal for use by pr
 All you need to do is run `pip3 install gdal matplotlib`, then run `playground/geotiff_play.py` with python3:
 ```bash
 pip3 install gdal matplotlib
-
+# if this fails, instead install the GDAL package with your package manager (i.e. apt, yum, brew, pacman, etc.)
 git clone https://github.com/mkrupczak3/OpenAthena.git
-cd OpenAthena
-python3 playground/geotiff_play.py
+cd OpenAthena/playground
+python3 geotiff_play.py
 ```
 
 "pip3" and "python3" may just be called "pip" and "python" depending on the configuration of your system
 
 # Current status
 
-run python geotiff_play.py for a demonstration of geotiff parsing and a render of the City of Rome in Italy and its outlying terrain. Chart labels represent longitude and latitude
+run python geotiff_play.py (while in the playground directory) for a demonstration of geotiff parsing and a render of the City of Rome in Italy and its outlying terrain. Chart labels represent longitude and latitude
 
 
 (counterintuitively, the x and y axis are backwards in the standard notation of a position via [latitude , longitude])
@@ -84,8 +84,8 @@ run python geotiff_play.py for a demonstration of geotiff parsing and a render o
 
 
 ```
-user@mypc:~/projects/OpenAthena/$
-python playground/geotiff_play.py
+user@mypc:~/projects/OpenAthena/playground$
+python geotiff_play.py
 ```
 ![render of terrain around Rome](playground/render_cli_screenshot.png)
 
