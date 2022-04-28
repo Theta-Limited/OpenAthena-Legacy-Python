@@ -154,7 +154,7 @@ def getAltFromLatLon(lat, lon, xParams, yParams, elevation):
 
 
 
-"""given a list and value, return the index of the element closest to value
+"""given a list and value, return a tuple of the two indexes in list whose value is closest to value
 
 Parameters
 ----------
@@ -174,14 +174,17 @@ def binarySearchNearest(list, val):
 
     isIncreasing = bool(list[0] < list[lastIndex])
     if not isIncreasing:
-        # if its in decreasing order, uh, don't do that. make it increasing instead
-        # kinda weird, but we reverse index result if we reverse the list
+        # if its in decreasing order, uh, don't do that. Make it increasing instead!
         reversedList = list.copy()
         reversedList.reverse()
 
+
         a1, a2 = binarySearchNearest(reversedList, val)
+        # kinda weird, but we reverse index result if we reverse the list
+        # reverse each of the two index(s)
         a1 = len(list) - a1 - 1
         a2 = len(list) - a2 - 1
+        # reverse the tuple
         return (a2, a1)
 
 
