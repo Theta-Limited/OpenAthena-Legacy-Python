@@ -24,6 +24,10 @@ Aerial forward artillery observation with small consumer aircraft, even if not e
 
 Examples:
 
+In first-hand accounts (via Twitter user [@Jack_Watling](https://twitter.com/Jack_Watling)):
+[shashj/status/1519041368672415747](https://twitter.com/shashj/status/1519041368672415747)
+
+
 forward artillery observation for counter-battery fire: [Osinttechnical/status/1511867981596434434](https://twitter.com/Osinttechnical/status/1511867981596434434)
 [alt video link](counter-battery-example.mp4)
 
