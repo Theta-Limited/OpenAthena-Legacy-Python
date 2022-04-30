@@ -259,7 +259,7 @@ def inverse_haversine(point, distance, azimuth, alt):
     r = 6371000 + alt # average radius of earth + altitude
     # Note: here we use azimuth (start @ 0, inc. clockwise),
     #       NOT like unit circle!
-    brng = math.radians(azimuth)
+    brng = azimuth
 
     return_lat = asin(sin(lat) * cos(d / r) + cos(lat) * sin(d / r) * cos(brng))
     return_lon = lon + atan2(sin(brng) * sin(d / r) * cos(lat), cos(d / r) - sin(lat) * sin(return_lat))
