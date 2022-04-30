@@ -87,6 +87,9 @@ python3 geotiff_play.py
 
 # Current status
 
+### geotiff_play.py:
+
+
 run python geotiff_play.py (while in the playground directory) for a demonstration of geotiff parsing and a render of the City of Rome in Italy and its outlying terrain. Chart labels represent longitude and latitude
 
 
@@ -102,6 +105,138 @@ python geotiff_play.py
 ![render of terrain around Rome](playground/render_cli_screenshot.png)
 
 Then, exit the picture window that appears. You will now be prompted in the command line interface for a latitude and longitude, enter lat/long coordinates and the program will give you the approximate elevation using the nearest 4 data points
+
+
+### getTarget.py
+
+
+getTarget.py searches along the constructed line (emmitted from the camera center) for a terrain match
+
+
+This functionality is not yet tested for correctness (should not be totally relied on)
+
+
+running `geotiff_play` in a seprate terminal session before and while running `getTarget.py` is favorable because it allows yourself to view the terrain data visually while experimenting with terrain resolution matches
+
+
+To start, `cd` into the `playground` directory, then run getTarget.py:
+
+```bash
+you@yourcomputer playground % python3 getTarget.py
+```
+
+You should then see the following prompt:
+```bash
+Hello World!
+I'm getTarget.py
+Which GeoTiff file would you like to read?
+Enter the GeoTIFF filename:
+```
+
+You can clip [your own geoTIFF file](./playground/EIO_fetch_geotiff_example.md) from the [elevation API command line](http://elevation.bopen.eu/en/stable/quickstart.html#command-line-usage), or just use the provided example file `Rome-30m-DEM.tif` which contains the elevation data of the city of Rome, Italy and its outlying area
+
+
+```bash
+Hello World!
+I'm getTarget.py
+Which GeoTiff file would you like to read?
+Enter the GeoTIFF filename: Rome-30m-DEM.tif
+```
+
+
+\[RETURN\]
+
+
+```bash
+The shape of the elevation data is:  (720, 1080)
+The raw Elevation data is:
+[[133 132 131 ... 126 131 134]
+ [131 131 130 ... 120 122 127]
+ [129 128 127 ... 110 114 119]
+ ...
+ [ 10  10  10 ... 221 223 225]
+ [ 10  10  10 ... 226 230 232]
+ [  9   9  10 ... 234 236 237]]
+x0: 12.3499 dx: 0.000277778 ncols: 1080 x1: 12.6499
+y0: 42.0001 dy: -0.000277778 nrows: 720 y1: 41.8001
+Please enter aircraft latitude in (+/-) decimal form:
+```
+
+
+The preceeding numbers are provided for the user as debug information, but are not necessary during normal operation
+
+
+Next, enter the latitude, then longitude, then altitude of the aircraft:
+
+
+```bash
+Please enter aircraft latitude in (+/-) decimal form: 41.801
+Please enter aircraft longitude in (+/-) decimal form: 12.6483
+Please enter altitude (meters from sea-level) in decimal form: 500
+Please enter camera azimuth (0 is north) in decimal form (degrees):
+```
+
+
+Next, enter the heading of the aircraft (in degrees, 0 is north and increasing clock-wise) and the angle of declanation \[theta\] of the camera (in degrees, 0 is straight forward and increasing up to a maximum of 90 which is straight downwards)
+
+
+The accuracy of the positional resolution is better at steep angles (high theta) when the camera is not close to parallel with the ground near the target
+
+
+```bash
+Please enter camera azimuth (0 is north) in decimal form (degrees): 315
+Please enter angle of declanation (degrees down from forward) in decimal form: 20
+direction is: 135.0
+sum of squares is 1.0 : True
+deltax is -0.6645
+deltay is 0.6645
+deltaz is -0.342
+Final Alt dist: -0.14882819874208053
+Target lat: 41.807184493793784
+Target lon: 12.640003435982031
+Approximate alt (constructed): 146.00915165793225
+Approximate alt (terrain): 146.5
+```
+
+
+`direction` and `sum of squares` are debug output and can be ignored during normal operation
+
+
+`deltax` is the factor of change in position East/West in meters per iteration
+
+
+`deltay` is the factor of change in position North/South in meters per iteration
+
+
+`deltaz` is the factor of change in position Skyward/Groundward (up/down) in meters per iteration. This value should always be negative
+
+
+The distance of each iterative step, in meters, is defined by the `increment` variable in `getTarget.py`
+
+
+The information in the following output lines represents the final positional resolution obtained by the approximate intersection of the constructed line emitted from the aircraft's camera and the ground as represented by the terrain data
+
+
+While the resolution obtained will have many decimal places of information, much of this is due to [floating point imprecision](https://www.youtube.com/watch?v=9hdFG2GcNuA) and digits beyond three significant figures can be ignored. The values should also be tested for correctness and not relied upon in the current version of this program.
+
+
+`Final alt dist` represents the difference in altitude from the last iterative step tracing along the constructed line and the value obtained by terrain data of the same lat./lon.
+
+
+`Target lat.` represents the latitude of the target to which the camera is likely aiming at.
+
+
+`Target lon.` represents the longitude of the target to which the camera is likely aiming at.
+
+
+`Approximate alt (constructed)` represents the aproximate altitude (in meters from sea level) of the target according to the altitude of the last iteration along the constructed line
+
+
+`Approximate alt (terrain):` represents the aproximate altitude (in meters from sea level) of the target according to the average altitude of the 4 terrain data points closest to the final lat./lon. pair
+
+
+The program `getTarget.py` will then exit
+
 
 # Military Uses
 Especially when employed with precision smart munitions (e.g. [artillery](https://asc.army.mil/web/portfolio-item/ammo-excalibur-xm982-m982-and-m982a1-precision-guided-extended-range-projectile/), aerial, etc.) this would greatly aid the safety and processes of the [forward artillery observer](https://en.wikipedia.org/wiki/Artillery_observer) using soley inexpensive consumer electronics, all while reducing the risk of operator error (mismeasurement, miscalculation, etc.) and subsequent risk of friendly-fire incidents and risk to civilian lives.
