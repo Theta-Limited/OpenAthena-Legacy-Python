@@ -22,6 +22,7 @@ from osgeo import gdal
 import math
 from math import sin, asin, cos, atan2
 from geotiff_play import *
+import sys
 
 """get the pos of current subject of UAS camera
        implementation can be changed later
