@@ -190,7 +190,7 @@ sum of squares is 1.0 : True
 deltax is -0.6645
 deltay is 0.6645
 deltaz is -0.342
-Final Alt dist: -0.14882819874208053
+Approximate range to target: 1035.0253891233806
 Target lat: 41.807184493793784
 Target lon: 12.640003435982031
 Approximate alt (constructed): 146.00915165793225
@@ -219,7 +219,7 @@ The information in the following output lines represents the final positional re
 While the resolution obtained will have many decimal places of information, much of this is due to [floating point imprecision](https://www.youtube.com/watch?v=9hdFG2GcNuA) and digits beyond three significant figures can be ignored. The values should also be tested for correctness and not relied upon in the current version of this program.
 
 
-`Final alt dist` represents the difference in altitude from the last iterative step tracing along the constructed line and the value obtained by terrain data of the same lat./lon.
+`Approximate range to target:` represents the direct-line distance in meters from the aircraft to the target. This may be useful for an operator to determine if the target match is in the expected place. To obtain the horizontal distance, multiply this number times the cosine of theta
 
 
 `Target lat.` represents the latitude of the target to which the camera is likely aiming at.
