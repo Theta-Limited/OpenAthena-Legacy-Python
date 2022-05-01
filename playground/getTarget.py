@@ -20,7 +20,7 @@ import time
 import matplotlib.pyplot as plt
 from osgeo import gdal
 import math
-from math import sin, asin, cos, atan2
+from math import sin, asin, cos, atan2, sqrt
 from geotiff_play import *
 import sys
 
@@ -181,7 +181,7 @@ def resolveTarget(y, x, z, azimuth, theta, elevationData, xParams, yParams):
 
     dx = xParams[2]
     #meters of acceptable distance between constructed line and datapoint
-    threshold = abs(dx)
+    threshold = abs(dx) / 2
 
     #meters of increment for each stepwise check (along constructed line)
     increment = 1
@@ -191,7 +191,7 @@ def resolveTarget(y, x, z, azimuth, theta, elevationData, xParams, yParams):
     curX = x
     curZ = z
     altDiff = curZ - getAltFromLatLon(curY, curX, xParams, yParams, elevationData)
-    while altDiff > (threshold / 2) and altDiff > 0:
+    while altDiff > threshold and altDiff > 0:
         groundAlt = getAltFromLatLon(curY, curX, xParams, yParams, elevationData)
         altDiff = curZ - groundAlt
 
@@ -217,7 +217,12 @@ def resolveTarget(y, x, z, azimuth, theta, elevationData, xParams, yParams):
     #this algorithm is extremely crude, NOT ACCURATE!
     #    could use refinement
 
-    print(f'Final Alt dist: {altDiff}')
+    # print(f'Final stepwise Alt dist: {altDiff}')
+    finalHorizDist = abs(haversine(x, y, curX, curY, z))
+    finalVertDist = abs(z - curZ)
+    # simple pythagorean theorem
+    finalDist = sqrt(finalHorizDist ** 2 + finalVertDist ** 2)
+    print(f'Approximate range to target: {finalDist}')
     print(f'Target lat: {curY}')
     print(f'Target lon: {curX}')
     print(f'Approximate alt (constructed): {curZ}')

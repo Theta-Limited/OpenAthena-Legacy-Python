@@ -87,10 +87,7 @@ python3 geotiff_play.py
 
 # Current status
 
-### geotiff_play.py:
-
-
-run python geotiff_play.py (while in the playground directory) for a demonstration of geotiff parsing and a render of the City of Rome in Italy and its outlying terrain. Chart labels represent longitude and latitude
+Run python geotiff_play.py (while in the playground directory) for a demonstration of [geoTIFF](https://en.wikipedia.org/wiki/GeoTIFF) [DEM](https://en.wikipedia.org/wiki/Digital_elevation_model) parsing. The file `Rome-30m-DEM.tif` is provided in the `playground` directory as an example. A DEM covering a customized area can be [easily obtained](./EIO_fetch_geotiff_example.md) using the python `elevation` API
 
 
 (counterintuitively, the x and y axis are backwards in the standard notation of a position via [latitude , longitude])
