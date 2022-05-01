@@ -87,6 +87,8 @@ python3 geotiff_play.py
 
 # Current status
 
+### geotiff_play.py
+
 Run python geotiff_play.py (while in the playground directory) for a demonstration of [geoTIFF](https://en.wikipedia.org/wiki/GeoTIFF) [DEM](https://en.wikipedia.org/wiki/Digital_elevation_model) parsing. The file `Rome-30m-DEM.tif` is provided in the `playground` directory as an example. A DEM covering a customized area can be [easily obtained](./EIO_fetch_geotiff_example.md) using the python `elevation` API
 
 
