@@ -181,7 +181,7 @@ def resolveTarget(y, x, z, azimuth, theta, elevationData, xParams, yParams):
 
     dx = xParams[2]
     #meters of acceptable distance between constructed line and datapoint
-    threshold = abs(dx) / 2
+    threshold = abs(dx) / 4
 
     #meters of increment for each stepwise check (along constructed line)
     increment = 1
@@ -191,7 +191,7 @@ def resolveTarget(y, x, z, azimuth, theta, elevationData, xParams, yParams):
     curX = x
     curZ = z
     altDiff = curZ - getAltFromLatLon(curY, curX, xParams, yParams, elevationData)
-    while altDiff > threshold and altDiff > 0:
+    while altDiff > threshold:
         groundAlt = getAltFromLatLon(curY, curX, xParams, yParams, elevationData)
         altDiff = curZ - groundAlt
 
@@ -199,8 +199,6 @@ def resolveTarget(y, x, z, azimuth, theta, elevationData, xParams, yParams):
         # deltaz should always be negative
         curZ += deltaz
         avgAlt = (avgAlt + curZ) / 2
-        #@TODO There is currently a bug with the direction/azimuth here
-        #Process works correctly but goes the wrong x direction sometimes
         curY, curX = inverse_haversine((curY,curX), math.cos(theta)*increment, azimuth, avgAlt)
         #check for Out Of Bounds after each iteration
         if curY > y0 or curY < y1 or curX < x0 or curX > x1:
@@ -256,7 +254,7 @@ def normalize(direction):
 
 # Inverse Haversine formula
 # adapted from user github.com/jdeniau
-# NOT VERIFIED FOR ACCURACY!
+# not verified accurate
 # given a point, distance, and direction, return the new point (lat lon)
 def inverse_haversine(point, distance, azimuth, alt):
     lat, lon = point
