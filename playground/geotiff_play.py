@@ -7,8 +7,6 @@ from getTarget import *
 # import sys
 
 # geotiff_play
-# based on:
-#    https://stackoverflow.com/questions/24956653/read-elevation-using-gdal-python-from-geotiff
 
 def main():
 
@@ -16,16 +14,17 @@ def main():
     print("I'm geotiff_play.py")
     print("Which File would you like to read?")
 
-    # geofile = input("Enter the GeoTIF filename: ")
-    geofile = 'Rome-30m-DEM.tif'
+    geofile = input("Enter the GeoTIF filename: ")
+    # geofile = 'Rome-30m-DEM.tif'
 
     print("Okay, grabbing the GeoTIF file named: ", geofile)
 
 
+    # based on:
+    # stackoverflow.com/a/24957068
+
     geodata = gdal.Open(geofile)
 
-    # @TODO wtf is this?
-    #     grabs elevation data from tuple?
     band = geodata.GetRasterBand(1)
     elevation = band.ReadAsArray()
 
@@ -36,19 +35,14 @@ def main():
 
     print("The raw Elevation data is: ")
 
-    # numpy.set_printoptions(threshold=sys.maxsize)
-
-    time.sleep(1)
+    time.sleep(0.1)
     print(".")
-    time.sleep(1)
+    time.sleep(0.1)
     print(".")
-    time.sleep(1)
+    time.sleep(0.1)
     print(".")
-    time.sleep(1)
+    time.sleep(0.1)
     print(elevation)
-
-    # plt.imshow(elevation, cmap=plt.get_cmap('viridisDE'))
-    # plt.show()
 
     nrows, ncols = elevation.shape
 
@@ -123,22 +117,11 @@ def getAltFromLatLon(lat, lon, xParams, yParams, elevation):
     if (lat > y0 or y1 > lat) or (lon > x1 or x0 > lon):
         return None
 
-    # :(
-    xlist = []
-    xinit = x0
-    for i in range(ncols):
-        xlist.append(xinit)
-        xinit += dx
-    xL, xR = binarySearchNearest(xlist, lon)
-    # print(f'xL: {xlist[xL]} xR: {xlist[xR]}')
-    # :(
-    ylist = []
-    yinit = y0
-    for i in range(nrows):
-        ylist.append(yinit)
-        yinit += dy
-    yT, yB = binarySearchNearest(ylist, lat)
-    # print(f'yT: {ylist[yT]} yB: {ylist[yB]}')
+    # Kinda dumb
+    #     @todo this can be replaced with simple algerbra :/
+    xL, xR = binarySearchNearest(x0, ncols, lon, dx)
+    yT, yB = binarySearchNearest(y0, nrows, lat, dy)
+
     # we have 4 datapoints nearest to the desired precise location
     # for now we will take a mean of their altitude (elevation)
     # but (@TODO) in the future we should find the point on the 3D plane defined by
@@ -158,32 +141,33 @@ def getAltFromLatLon(lat, lon, xParams, yParams, elevation):
 
 Parameters
 ----------
-list: a sorted list of values
+start: the start value to the search space items
+n: the number of items in search space
 val: a value to search for
+dN: the change in value of each incremental value (i.e. dX or dY)
 """
-def binarySearchNearest(list, val):
-    if len(list) == 0:
-        print(f'ERROR with list: {list}')
+def binarySearchNearest(start, n, val, dN):
+    if n <= 0:
+        print(f'ERROR, tried to search on empty data')
         return None
 
-    if (len(list) == 1):
+    if (n == 1):
         # only one item in list
-        return (0, 0)
+        return (start, start)
 
-    lastIndex = len(list) - 1
+    lastIndex = n - 1
 
-    isIncreasing = bool(list[0] < list[lastIndex])
+    isIncreasing = (dN >= 0)
     if not isIncreasing:
         # if its in decreasing order, uh, don't do that. Make it increasing instead!
-        reversedList = list.copy()
-        reversedList.reverse()
+        reversedStart = start + n * dN
+        reversedDN = -1 * dN
 
-
-        a1, a2 = binarySearchNearest(reversedList, val)
+        a1, a2 = binarySearchNearest(reversedStart, n, val, reversedDN)
         # kinda weird, but we reverse index result if we reverse the list
         # reverse each of the two index(s)
-        a1 = len(list) - a1 - 1
-        a2 = len(list) - a2 - 1
+        a1 = n - a1 - 1
+        a2 = n - a2 - 1
         # reverse the tuple
         return (a2, a1)
 
@@ -192,14 +176,15 @@ def binarySearchNearest(list, val):
     R = lastIndex
     while L <= R:
         m = math.floor((L + R) / 2)
-        if list[m] < val:
+        if start + m * dN < val:
             L = m + 1
-        elif list[m] > val:
+        elif start + m * dN > val:
             R = m - 1
         else:
             # exact match
             return (m, m)
     #if we've broken out of the loop, L > R
+    #    meaning that the markers have flipped
     #    so either list[L] or list[R] must be closest to val
     return(R, L)
     # if abs(list[L] - val) <= abs(list[R] - val):
