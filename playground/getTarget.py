@@ -92,9 +92,9 @@ def getTarget():
 
     finalDist, tarY, tarX, tarZ, terrainAlt = target
     print(f'Approximate range to target: {finalDist}')
-    print(f'Target lat: {curY}')
-    print(f'Target lon: {curX}')
-    print(f'Approximate alt (constructed): {curZ}')
+    print(f'Target lat: {tarY}')
+    print(f'Target lon: {tarX}')
+    print(f'Approximate alt (constructed): {tarZ}')
     print(f'Approximate alt (terrain): {terrainAlt}')
 
 
