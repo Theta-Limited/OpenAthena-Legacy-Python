@@ -87,7 +87,15 @@ def getTarget():
     azimuth = inputNumber("Please enter camera azimuth (0 is north) in decimal form (degrees): ", 0, 360)
     theta = inputNumber("Please enter angle of declanation (degrees down from forward) in decimal form: ", 0, 90)
 
+    # most of the complex logic is done here
     target = resolveTarget(y, x, z, azimuth, theta, elevationData, xParams, yParams)
+
+    finalDist, tarY, tarX, tarZ, terrainAlt = target
+    print(f'Approximate range to target: {finalDist}')
+    print(f'Target lat: {curY}')
+    print(f'Target lon: {curX}')
+    print(f'Approximate alt (constructed): {curZ}')
+    print(f'Approximate alt (terrain): {terrainAlt}')
 
 
 # handle user input of data, using message for prompt
@@ -220,13 +228,15 @@ def resolveTarget(y, x, z, azimuth, theta, elevationData, xParams, yParams):
     finalVertDist = abs(z - curZ)
     # simple pythagorean theorem
     finalDist = sqrt(finalHorizDist ** 2 + finalVertDist ** 2)
-    print(f'Approximate range to target: {finalDist}')
-    print(f'Target lat: {curY}')
-    print(f'Target lon: {curX}')
-    print(f'Approximate alt (constructed): {curZ}')
     terrainAlt = getAltFromLatLon(curY, curX, xParams, yParams, elevationData)
-    print(f'Approximate alt (terrain): {terrainAlt}')
 
+    # print(f'Approximate range to target: {finalDist}')
+    # print(f'Target lat: {curY}')
+    # print(f'Target lon: {curX}')
+    # print(f'Approximate alt (constructed): {curZ}')
+
+    # print(f'Approximate alt (terrain): {terrainAlt}')
+    return((finalDist, curY, curX, curZ, terrainAlt))
 
 # convert from azimuth notation (0 is up [+y], inc. clockwise) to
 #     math notation(0 is right [+x], inc. counter-clockwise)
