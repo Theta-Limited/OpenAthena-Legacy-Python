@@ -1,7 +1,7 @@
 # Open Athena
 ![Carole Raddato - Statue of Athena wearing a Corinthian helmet - CC Share Alike license](athena_thumb.jpg)
 
-Open Athena is a project to enable precision indirect fires that disrupt conventional combined arms warfare. This is accomplished by combining consumer rotary-wing aircraft (drones) sensor data with geospatial topography data
+Open Athena is a project to enable precision indirect fires that disrupt conventional combined arms warfare. This is accomplished by combining consumer rotary-wing aircraft (drones) [sensor data](./drone_sensor_data_blurb.md) with [geospatial topography data](https://github.com/mkrupczak3/OpenAthena/blob/main/playground/EIO_fetch_geotiff_example.md)
 
 This software is in pre-alpha and results are not guaranteed to be accurate. Use appropriate caution when using data generated from this program
 
