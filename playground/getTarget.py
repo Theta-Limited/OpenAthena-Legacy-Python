@@ -18,7 +18,8 @@ See ../fn_diagram.jpg
 
 import time
 import matplotlib.pyplot as plt
-from osgeo import gdal
+from osgeo import gdal # Lots of good GeoINT stuff
+import mgrs # Military Grid ref converter
 import math
 from math import sin, asin, cos, atan2, sqrt
 from geotiff_play import *
@@ -85,17 +86,29 @@ def getTarget():
     x = inputNumber("Please enter aircraft longitude in (+/-) decimal form: ", x0, x1)
     z = inputNumber("Please enter altitude (meters from sea-level) in decimal form: ", -423, 8848)
     azimuth = inputNumber("Please enter camera azimuth (0 is north) in decimal form (degrees): ", 0, 360)
-    theta = inputNumber("Please enter angle of declanation (degrees down from forward) in decimal form: ", 0, 90)
+    theta = inputNumber("Please enter angle of declanation (degrees down from forward) in decimal form: ", -90, 90)
+    if (theta < 0):
+        theta = abs(theta)
+        print(f"Warning: using value: {theta}")
 
     # most of the complex logic is done here
     target = resolveTarget(y, x, z, azimuth, theta, elevationData, xParams, yParams)
 
     finalDist, tarY, tarX, tarZ, terrainAlt = target
-    print(f'Approximate range to target: {finalDist}')
-    print(f'Target lat: {tarY}')
-    print(f'Target lon: {tarX}')
-    print(f'Approximate alt (constructed): {tarZ}')
-    print(f'Approximate alt (terrain): {terrainAlt}')
+    print(f'\nApproximate range to target: {round(finalDist , 2)}\n')
+
+    print(f'Approximate alt (constructed): {round(tarZ , 2)}')
+    print(f'Approximate alt (terrain): {terrainAlt}\n')
+
+
+    print(f'Target lat: {round(tarY, 7)}')
+    print(f'Target lon: {round(tarX, 7)}\n')
+
+    # en.wikipedia.org/wiki/Military_Grid_Reference_System
+    # via github.com/hobuinc/mgrs
+    m = mgrs.MGRS()
+    targetMGRS = m.toMGRS(tarY, tarX)
+    print(f'NATO MGRS: {targetMGRS}\n')
 
 
 # handle user input of data, using message for prompt

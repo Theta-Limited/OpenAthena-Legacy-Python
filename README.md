@@ -82,9 +82,9 @@ Such a rapid positional resolution may prove ideal for use by precision indirect
 
 # Install
 
-All you need to do is run `pip3 install gdal matplotlib`, then run `playground/geotiff_play.py` with python3:
+All you need to do is run `pip3 install gdal matplotlib mgrs`, then run `playground/geotiff_play.py` with python3:
 ```bash
-pip3 install gdal matplotlib
+pip3 install gdal matplotlib mgrs
 # if this fails, instead install the GDAL package with your package manager (i.e. apt, yum, brew, pacman, etc.)
 git clone https://github.com/mkrupczak3/OpenAthena.git
 cd OpenAthena/playground
