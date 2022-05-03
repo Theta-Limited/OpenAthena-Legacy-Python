@@ -111,7 +111,7 @@ python geotiff_play.py
 ```
 ![render of terrain around Rome](playground/render_cli_screenshot.png)
 
-Then, exit the picture window that appears. You will now be prompted in the command line interface for a latitude and longitude, enter lat/long coordinates and the program will give you the approximate elevation using the nearest 4 data points
+Then, exit the picture window that appears. You will now be prompted in the command line interface for a latitude and longitude, enter lat/long coordinates and the program will give you the approximate elevation using the nearest elevation data point
 
 
 ### getTarget.py
@@ -120,7 +120,7 @@ Then, exit the picture window that appears. You will now be prompted in the comm
 getTarget.py searches along the constructed line (emmitted from the camera center) for a terrain match
 
 
-This functionality is not yet tested for correctness (should not be totally relied on)
+This software is still in testing. Any match should be verified before it is used
 
 
 running `geotiff_play` in a seprate terminal session before and while running `getTarget.py` is favorable because it allows yourself to view the terrain data visually while experimenting with terrain resolution matches
