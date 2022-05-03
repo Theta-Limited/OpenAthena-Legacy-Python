@@ -3,6 +3,8 @@
 
 Open Athena is a project to enable precision indirect fires that disrupt conventional combined arms warfare. This is accomplished by combining consumer rotary-wing aircraft (drones) sensor data with geospatial topography data
 
+This software is in pre-alpha and results are not guaranteed to be accurate. Use appropriate caution when using data generated from this program
+
  [**Premise**](https://github.com/mkrupczak3/OpenAthena#premise)
 [![proof_of_concept](proof_of_concept.jpg)](https://github.com/mkrupczak3/OpenAthena#premise)
 
@@ -82,6 +84,8 @@ Such a rapid positional resolution may prove ideal for use by precision indirect
 
 # Install
 
+This software is in pre-alpha and results are not guaranteed to be accurate. Use appropriate caution when using data generated from this program
+
 All you need to do is run `pip3 install gdal matplotlib mgrs`, then run `playground/geotiff_play.py` with python3:
 ```bash
 pip3 install gdal matplotlib mgrs
@@ -94,6 +98,8 @@ python3 geotiff_play.py
 "pip3" and "python3" may just be called "pip" and "python" depending on the configuration of your system
 
 # Usage:
+
+This software is in pre-alpha and results are not guaranteed to be accurate. Use appropriate caution when using data generated from this program
 
 ### geotiff_play.py
 
