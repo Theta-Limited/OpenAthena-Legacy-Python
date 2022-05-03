@@ -185,7 +185,6 @@ The accuracy of the positional resolution is better at steep angles (high theta)
 ```bash
 Please enter camera azimuth (0 is north) in decimal form (degrees): 315
 Please enter angle of declanation (degrees down from forward) in decimal form: 20
-direction is: 135.0
 sum of squares is 1.0 : True
 deltax is -0.6645
 deltay is 0.6645
@@ -198,7 +197,7 @@ Approximate alt (terrain): 146.5
 ```
 
 
-`direction` and `sum of squares` are debug output and can be ignored during normal operation
+`sum of squares` is debug output and can be ignored during normal operation
 
 
 `deltax` is the factor of change in position East/West in meters per iteration

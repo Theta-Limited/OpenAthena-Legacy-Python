@@ -248,7 +248,6 @@ def azimuthToUnitCircleRad(azimuth):
     # rotate 90deg, move origin from +y to +x
     direction += (0.5 * math.pi)
     direction = normalize(direction)
-    print(f'direction is: {math.degrees(direction)}')
     return direction
 
 # if a given angle is not between 0 and 2pi,
