@@ -3,8 +3,12 @@
 
 Open Athena is a project to enable precision indirect fires that disrupt conventional combined arms warfare. This is accomplished by combining consumer rotary-wing aircraft (drones) sensor data with geospatial topography data
 
-[Premise](https://github.com/mkrupczak3/OpenAthena#premise)
+### [Premise](https://github.com/mkrupczak3/OpenAthena#premise)
 [![concept whiteboard diagram](concept_whiteboard_diagram.jpg)](https://github.com/mkrupczak3/OpenAthena#premise)
+
+### [Installation](https://github.com/mkrupczak3/OpenAthena#install)
+
+### [Usage](https://github.com/mkrupczak3/OpenAthena#usage)
 
 # Limitations of Indirect Fire in existing combined arms doctrine
 While the [importance of indirect fire](causative_agents_blurb.md) (e.g. mortars, artillery, rockets) is well known to military historians, present-day soldiers, and others studied in methods of warfare, it remains an imprecise, blunt, and destructive tool relegated merely to a support role in current combined arms doctrine.
@@ -64,13 +68,13 @@ Multi-copter rotary-wing aircraft (e.g. quadroters, drones, etc.) typically have
 
 They also typically have an "accelerometer" which allows it to stay level with the ground while in flight, and a camera.
 
-Ideally for this purpose, the camera would point at horizon level during normal operation, and could be aimed at an angle <= 90 deg downward from the horizon at a target (while giving a very specific measure of its angle of declanation).
+The camera starts level with the horizon level during normal operation, and the operator can pitch it downwards towards the ground for live camera feed and taking pictures. These pictures store GPS coordinates, altitude, and the azimuth and angle of declanation (pitch) in their XMP and EXIF metadata (attached with the image)
 
-Given that the lat/long and altitude of the rotary-wing aircraft is known, its azimuth is known, and it is possible to obtain accurate worldwide elevation data (within ~30m) from [this api](https://pypi.org/project/elevation/), it should be a very simple math problem to calculate the position and altitude of the object aimed at by the camera.
+Given that the lat/long and altitude of the rotary-wing aircraft is known, its azimuth is known, and it is possible to obtain accurate worldwide elevation data (within ~30m) from [this api](https://pypi.org/project/elevation/), it is a very simple math problem to calculate the position and altitude of the object aimed at by the camera.
 
-If an invisible, imaginary mathematical line was "paramaterized" from the aircraft's camera towards the ground at its angle of declanation, the point closest along this line to the aircraft yet reasonably near any geographic lat/long/alt data point is likely to be the target which the camera is aiming at. This would provide the aircraft operator with a rough latitude, longitude, and elevation of the target to which the camera is aiming in an extremely short period of time.
+An invisible, imaginary mathematical line is "paramaterized" from the aircraft's camera towards the ground at its angle of declanation (theta). The point closest along this line to the aircraft yet reasonably near any geographic lat/long/alt data point is usually the target which the camera is aiming at. This provides the aircraft operator with an approximate latitude, longitude, and elevation of the target to which the camera is aiming in an extremely short period of time.
 
-While untested, such a rapid positional resolution may prove ideal for use by precision indirect fire teams
+Such a rapid positional resolution may prove ideal for use by precision indirect fire teams
 
 # Install
 
@@ -85,7 +89,7 @@ python3 geotiff_play.py
 
 "pip3" and "python3" may just be called "pip" and "python" depending on the configuration of your system
 
-# Current status
+# Usage:
 
 ### geotiff_play.py
 
