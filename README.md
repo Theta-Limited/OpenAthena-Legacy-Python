@@ -6,9 +6,13 @@ Open Athena is a project to enable precision indirect fires that disrupt convent
 ### [Premise](https://github.com/mkrupczak3/OpenAthena#premise)
 [![concept whiteboard diagram](concept_whiteboard_diagram.jpg)](https://github.com/mkrupczak3/OpenAthena#premise)
 
-### [Installation](https://github.com/mkrupczak3/OpenAthena#install)
 
-### [Usage](https://github.com/mkrupczak3/OpenAthena#usage)
+ [Installation](https://github.com/mkrupczak3/OpenAthena#install)
+
+
+ [Usage](https://github.com/mkrupczak3/OpenAthena#usage)
+
+---
 
 # Limitations of Indirect Fire in existing combined arms doctrine
 While the [importance of indirect fire](causative_agents_blurb.md) (e.g. mortars, artillery, rockets) is well known to military historians, present-day soldiers, and others studied in methods of warfare, it remains an imprecise, blunt, and destructive tool relegated merely to a support role in current combined arms doctrine.
