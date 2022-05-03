@@ -166,6 +166,8 @@ The raw Elevation data is:
  [  9   9  10 ... 234 236 237]]
 x0: 12.3499 dx: 0.000277778 ncols: 1080 x1: 12.6499
 y0: 42.0001 dy: -0.000277778 nrows: 720 y1: 41.8001
+
+
 Please enter aircraft latitude in (+/-) decimal form:
 ```
 
@@ -193,19 +195,23 @@ The accuracy of the positional resolution is better at steep angles (high theta)
 ```bash
 Please enter camera azimuth (0 is north) in decimal form (degrees): 315
 Please enter angle of declanation (degrees down from forward) in decimal form: 20
-sum of squares is 1.0 : True
+
 deltax is -0.6645
 deltay is 0.6645
 deltaz is -0.342
-Approximate range to target: 1035.0253891233806
-Target lat: 41.807184493793784
-Target lon: 12.640003435982031
-Approximate alt (constructed): 146.00915165793225
+
+Approximate range to target: 1035.03
+
+Approximate alt (constructed): 146.01
 Approximate alt (terrain): 146.5
+
+Target (lat, lon): 33.8352826, -84.5219971
+Google Maps: https://maps.google.com/?q=33.835283,-84.521997
+
+NATO MGRS: 16SGC2930646654
+
 ```
 
-
-`sum of squares` is debug output and can be ignored during normal operation
 
 
 `deltax` is the factor of change in position East/West in meters per iteration
@@ -223,22 +229,23 @@ The distance of each iterative step, in meters, is defined by the `increment` va
 The information in the following output lines represents the final positional resolution obtained by the approximate intersection of the constructed line emitted from the aircraft's camera and the ground as represented by the terrain data
 
 
-While the resolution obtained will have many decimal places of information, much of this is due to [floating point imprecision](https://www.youtube.com/watch?v=9hdFG2GcNuA) and digits beyond three significant figures can be ignored. The values should also be tested for correctness and not relied upon in the current version of this program.
+The values should be tested for correctness and not totally relied upon in the current version of this program.
 
 
 `Approximate range to target:` represents the direct-line distance in meters from the aircraft to the target. This may be useful for an operator to determine if the target match is in the expected place. To obtain the horizontal distance, multiply this number times the cosine of theta
-
-
-`Target lat.` represents the latitude of the target to which the camera is likely aiming at.
-
-
-`Target lon.` represents the longitude of the target to which the camera is likely aiming at.
 
 
 `Approximate alt (constructed)` represents the aproximate altitude (in meters from sea level) of the target according to the altitude of the last iteration along the constructed line
 
 
 `Approximate alt (terrain):` represents the aproximate altitude (in meters from sea level) of the target according to the terrain data point closest to the final lat./lon. pair
+
+
+`Target (lat, lon):` represents the latitude and longitude of the target to which the camera is likely aiming at.
+`Google Maps:` a link to the previous lat/lon on Google Maps. Each rounded to 6 decimal places
+
+
+`NATO MGRS: ` represents the target location in the [NATO Military Grid Reference System (MGRS)](https://en.wikipedia.org/wiki/Military_Grid_Reference_System), which is simmilar to [UTM](https://en.wikipedia.org/wiki/Universal_Transverse_Mercator_coordinate_system). This coordinate system does not include the altitude of the Target
 
 
 The program `getTarget.py` will then exit
