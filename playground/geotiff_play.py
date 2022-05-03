@@ -123,21 +123,12 @@ def getAltFromLatLon(lat, lon, xParams, yParams, elevation):
     xL, xR = binarySearchNearest(x0, ncols, lon, dx)
     yT, yB = binarySearchNearest(y0, nrows, lat, dy)
 
-    # xL = x0 + xL * dx
-    # xR = x0 + xR * dx
-    # yT = y0 + yT * dy
-
     # we have 4 datapoints nearest to the desired precise location
-    # for now we will take a mean of their altitude (elevation)
-    # but (@TODO) in the future we should find the point on the 3D plane defined by
-    # the three nearest points to the target
-    #
-    # the greater dx or dy (lower the res of data), the greater the error
-    # approximate conversion of degrees to metric here:
-    # https://www.usna.edu/Users/oceano/pguth/md_help/html/approx_equivalents.htm
+    # for now we will just use the elevation of the nearest datapoint
     e1, e2, e3, e4 = elevation[yT][xL], elevation[yB][xL], elevation[yT][xR], elevation[yB][xR]
     meanE = (e1 + e2 + e3 + e4) / 4
-    # (x, y, z) points
+    # note here that xL, xR, yT, and yB are all index positions of
+    # elevation and not yet in degrees lat/lon
     d1, d2, d3, d4 = [xL, yT, e1], [xL, yB, e2], [xR, yT, e3], [xR, yB, e4]
     i = 0
     minD = 0
