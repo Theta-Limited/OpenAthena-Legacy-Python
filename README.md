@@ -238,7 +238,7 @@ While the resolution obtained will have many decimal places of information, much
 `Approximate alt (constructed)` represents the aproximate altitude (in meters from sea level) of the target according to the altitude of the last iteration along the constructed line
 
 
-`Approximate alt (terrain):` represents the aproximate altitude (in meters from sea level) of the target according to the average altitude of the 4 terrain data points closest to the final lat./lon. pair
+`Approximate alt (terrain):` represents the aproximate altitude (in meters from sea level) of the target according to the terrain data point closest to the final lat./lon. pair
 
 
 The program `getTarget.py` will then exit
