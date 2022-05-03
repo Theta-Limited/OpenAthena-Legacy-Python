@@ -119,8 +119,13 @@ def getAltFromLatLon(lat, lon, xParams, yParams, elevation):
 
     # Kinda dumb
     #     @todo this can be replaced with simple algerbra :/
+
     xL, xR = binarySearchNearest(x0, ncols, lon, dx)
     yT, yB = binarySearchNearest(y0, nrows, lat, dy)
+
+    # xL = x0 + xL * dx
+    # xR = x0 + xR * dx
+    # yT = y0 + yT * dy
 
     # we have 4 datapoints nearest to the desired precise location
     # for now we will take a mean of their altitude (elevation)
@@ -132,8 +137,25 @@ def getAltFromLatLon(lat, lon, xParams, yParams, elevation):
     # https://www.usna.edu/Users/oceano/pguth/md_help/html/approx_equivalents.htm
     e1, e2, e3, e4 = elevation[yT][xL], elevation[yB][xL], elevation[yT][xR], elevation[yB][xR]
     meanE = (e1 + e2 + e3 + e4) / 4
-    # print(f'e1: {e1} e2: {e2} e3: {e3} e4: {e4}')
-    return meanE
+    # (x, y, z) points
+    d1, d2, d3, d4 = [xL, yT, e1], [xL, yB, e2], [xR, yT, e3], [xR, yB, e4]
+    i = 0
+    minD = 0
+    distValuePairs = []
+    for d in [d1, d2, d3, d4]:
+        a = abs(haversine(x0 + d[0] * dx, 0, lon, 0, meanE))
+        b = abs(haversine(0, y0 + d[1] * dy, 0, lat, meanE))
+        #valuePair is of format (distance, elevation)
+        valuePair = (sqrt(a ** 2 + b ** 2), d[2])
+        distValuePairs.append(valuePair)
+        if valuePair[0] < distValuePairs[minD][0]:
+            minD = i
+        i += 1
+    #
+    outElevation = distValuePairs[minD][1]
+
+    # return the elevation of the nearest of 4 bounding datapoints
+    return outElevation
 
 
 
