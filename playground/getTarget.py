@@ -75,7 +75,7 @@ def getTarget():
     y1 = y0 + dy * nrows
 
     print(f'x0: {round(x0,4)} dx: {round(dx,9)} ncols: {round(ncols,4)} x1: {round(x1,4)}')
-    print(f'y0: {round(y0,4)} dy: {round(dy,9)} nrows: {round(nrows,4)} y1: {round(y1,4)}')
+    print(f'y0: {round(y0,4)} dy: {round(dy,9)} nrows: {round(nrows,4)} y1: {round(y1,4)}\n\n')
 
     xParams = (x0, x1, dx, ncols)
     yParams = (y0, y1, dy, nrows)
@@ -85,11 +85,15 @@ def getTarget():
     y = inputNumber("Please enter aircraft latitude in (+/-) decimal form: ", y1, y0)
     x = inputNumber("Please enter aircraft longitude in (+/-) decimal form: ", x0, x1)
     z = inputNumber("Please enter altitude (meters from sea-level) in decimal form: ", -423, 8848)
-    azimuth = inputNumber("Please enter camera azimuth (0 is north) in decimal form (degrees): ", 0, 360)
+    azimuth = inputNumber("Please enter camera azimuth (0 is north) in decimal form (degrees): ", -180, 360)
+    if (azimuth < 0):
+
+        print(f"\nWarning: using value: {azimuth + 360}\n")
+
     theta = inputNumber("Please enter angle of declanation (degrees down from forward) in decimal form: ", -90, 90)
     if (theta < 0):
-        theta = abs(theta)
-        print(f"Warning: using value: {theta}")
+
+        print(f"\nWarning: using value: {abs(theta)}\n")
 
     # most of the complex logic is done here
     target = resolveTarget(y, x, z, azimuth, theta, elevationData, xParams, yParams)
@@ -101,9 +105,8 @@ def getTarget():
     print(f'Approximate alt (terrain): {terrainAlt}\n')
 
 
-    print(f'Target lat: {round(tarY, 7)}')
-    print(f'Target lon: {round(tarX, 7)}\n')
-
+    print(f'Target (lat, lon): {round(tarY, 7)}, {round(tarX, 7)}')
+    print(f'Google Maps: https://maps.google.com/?q={round(tarY,6)},{round(tarX,6)}\n')
     # en.wikipedia.org/wiki/Military_Grid_Reference_System
     # via github.com/hobuinc/mgrs
     m = mgrs.MGRS()
@@ -170,6 +173,8 @@ def resolveTarget(y, x, z, azimuth, theta, elevationData, xParams, yParams):
 
     # convert azimuth and theta from degrees to radians
     azimuth, theta = math.radians(azimuth), math.radians(theta)
+    azimuth  = normalize(azimuth) # 0 <= azimuth < 2pi
+    theta = abs(theta) # pitch is technically neg., but we use pos.
 
     # direction, convert to unit circle (just like math class)
     direction = azimuthToUnitCircleRad(azimuth)
@@ -186,10 +191,6 @@ def resolveTarget(y, x, z, azimuth, theta, elevationData, xParams, yParams):
     horizScalar = math.cos(theta)
     deltax, deltay = horizScalar * deltax, horizScalar * deltay
 
-    # at this point, deltax^2 + deltay^2 + deltaz^2 = 1
-    #     if not, something is wrong
-    sumOfSquares = deltax*deltax + deltay*deltay + deltaz*deltaz
-    print(f'sum of squares is 1.0 : {sumOfSquares == 1.0}')
     print(f'deltax is {round(deltax, 4)}')
     print(f'deltay is {round(deltay, 4)}')
     print(f'deltaz is {round(deltaz, 4)}')
@@ -243,12 +244,6 @@ def resolveTarget(y, x, z, azimuth, theta, elevationData, xParams, yParams):
     finalDist = sqrt(finalHorizDist ** 2 + finalVertDist ** 2)
     terrainAlt = getAltFromLatLon(curY, curX, xParams, yParams, elevationData)
 
-    # print(f'Approximate range to target: {finalDist}')
-    # print(f'Target lat: {curY}')
-    # print(f'Target lon: {curX}')
-    # print(f'Approximate alt (constructed): {curZ}')
-
-    # print(f'Approximate alt (terrain): {terrainAlt}')
     return((finalDist, curY, curX, curZ, terrainAlt))
 
 # convert from azimuth notation (0 is up [+y], inc. clockwise) to
@@ -269,7 +264,7 @@ def normalize(direction):
     # the following two routines are mutually-exclusive
     while (direction < 0):
         direction += 2 * math.pi
-    while (direction > (2 * math.pi)):
+    while (direction >= (2 * math.pi)):
         direction -= 2 * math.pi
 
     return direction

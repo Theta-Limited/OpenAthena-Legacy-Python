@@ -127,6 +127,9 @@ def getAltFromLatLon(lat, lon, xParams, yParams, elevation):
     # for now we will just use the elevation of the nearest datapoint
     e1, e2, e3, e4 = elevation[yT][xL], elevation[yB][xL], elevation[yT][xR], elevation[yB][xR]
     meanE = (e1 + e2 + e3 + e4) / 4
+    # # Slightly less accurate, but still okay
+    # return meanE
+
     # note here that xL, xR, yT, and yB are all index positions of
     # elevation and not yet in degrees lat/lon
     d1, d2, d3, d4 = [xL, yT, e1], [xL, yB, e2], [xR, yT, e3], [xR, yB, e4]
