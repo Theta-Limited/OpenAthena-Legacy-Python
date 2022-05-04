@@ -18,7 +18,7 @@ exiv2 -P kt DJI_1234.JPG | grep -i "gimbal\|latitude\|longitude\|alt"
 ```
 
 
-`drone-dji.GimbalYawDegree` is the direction of the aircraft, from -180 (exclusive) to +180. 0 degrees is North, 90 is East, -90 is West, etc. Internally this number is converted to an `azimuth` for use by OpenAthena
+`drone-dji.GimbalYawDegree` is the direction of the aircraft, from -180 (exclusive) to +180 (inclusive). 0 degrees is North, 90 is East, -90 is West, etc. Internally this number is converted to an `azimuth` for use by OpenAthena
 
 
 `drone-dji.GimbalPitchDegree` is the amount of pitch of the camera's gimbal. While the DJI displays this number as negative, Internally the absolute value of this number `theta` is used for OpenAthena. Values of below -90 (straight down) produce undefined behavior and are prohibitted from being entered during manual data input

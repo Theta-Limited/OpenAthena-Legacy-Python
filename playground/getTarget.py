@@ -98,20 +98,24 @@ def getTarget():
     # most of the complex logic is done here
     target = resolveTarget(y, x, z, azimuth, theta, elevationData, xParams, yParams)
 
-    finalDist, tarY, tarX, tarZ, terrainAlt = target
-    print(f'\nApproximate range to target: {round(finalDist , 2)}\n')
+    if target is None:
+        print(f'\n ERROR: bad calculation!\n')
+    else:
+        finalDist, tarY, tarX, tarZ, terrainAlt = target
+        print(f'\nApproximate range to target: {round(finalDist , 2)}\n')
 
-    print(f'Approximate alt (constructed): {round(tarZ , 2)}')
-    print(f'Approximate alt (terrain): {terrainAlt}\n')
+        if tarZ is not None:
+            print(f'Approximate alt (constructed): {round(tarZ , 2)}')
+        print(f'Approximate alt (terrain): {terrainAlt}\n')
 
 
-    print(f'Target (lat, lon): {round(tarY, 7)}, {round(tarX, 7)}')
-    print(f'Google Maps: https://maps.google.com/?q={round(tarY,6)},{round(tarX,6)}\n')
-    # en.wikipedia.org/wiki/Military_Grid_Reference_System
-    # via github.com/hobuinc/mgrs
-    m = mgrs.MGRS()
-    targetMGRS = m.toMGRS(tarY, tarX)
-    print(f'NATO MGRS: {targetMGRS}\n')
+        print(f'Target (lat, lon): {round(tarY, 7)}, {round(tarX, 7)}')
+        print(f'Google Maps: https://maps.google.com/?q={round(tarY,6)},{round(tarX,6)}\n')
+        # en.wikipedia.org/wiki/Military_Grid_Reference_System
+        # via github.com/hobuinc/mgrs
+        m = mgrs.MGRS()
+        targetMGRS = m.toMGRS(tarY, tarX)
+        print(f'NATO MGRS: {targetMGRS}\n')
 
 
 # handle user input of data, using message for prompt
@@ -176,6 +180,30 @@ def resolveTarget(y, x, z, azimuth, theta, elevationData, xParams, yParams):
     azimuth  = normalize(azimuth) # 0 <= azimuth < 2pi
     theta = abs(theta) # pitch is technically neg., but we use pos.
 
+    # check if angle is exactly (1e-09) straight downwards,
+    #     if so, skip iterative search b/c target is directly
+    #     below us:
+    if math.isclose((math.pi / 2), theta):
+        terrainAlt = getAltFromLatLon(y, x, xParams, yParams, elevationData)
+        finalDist = z - terrainAlt
+        if finalDist < 0:
+            print(f'\n ERROR: bad calculation!\n')
+            return None
+        print(f'\nWARNING: theta is exactly 90 deg, skipping search\n')
+        return((finalDist, y, x, None, terrainAlt))
+
+    # safety check: if theta > 90 degrees (pi / 2 radians)
+    # then camera is facing backwards
+    # to avoid undefined behavior, reverse AZIMUTH,
+    # then subtract theta from 180deg to determine
+    # a new appropriate theta for the reverse direction
+    #
+    # during manual data entry, please avoid absolute values > 90
+    if theta > (math.pi / 2):
+        azimuth = normalize(azimuth + math.pi)
+        theta = math.pi - theta
+        print(f'\nWARNING: theta > 90 deg, if target is not behind the aircraft then something is wrong')
+
     # direction, convert to unit circle (just like math class)
     direction = azimuthToUnitCircleRad(azimuth)
 
@@ -233,8 +261,8 @@ def resolveTarget(y, x, z, azimuth, theta, elevationData, xParams, yParams):
     #end loop
     #
     #When the loop ends, curY, curX, and curZ are closeish to the target
-    #may be a bit biased to slightly long (beyond the target)
-    #this algorithm is extremely crude, NOT ACCURATE!
+    #may be a bit biased ever so slightly long (beyond the target)
+    #this algorithm is extremely crude,
     #    could use refinement
 
     # print(f'Final stepwise Alt dist: {altDiff}')
