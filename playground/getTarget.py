@@ -2,17 +2,9 @@
 getTarget.py
 
 This file should contain most of the math-heavy functions
-    for use in an eventual prototype
-
-By far the most dificult part of this project so far has been
-    interfacing with the gdal library for GEOINT data
 
 This file will focus instead on the core math of resolving the location
     of a target in the UAS camera's direct center line-of-sight
-    ...while under the assumption that getAltFromLatLong() abstracts
-       away the GEOINT data implementation
-
-See ../fn_diagram.jpg
 
 """
 
@@ -26,6 +18,7 @@ from geotiff_play import *
 import sys
 
 """get the pos of current subject of UAS camera
+       data entry is done manually
        implementation can be changed later
 """
 def getTarget():
@@ -135,7 +128,7 @@ def inputNumber(message, lowerBound, upperBound):
             return userInput
             break
 
-"""given sensor data, returns a tuple (y, x, z) location of target
+"""given sensor data, returns a tuple (distance, y, x, z, terrainAlt) distance, location, and alitude of target
 
 Parameters
 ----------
@@ -156,21 +149,20 @@ theta : float
     theta represents the angle of declanation of the aircraft's camera
     measured in degrees
     starting at 0° as ideal level with the horizon, increasing as it aims downward
-    must be between 0.0 (straight forward) and 90.0 (straight downward)
 elevationData : 2D array
     elevationData
 xParams: tuple
-     tuple of 4 elements (x0, x1, dx, ncols)
-     x0 is minimum lon. of dataset
-     x1 is maximum lon. of dataset
-     dx is the lon. change per datapoint increment +x
-     ncols is the number of datapoints per row of the dataset
+    tuple of 4 elements (x0, x1, dx, ncols)
+    x0 is minimum lon. of dataset
+    x1 is maximum lon. of dataset
+    dx is the lon. change per datapoint increment +x
+    ncols is the number of datapoints per row of the dataset
 yParams: tuple
-     tuple of 4 elements (y0, y1, dy, nrows)
-     y0 is maximum lat. of dataset
-     y1 is minimum lat. of dataset
-     dy is the lat. change per datapoint increment +y
-     nrows is the number of datapoints per column of the dataset
+    tuple of 4 elements (y0, y1, dy, nrows)
+    y0 is maximum lat. of dataset
+    y1 is minimum lat. of dataset
+    dy is the lat. change per datapoint increment +y
+    nrows is the number of datapoints per column of the dataset
 
 """
 def resolveTarget(y, x, z, azimuth, theta, elevationData, xParams, yParams):
@@ -196,7 +188,7 @@ def resolveTarget(y, x, z, azimuth, theta, elevationData, xParams, yParams):
     # then camera is facing backwards
     # to avoid undefined behavior, reverse AZIMUTH,
     # then subtract theta from 180deg to determine
-    # a new appropriate theta for the reverse direction
+    # a new appropriate THETA for the reverse direction
     #
     # during manual data entry, please avoid absolute values > 90
     if theta > (math.pi / 2):
@@ -252,23 +244,22 @@ def resolveTarget(y, x, z, azimuth, theta, elevationData, xParams, yParams):
         curY, curX = inverse_haversine((curY,curX), math.cos(theta)*increment, azimuth, avgAlt)
         #check for Out Of Bounds after each iteration
         if curY > y0 or curY < y1 or curX < x0 or curX > x1:
-            print(f'FATAL ERROR: resolveTarget ran out of bounds at {curY}, {curX}, {curZ}m')
-            errOut = "FATAL ERROR: Please ensure target location is within geoTIFF dataset bounds"
-            print(errOut, file=sys.stderr)
-            sys.exit(errOut)
+            print(f'ERROR: resolveTarget ran out of bounds at {curY}, {curX}, {curZ}m')
+            print('ERROR: Please ensure target location is within geoTIFF dataset bounds')
+            return None
         #
         #end iteration
     #end loop
     #
     #When the loop ends, curY, curX, and curZ are closeish to the target
     #may be a bit biased ever so slightly long (beyond the target)
-    #this algorithm is extremely crude,
+    #this algorithm is crude,
     #    could use refinement
 
-    # print(f'Final stepwise Alt dist: {altDiff}')
     finalHorizDist = abs(haversine(x, y, curX, curY, z))
     finalVertDist = abs(z - curZ)
     # simple pythagorean theorem
+    # may be inaccurate for very very large horizontal distances
     finalDist = sqrt(finalHorizDist ** 2 + finalVertDist ** 2)
     terrainAlt = getAltFromLatLon(curY, curX, xParams, yParams, elevationData)
 
