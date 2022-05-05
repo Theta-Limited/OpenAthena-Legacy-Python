@@ -94,6 +94,11 @@ def getGeoFileFromString(geofilename):
         outstr = f'FATAL ERROR: can\'t find file with name \'{geofilename}\''
         print(outstr, file=sys.stderr)
         sys.exit(outstr)
+    #
+
+    band = geoFile.GetRasterBand(1)
+    elevationData = band.ReadAsArray()
+    return elevationData, geoFile.GetGeoTransform()
 
 """prompt the user for the entry of a GeoTIFF filename
     if filename is invalid, will re-prompt

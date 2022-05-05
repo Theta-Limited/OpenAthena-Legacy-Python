@@ -1,6 +1,6 @@
 """
 imageParse.py
-
+-
 This file is responsible for extracting drone sensor data from still-capture image(s) XMP and EXIF metadata
 
 This can be done in near real-time if images are automatically downloaded to a computer from the UAV's paired device
@@ -23,11 +23,13 @@ import time
 import math
 # from math import sin, asin, cos, atan2, sqrt
 import sys
+import xml.sax
 # import collections
 from osgeo import gdal # en.wikipedia.org/wiki/GDAL
 import mgrs # Military Grid ref converter
 # broken :(
 # from libxmp.utils import file_to_dict # python-xmp-toolkit, (c) ESA
+
 
 from getTarget import *
 
@@ -74,17 +76,36 @@ def imageParse():
 
     if not images:
         imageName = ""
-        print("type \'exit\' to finish")
-        while imageName != 'exit':
+        print("\nType \'exit\' to finish input\n")
+        while imageName.lower() != 'exit':
+            print(f'Image filenames: {images}')
             imageName = str(input("Enter a drone image filename: "))
             imageName.strip()
-            if imageName != 'exit':
+            if imageName.lower() != 'exit':
                 images.append(imageName)
         #
     #
 
     while images:
         thisImage = images.pop()
+        #from stackoverflow.com/a/14637315
+        #    if XMP in image is spread in multiple pieces, this
+        #    approach will fail to extract data in all
+        #    but the first XMP piece of image
+        try:
+            fd = open(thisImage, 'rb')
+            d = str(fd.read())
+            xmp_start = d.find('<x:xmpmeta')
+            xmp_end = d.find('</x:xmpmeta')
+            xmp_str = d[xmp_start:xmp_end+12]
+            print(f'filename: {thisImage}')
+            print(xmp_str)
+            print('\n')
+
+        except:
+            print(f'ERROR with filename {thisImage}, skipping...', file=sys.stderr)
+            continue
+    #
 
 
 if __name__ == "__main__":
