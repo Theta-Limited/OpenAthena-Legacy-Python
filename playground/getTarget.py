@@ -19,53 +19,23 @@ import sys
 
 """get the pos of current subject of UAS camera
        data entry is done manually
-       implementation can be changed later
+       implementation in resolveTarget function
 """
 def getTarget():
     print("Hello World!")
     print("I'm getTarget.py")
-    print("Which GeoTiff file would you like to read?")
-    geoFile = None
-    while geoFile is None:
-        geofilename = str(input("Enter the GeoTIFF filename: "))
-        geofilename.strip()
-        if geofilename.isdecimal() or geofilename.isnumeric():
-            print(f'ERROR: filename {geofilename} does not contain at least 1 non-digit character')
-            print('Please try again')
-            continue
-        else:
-            try:
-                geoFile = gdal.Open(geofilename)
-            except:
-                print(f'ERROR: can\'t find file with name \'{geofilename}\'')
-                geoFile = None
-                print('Please try again')
-                continue
-    #
+    elevationData, (x0, dx, dxdy, y0, dydx, dy) = getGeoFileFromUser()
 
-    band = geoFile.GetRasterBand(1)
-    elevationData = band.ReadAsArray()
     print("The shape of the elevation data is: ", elevationData.shape)
     print("The raw Elevation data is: ")
     print(elevationData)
 
     nrows, ncols = elevationData.shape
 
-    # I'm making the assumption that the image isn't rotated/skewed/etc.
-    # This is not the correct method in general, but let's ignore that for now
-    # If dxdy or dydx aren't 0, then this will be incorrect
-    x0, dx, dxdy, y0, dydx, dy = geoFile.GetGeoTransform()
-
-    # we cannot deal with rotated or skewed images in current version
-    if dxdy != 0 or dydx != 0:
-        outstr = "FATAL ERROR: geoTIFF is rotated or skewed!"
-        outstr += "\ncannot proceed with file: "
-        outstr += geofilename
-        print(outstr, file=sys.stderr)
-        sys.exit(outstr)
-
     x1 = x0 + dx * ncols
     y1 = y0 + dy * nrows
+
+    ensureValidGeotiff(dxdy, dydx)
 
     print(f'x0: {round(x0,4)} dx: {round(dx,9)} ncols: {round(ncols,4)} x1: {round(x1,4)}')
     print(f'y0: {round(y0,4)} dy: {round(dy,9)} nrows: {round(nrows,4)} y1: {round(y1,4)}\n\n')
@@ -110,14 +80,92 @@ def getTarget():
         targetMGRS = m.toMGRS(tarY, tarX)
         print(f'NATO MGRS: {targetMGRS}\n')
 
+"""get and open a geoFile named by a string
+    e.g. from a command line argument
 
-# handle user input of data, using message for prompt
-#   guaranteed to return a float
+    if the name is invalid, exit with error
+
+"""
+def getGeoFileFromString(geofilename):
+    geofilename.strip()
+    try:
+        geoFile = gdal.Open(geofilename)
+    except:
+        outstr = f'FATAL ERROR: can\'t find file with name \'{geofilename}\''
+        print(outstr, file=sys.stderr)
+        sys.exit(outstr)
+
+"""prompt the user for the entry of a GeoTIFF filename
+    if filename is invalid, will re-prompt
+    until a valid file name is entered
+
+    returns 2D array elevationData and x and y parameters
+"""
+def getGeoFileFromUser():
+    print("Which GeoTiff file would you like to read?")
+    geoFile = None
+    while geoFile is None:
+        geofilename = str(input("Enter the GeoTIFF filename: "))
+        geofilename.strip()
+        if geofilename.isdecimal() or geofilename.isnumeric():
+            print(f'ERROR: filename {geofilename} does not contain at least 1 non-digit character')
+            print('Please try again')
+            continue
+        else:
+            try:
+                geoFile = gdal.Open(geofilename)
+            except:
+                print(f'ERROR: can\'t find file with name \'{geofilename}\'')
+                geoFile = None
+                print('Please try again')
+                continue
+    #
+
+    band = geoFile.GetRasterBand(1)
+    elevationData = band.ReadAsArray()
+    return elevationData, geoFile.GetGeoTransform()
+
+"""check if a geoTiff is invalid, i.e. rotated or skewed
+
+Parameters
+----------
+dxdy : float
+    might be the rate of x change per unit y
+    if this is not 0, we have a problem!
+dydx : float
+    might be the rate of y change per unit x
+    if this is not 0, we have a problem!
+"""
+def ensureValidGeotiff(dxdy, dydx):
+    # I'm making the assumption that the image isn't rotated/skewed/etc.
+    # This is not the correct method in general, but let's ignore that for now
+    # If dxdy or dydx aren't 0, then this will be incorrect
+    # we cannot deal with rotated or skewed images in current version
+    if dxdy != 0 or dydx != 0:
+        outstr = "FATAL ERROR: geoTIFF is rotated or skewed!"
+        outstr += "\ncannot proceed with file: "
+        outstr += geofilename
+        print(outstr, file=sys.stderr)
+        sys.exit(outstr)
+
+"""handle user input of data, using message for prompt
+    guaranteed to return a float in range
+    will reprompt until input is valid
+
+Parameters
+----------
+message : string
+    input prompt to display to the user
+lowerBound : float
+    the lower bound, inclusive, of valid input
+uperBound : float
+    the upper bound, inclusive of valid input
+"""
 def inputNumber(message, lowerBound, upperBound):
     while True:
         try:
             userInput = float(input(message))
-            if userInput < lowerBound or upperBound < userInput:
+            if userInput <= lowerBound or upperBound <= userInput:
                 print(f'ERROR: input out of bounds. Lower bound is {lowerBound}, Upper bound is {upperBound}')
                 print("Please Try Again")
                 continue
@@ -265,10 +313,15 @@ def resolveTarget(y, x, z, azimuth, theta, elevationData, xParams, yParams):
 
     return((finalDist, curY, curX, curZ, terrainAlt))
 
-# convert from azimuth notation (0 is up [+y], inc. clockwise) to
-#     math notation(0 is right [+x], inc. counter-clockwise)
-#
-#     all units in Radians
+"""convert from azimuth notation (0 is up [+y], inc. clockwise) to
+math notation(0 is right [+x], inc. counter-clockwise)
+all units in Radians
+
+Parameters
+----------
+azimuth : float
+    an angle in radians, should be between 0 and 2pi
+"""
 def azimuthToUnitCircleRad(azimuth):
     # reverse direction of increment
     direction = (-1 * azimuth)
@@ -277,8 +330,15 @@ def azimuthToUnitCircleRad(azimuth):
     direction = normalize(direction)
     return direction
 
-# if a given angle is not between 0 and 2pi,
-#     return the same angle in a number that is between 0 and 2pi (rad)
+"""if a given angle is not between 0 and 2pi,
+return the same angle in a number that is between 0 and 2pi (rad)
+
+Parameters
+----------
+direction : float
+    an angle in radians, in the set of all real numbers
+
+"""
 def normalize(direction):
     # the following two routines are mutually-exclusive
     while (direction < 0):
@@ -288,17 +348,34 @@ def normalize(direction):
 
     return direction
 
-# Inverse Haversine formula
-# adapted from user github.com/jdeniau
-# not verified accurate
-# given a point, distance, and direction, return the new point (lat lon)
+"""Inverse Haversine formula
+via github.com/jdeniau
+given a point, distance, and heading, return the new point (lat lon)
+a certain distance along the great circle
+
+for short distances, this is close to the straight line distance
+
+this function assumes the earth is a sphere instead of a slight ellipsoid, which introduces a minor amount of error
+
+Parameters
+----------
+point : (float, float)
+    a latitude, longitude pair of the start location
+distance : float
+    the distance (in meters) to 'travel' along the great circle
+azimuth : float
+    the heading of the direction of travel
+    NOTE: here we use azimuth (start @ 0, inc. clockwise),
+           NOT like unit circle!
+alt : float
+    the approximate altitude, added to the radius of the great circle
+"""
 def inverse_haversine(point, distance, azimuth, alt):
     lat, lon = point
     lat, lon = map(math.radians, (lat, lon))
     d = distance
     r = 6371000 + alt # average radius of earth + altitude
-    # Note: here we use azimuth (start @ 0, inc. clockwise),
-    #       NOT like unit circle!
+
     brng = azimuth
 
     return_lat = asin(sin(lat) * cos(d / r) + cos(lat) * sin(d / r) * cos(brng))
@@ -307,9 +384,29 @@ def inverse_haversine(point, distance, azimuth, alt):
     return_lat, return_lon = map(math.degrees, (return_lat, return_lon))
     return return_lat, return_lon
 
-# Haversine formula
-# i.e. great circle distance (meters) between two lat lon
-# via stackoverflow.com/a/4913653
+"""Haversine formula
+via stackoverflow.com/a/4913653
+determines the great circle distance (meters) between
+two lattitude longitude pairs
+
+for short distances, this is close to the straight-line distance
+
+this function assumes the earth is a sphere instead of a slight ellipsoid, which introduces a minor amount of error
+
+Parameters
+----------
+lon1 : float
+    longitude of the first point
+lat1 : float
+    latitude of the first point
+lon2 : float
+    longitude of the second point
+lat2 : float
+    latitude of the second point
+alt : float
+    the approximate altitude, added to the radius of the great circle
+
+"""
 def haversine(lon1, lat1, lon2, lat2, alt):
     """
     Calculate the great circle distance in kilometers between two points
