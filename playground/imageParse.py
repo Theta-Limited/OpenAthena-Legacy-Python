@@ -212,7 +212,7 @@ def handleDJI( xmp_str ):
     z = dict["drone-dji:AbsoluteAltitude="]
 
     azimuth = dict["drone-dji:GimbalYawDegree="]
-    azimuth = normalize(azimuth)
+    azimuth = azimuth
 
     theta = abs(dict["drone-dji:GimbalPitchDegree="])
 
