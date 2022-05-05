@@ -14,7 +14,7 @@ from osgeo import gdal # Lots of good GeoINT stuff
 import mgrs # Military Grid ref converter
 import math
 from math import sin, asin, cos, atan2, sqrt
-from geotiff_play import *
+import geotiff_play
 import sys
 
 """get the pos of current subject of UAS camera
@@ -181,7 +181,7 @@ def inputNumber(message, lowerBound, upperBound):
             return userInput
             break
 
-"""given sensor data, returns a tuple (distance, y, x, z, terrainAlt) distance, location, and alitude of target
+"""given sensor data, returns a tuple (distance, y, x, z, terrainAlt) distance, location, and alitude(s) of target
 
 Parameters
 ----------
@@ -229,7 +229,7 @@ def resolveTarget(y, x, z, azimuth, theta, elevationData, xParams, yParams):
     #     if so, skip iterative search b/c target is directly
     #     below us:
     if math.isclose((math.pi / 2), theta):
-        terrainAlt = getAltFromLatLon(y, x, xParams, yParams, elevationData)
+        terrainAlt = geotiff_play.getAltFromLatLon(y, x, xParams, yParams, elevationData)
         finalDist = z - terrainAlt
         if finalDist < 0:
             print(f'\n ERROR: bad calculation!\n')
@@ -285,9 +285,9 @@ def resolveTarget(y, x, z, azimuth, theta, elevationData, xParams, yParams):
     curY = y
     curX = x
     curZ = z
-    altDiff = curZ - getAltFromLatLon(curY, curX, xParams, yParams, elevationData)
+    altDiff = curZ - geotiff_play.getAltFromLatLon(curY, curX, xParams, yParams, elevationData)
     while altDiff > threshold:
-        groundAlt = getAltFromLatLon(curY, curX, xParams, yParams, elevationData)
+        groundAlt = geotiff_play.getAltFromLatLon(curY, curX, xParams, yParams, elevationData)
         altDiff = curZ - groundAlt
 
         avgAlt = curZ
@@ -314,7 +314,7 @@ def resolveTarget(y, x, z, azimuth, theta, elevationData, xParams, yParams):
     # simple pythagorean theorem
     # may be inaccurate for very very large horizontal distances
     finalDist = sqrt(finalHorizDist ** 2 + finalVertDist ** 2)
-    terrainAlt = getAltFromLatLon(curY, curX, xParams, yParams, elevationData)
+    terrainAlt = geotiff_play.getAltFromLatLon(curY, curX, xParams, yParams, elevationData)
 
     return((finalDist, curY, curX, curZ, terrainAlt))
 

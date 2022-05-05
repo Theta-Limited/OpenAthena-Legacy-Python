@@ -2,7 +2,8 @@ import time
 import matplotlib.pyplot as plt
 from osgeo import gdal
 import math
-from getTarget import *
+from math import sin, asin, cos, atan2, sqrt
+import getTarget
 # import numpy
 # import sys
 
@@ -137,8 +138,8 @@ def getAltFromLatLon(lat, lon, xParams, yParams, elevation):
     minD = 0
     distValuePairs = []
     for d in [d1, d2, d3, d4]:
-        a = abs(haversine(x0 + d[0] * dx, 0, lon, 0, meanE))
-        b = abs(haversine(0, y0 + d[1] * dy, 0, lat, meanE))
+        a = abs(getTarget.haversine(x0 + d[0] * dx, 0, lon, 0, meanE))
+        b = abs(getTarget.haversine(0, y0 + d[1] * dy, 0, lat, meanE))
         #valuePair is of format (distance, elevation)
         valuePair = (sqrt(a ** 2 + b ** 2), d[2])
         distValuePairs.append(valuePair)

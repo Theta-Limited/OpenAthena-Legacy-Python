@@ -6,7 +6,7 @@ The consumer models of some drones do not display their position, altitude, came
 One tool to view EXIF and XMP metadata on Mac, Linux, and Windows is Phil Harvey's (not affiliated with this project) [exiftool](https://exiftool.org/)
 
 
-A future version will allow for extraction and use of EXIF/XMP sensor information from drone photos automatically
+imageParse.py has an experimental feature for extraction and use of EXIF/XMP sensor information from drone photos automatically
 
 
 An equivalent command line tool available on Mac and Linux is [exiv2](https://exiv2.org/) (also not affiliated)
