@@ -137,12 +137,12 @@ def imageParse():
                     print(f'ERROR with {thisImage}, Mfr. \'{make}\' not compatible with this program', file=sys.stderr)
                     print(f'skipping {thisImage}', file=sys.stderr)
                     continue
-            except:
+            else:
                 print(f'ERROR with {thisImage}, xmp data not found!', file=sys.stderr)
                 print(f'skipping {thisImage}', file=sys.stderr)
                 continue
 
-        else:
+        except:
             print(f'ERROR with filename {thisImage}, skipping...', file=sys.stderr)
             continue
         #
