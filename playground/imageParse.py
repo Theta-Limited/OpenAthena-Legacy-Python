@@ -44,6 +44,7 @@ from getTarget import *
 def imageParse():
     images = []
     elevationData = None
+    headless = False
     if len(sys.argv) > 2:
         headless = True
     # If provided arguments in command line,
@@ -146,12 +147,12 @@ def imageParse():
             continue
         #
         if target is not None:
-            finalDist, curY, curX, curZ, terrainAlt = target
+            finalDist, tarY, tarX, tarZ, terrainAlt = target
             if headless:
                 filename = thisImage + ".ATHENA"
                 file_object = open(filename, 'w')
-                file_object.write(str(curY) + "\n")
-                file_object.write(str(curX) + "\n")
+                file_object.write(str(tarY) + "\n")
+                file_object.write(str(tarX) + "\n")
                 file_object.write(str(terrainAlt) + "\n")
                 file_object.write(str(finalDist))
                 file_object.write("\n# format: lat, lon, alt, dist")
