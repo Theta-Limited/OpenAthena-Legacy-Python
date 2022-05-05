@@ -48,10 +48,15 @@ def imageParse():
     if len(sys.argv) > 2:
         headless = True
     # If provided arguments in command line,
-    #     assume the first argument is a geoTiff filename
+    #     the first argument must be a geoTiff filename
     #     and every other argument after is a drone image filename
     if len(sys.argv) > 1:
+        if sys.argv[1].split('.')[-1].lower() != "tif":
+            outstr = f'FATAL ERROR: got first argument: {sys.argv[1]}, expected GeoTIFF DEM!'
+            sys.exit(outstr)
+
         elevationData, (x0, dx, dxdy, y0, dydx, dy) = getGeoFileFromString(sys.argv[1])
+
         if headless:
             for imageName in sys.argv[2:]:
                 images.append(imageName.strip())
@@ -108,8 +113,6 @@ def imageParse():
             xmp_str = d[xmp_start:xmp_end+12]
             fd.close()
 
-
-
             # agisoft.com/forum/index.php?topic=5008.0
             # Alexey Pasumansky
             makeTag = "tiff:Make="
@@ -117,7 +120,7 @@ def imageParse():
                 tagStart = xmp_str.find(makeTag)
                 make = xmp_str[tagStart + len(makeTag) : tagStart + len(makeTag) + 10]
                 make = str(make.split('\"',3)[1])
-                print(f'make: {make}')
+                # print(f'make: {make}')
                 if make == "DJI":
                     sensData = handleDJI(xmp_str)
                     if sensData is not None:
@@ -127,10 +130,10 @@ def imageParse():
                         print(f'ERROR with {thisImage}, couldn\'t find sensor data', file=sys.stderr)
                         print(f'skipping {thisImage}', file=sys.stderr)
                         continue
-                elif False: # your drone model here
+                elif False: # your drone make here
                     # <----YOUR HANDLER FUNCTION HERE---->
                     pass
-                elif False: # your drone model here
+                elif False: # your drone make here
                     # <----YOUR HANDLER FUNCTION HERE---->
                     pass
                 else:
@@ -149,7 +152,9 @@ def imageParse():
         if target is not None:
             finalDist, tarY, tarX, tarZ, terrainAlt = target
             if headless:
-                filename = thisImage + ".ATHENA"
+                # undefined behavior if there is a '.' in full filepath
+                #     other than the file extension
+                filename = thisImage.split('.')[0] + ".ATHENA"
                 file_object = open(filename, 'w')
                 file_object.write(str(tarY) + "\n")
                 file_object.write(str(tarX) + "\n")
@@ -195,6 +200,8 @@ def handleDJI( xmp_str ):
                             "drone-dji:GimbalYawDegree=",
                             "drone-dji:GimbalPitchDegree=",
                             # ...not relative to these values
+                            # https://developer.dji.com/iframe/mobile-sdk-doc/android/reference/dji/sdk/Gimbal/DJIGimbal.html
+                            # may be different for other mfns.
                             "drone-dji:FlightRollDegree=",
                             "drone-dji:FlightYawDegree=",
                             "drone-dji:FlightPitchDegree="]
@@ -212,7 +219,6 @@ def handleDJI( xmp_str ):
     z = dict["drone-dji:AbsoluteAltitude="]
 
     azimuth = dict["drone-dji:GimbalYawDegree="]
-    azimuth = azimuth
 
     theta = abs(dict["drone-dji:GimbalPitchDegree="])
 
@@ -223,35 +229,3 @@ def handleDJI( xmp_str ):
 
 if __name__ == "__main__":
     imageParse()
-
-# class XMPHandler( xml.sax.ContentHandler ):
-#     def __init__(self):
-#         self.CurrentData = ""
-#         # The manufactuer of the drone/camera
-#         self.make = ""
-#         # The model of the camera :
-#         self.model = ""
-#         self.latitude = ""
-#         self.longitude = ""
-#         self.AbsoluteAltitude = ""
-#         # https://developer.dji.com/iframe/mobile-sdk-doc/android/reference/dji/sdk/Gimbal/DJIGimbal.html
-#         # Gimbal Pitch, Yaw, Roll are absolute, NOT relative to airframe)
-#         # Should be all we need for resolveTarget
-#         self.GimbalRollDegree = ""
-#         self.GimbalYawDegree = ""
-#         self.GimbalPitchDegree = ""
-#         self.GimbalReverse = ""
-#         # Shouldn't be needed, but we may use later
-#         #     e.g. If FlightRollDegree or FlightPitchDegre are high
-#         #     this could mean the aircraft is moving too fast for
-#         #     a good target resolution (speculation, not tested)
-#         self.FlightRollDegree = ""
-#         self.FlightYawDegree = ""
-#         self.FlightPitchDegree= ""
-#         # IDK what these mean...
-#         self.CamReverse = ""
-#         self.GimbalReverse = ""
-
-#     def startElement(self, tag, attributes):
-#         self.CurrentData = tag
-#         if tag == "":

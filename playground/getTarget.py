@@ -234,7 +234,7 @@ def resolveTarget(y, x, z, azimuth, theta, elevationData, xParams, yParams):
         if finalDist < 0:
             print(f'\n ERROR: bad calculation!\n')
             return None
-        print(f'\nWARNING: theta is exactly 90 deg, skipping search\n')
+        print(f'\nWARNING: theta is exactly 90 deg, just using GPS lat/lon\n')
         return((finalDist, y, x, None, terrainAlt))
 
     # safety check: if theta > 90 degrees (pi / 2 radians)
@@ -264,9 +264,10 @@ def resolveTarget(y, x, z, azimuth, theta, elevationData, xParams, yParams):
     horizScalar = math.cos(theta)
     deltax, deltay = horizScalar * deltax, horizScalar * deltay
 
-    print(f'deltax is {round(deltax, 4)}')
-    print(f'deltay is {round(deltay, 4)}')
-    print(f'deltaz is {round(deltaz, 4)}')
+    # # debug output
+    # print(f'deltax is {round(deltax, 4)}')
+    # print(f'deltay is {round(deltay, 4)}')
+    # print(f'deltaz is {round(deltaz, 4)}')
 
     x0 = xParams[0]
     x1 = xParams[1]
