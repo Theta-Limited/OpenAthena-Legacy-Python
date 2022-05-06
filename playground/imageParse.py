@@ -23,6 +23,7 @@ import sys
 import time
 import math
 from math import sin, asin, cos, atan2, sqrt
+import decimal # more float precision with Decimal objects
 
 from osgeo import gdal # en.wikipedia.org/wiki/GDAL
 import mgrs # Military Grid ref converter

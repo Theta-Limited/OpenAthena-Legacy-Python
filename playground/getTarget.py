@@ -14,6 +14,7 @@ from osgeo import gdal # Lots of good GeoINT stuff
 import mgrs # Military Grid ref converter
 import math
 from math import sin, asin, cos, atan2, sqrt
+import decimal # more float precision with Decimal objects
 import geotiff_play
 import sys
 
@@ -219,7 +220,12 @@ yParams: tuple
 
 """
 def resolveTarget(y, x, z, azimuth, theta, elevationData, xParams, yParams):
+    decimal.getcontext().prec = 50
+    y = decimal.Decimal(y)
+    x = decimal.Decimal(x)
+    z = decimal.Decimal(z)
 
+    azimuth, theta = decimal.Decimal(azimuth), decimal.Decimal(theta)
     # convert azimuth and theta from degrees to radians
     azimuth, theta = math.radians(azimuth), math.radians(theta)
     azimuth  = normalize(azimuth) # 0 <= azimuth < 2pi
@@ -255,13 +261,14 @@ def resolveTarget(y, x, z, azimuth, theta, elevationData, xParams, yParams):
     # from Azimuth, determine rate of x and y change
     #     per unit travel (level with horizon for now)
     deltax, deltay = math.cos(direction), math.sin(direction)
+    deltax, deltay = decimal.Decimal(deltax), decimal.Decimal(deltay)
 
     deltaz = -1 * math.sin(theta) #neg because direction is downward
-
+    deltaz = decimal.Decimal(deltaz)
 
     # determines by how much of travel per unit is actually horiz
     # pythagoran theorem, deltaz^2 + deltax^2 + deltay^2 = 1
-    horizScalar = math.cos(theta)
+    horizScalar = decimal.Decimal(math.cos(theta))
     deltax, deltay = horizScalar * deltax, horizScalar * deltay
 
     # # debug output
@@ -277,15 +284,16 @@ def resolveTarget(y, x, z, azimuth, theta, elevationData, xParams, yParams):
 
     dx = xParams[2]
     #meters of acceptable distance between constructed line and datapoint
-    threshold = abs(dx) / 4
+    threshold = abs(dx) / 4.0
 
     #meters of increment for each stepwise check (along constructed line)
-    increment = 1
+    increment = decimal.Decimal(1.0)
 
     # start at the aircraft's position
-    curY = y
-    curX = x
-    curZ = z
+
+    curY = decimal.Decimal(y)
+    curX = decimal.Decimal(x)
+    curZ = decimal.Decimal(z)
     altDiff = curZ - geotiff_play.getAltFromLatLon(curY, curX, xParams, yParams, elevationData)
     while altDiff > threshold:
         groundAlt = geotiff_play.getAltFromLatLon(curY, curX, xParams, yParams, elevationData)
@@ -294,8 +302,8 @@ def resolveTarget(y, x, z, azimuth, theta, elevationData, xParams, yParams):
         avgAlt = curZ
         # deltaz should always be negative
         curZ += deltaz
-        avgAlt = (avgAlt + curZ) / 2
-        curY, curX = inverse_haversine((curY,curX), math.cos(theta)*increment, azimuth, avgAlt)
+        avgAlt = (avgAlt + curZ) / decimal.Decimal(2)
+        curY, curX = inverse_haversine((curY,curX), horizScalar*increment, azimuth, avgAlt)
         #check for Out Of Bounds after each iteration
         if curY > y0 or curY < y1 or curX < x0 or curX > x1:
             print(f'ERROR: resolveTarget ran out of bounds at {curY}, {curX}, {curZ}m')
@@ -426,8 +434,10 @@ def haversine(lon1, lat1, lon2, lat2, alt):
     dlat = lat2 - lat1
     a = sin(dlat/2)**2 + cos(lat1) * cos(lat2) * sin(dlon/2)**2
     c = 2 * asin(sqrt(a))
+    c = decimal.Decimal(c)
     # en.wikipedia.org/wiki/Earth_radius
     r = 6371000 + alt # Radius of earth in meters. Use 3956 for miles. Determines return value units.
+    r = decimal.Decimal(r)
     return c * r
 
 if __name__ == "__main__":

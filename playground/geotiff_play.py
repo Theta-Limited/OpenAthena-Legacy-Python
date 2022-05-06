@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from osgeo import gdal
 import math
 from math import sin, asin, cos, atan2, sqrt
+import decimal # more float precision with Decimal objects
 import getTarget
 # import numpy
 # import sys
