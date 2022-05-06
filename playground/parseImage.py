@@ -1,15 +1,20 @@
 """
-imageParse.py
+parseImage.py
 -
 This file is responsible for extracting drone sensor data from still-capture image(s) XMP and EXIF metadata
 
 This can be done in near real-time if images are automatically downloaded to a computer from the UAV's paired device
 
-Currently only photos from a DJI Mavic 2 Zoom are tested, support for more drone models can be added later with help from the OpenAthena
+Currently only photos from DJI-make drones are supported
+, and the only tested model(s) are below
+Support for more drone models can be added later with help from the OpenAthena
 user community
 
-If your UAV model is not listed here, feel free to make a pull request:
-    DJI Mavic 2 Zoom
+If your UAV make or model is not listed here, feel free to make a pull request:
+Makes:
+    DJI
+    Models:
+        DJI Mavic 2 Zoom
 
 XMP:
 en.wikipedia.org/wiki/Extensible_Metadata_Platform
@@ -42,7 +47,7 @@ from getTarget import *
 
     @TODO not finished yet!
 """
-def imageParse():
+def parseImage():
     images = []
     elevationData = None
     headless = False
@@ -229,4 +234,4 @@ def handleDJI( xmp_str ):
         return (y, x, z, azimuth, theta)
 
 if __name__ == "__main__":
-    imageParse()
+    parseImage()

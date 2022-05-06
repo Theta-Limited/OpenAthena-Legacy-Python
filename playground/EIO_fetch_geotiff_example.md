@@ -1,7 +1,15 @@
-# Fetch geotiff file from internet
+# Fetch geoTiff file from internet
 From python elevation API's [read the docs](http://elevation.bopen.eu/en/stable/quickstart.html#command-line-usage)
 
+## Install
+clipping geoTiff files requires the python `elevation` package
+
+This can be installed on most systems with the command `pip install elevation`, or alternatively `pip3 install elevation`
+
+
 ## Command line usage
+
+The `eio clip` command may take a while to complete. This is normal.
 
 Identify the geographic bounds of the area of interest and fetch the DEM with the eio command. For example to clip the SRTM 30m DEM of Rome, around 41.9N 12.5E, to the Rome-30m-DEM.tif file:
 
