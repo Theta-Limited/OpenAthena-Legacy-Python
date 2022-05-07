@@ -130,8 +130,8 @@ def parseImage():
                 if make == "DJI":
                     sensData = handleDJI(xmp_str)
                     if sensData is not None:
-                        x, y, z, azimuth, theta = sensData
-                        target = resolveTarget(x, y, z, azimuth, theta, elevationData, xParams, yParams)
+                        y, x, z, azimuth, theta = sensData
+                        target = resolveTarget(y, x, z, azimuth, theta, elevationData, xParams, yParams)
                     else:
                         print(f'ERROR with {thisImage}, couldn\'t find sensor data', file=sys.stderr)
                         print(f'skipping {thisImage}', file=sys.stderr)
