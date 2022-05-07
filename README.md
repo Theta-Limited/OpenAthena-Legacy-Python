@@ -202,10 +202,6 @@ The accuracy of the positional resolution is better at steep angles (high theta)
 Please enter camera azimuth (0 is north) in decimal form (degrees): 315
 Please enter angle of declanation (degrees down from forward) in decimal form: 20
 
-deltax is -0.6645
-deltay is 0.6645
-deltaz is -0.342
-
 Approximate range to target: 1035.03
 
 Approximate alt (constructed): 146.01
@@ -217,17 +213,6 @@ Google Maps: https://maps.google.com/?q=33.835283,-84.521997
 NATO MGRS: 16SGC2930646654
 
 ```
-
-
-
-`deltax` is the factor of change in position East/West in meters per iteration
-
-
-`deltay` is the factor of change in position North/South in meters per iteration
-
-
-`deltaz` is the factor of change in position Skyward/Groundward (up/down) in meters per iteration. This value should always be negative
-
 
 The distance of each iterative step, in meters, is defined by the `increment` variable in `getTarget.py`
 
@@ -255,6 +240,15 @@ The values should be tested for correctness and not totally relied upon in the c
 
 
 The program `getTarget.py` will then exit
+
+### parseImage.py
+
+    [parseImage.py](./playground/parseImage.py) has an experimental feature for automatic extraction and use of EXIF/XMP sensor information from drone photos. This allows for the automatic extraction and use of data including the aircraft camera's lat/lon, altitude, azimuth, and angle of declenation (theta)
+
+[![image of command line on MacOS, command python3 parseImage.py bartow.tif, output and prompting user for drone image filename](parseImage_interactive_example2.png)](drone_sensor_data_blurb.md)
+
+
+More info **[here]**(drone_sensor_data_blurb.md)
 
 
 # Military Uses
