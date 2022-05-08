@@ -243,12 +243,12 @@ The program `getTarget.py` will then exit
 
 ### parseImage.py
 
-    [parseImage.py](./playground/parseImage.py) has an experimental feature for automatic extraction and use of EXIF/XMP sensor information from drone photos. This allows for the automatic extraction and use of data including the aircraft camera's lat/lon, altitude, azimuth, and angle of declenation (theta)
+[parseImage.py](./playground/parseImage.py) has an experimental feature for automatic extraction and use of EXIF/XMP sensor information from drone photos. This allows for the automatic extraction and use of data including the aircraft camera's lat/lon, altitude, azimuth, and angle of declenation (theta)
 
 [![image of command line on MacOS, command python3 parseImage.py bartow.tif, output and prompting user for drone image filename](parseImage_interactive_example2.png)](drone_sensor_data_blurb.md)
 
 
-More info **[here]**(drone_sensor_data_blurb.md)
+More info [**here**](drone_sensor_data_blurb.md)
 
 
 # Military Uses

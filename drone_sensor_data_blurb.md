@@ -6,13 +6,13 @@ The consumer models of some drones do not display their position, altitude, came
 
 [parseImage.py](./playground/parseImage.py) has an experimental feature for automatic extraction and use of EXIF/XMP sensor information from drone photos
 
-parseImage.py can be run in an **interactive** mode, or **headless** mode based on what arguments are given after `python parseImage.py`. **interactive** is designed for use by humans with one or more images, **headless** is designed for use by automation with one or more images. The output of **headless** mode is subject to change in future versions
+parseImage.py can be run in an **interactive** mode, or **headless** mode based on what arguments are given after `python parseImage.py`. **Interactive** is designed for use by humans with one or more images, **headless** is designed for use by automation with one or more images. The output of **headless** mode is subject to change in future versions
 
 #### interactive
 
-Before using parseImage.py, make sure you have a valid geoTiff file that covers at least the location of the drone and the possible location of its subject. One way to do this is to get the drone's location from an image's metadata, then [clip a geoTiff file of the surrounding area](./playground/EIO_fetch_geotiff_example.md)
+Before using parseImage.py, make sure you have a valid geoTiff file that covers at least the location of the drone and the possible location of its subject. One way to do this is to get the drone's location from an [image's metadata](drone_sensor_data_blurb.md#manual-extraction), then [clip a geoTiff file of the surrounding area](./playground/EIO_fetch_geotiff_example.md)
 
-Next, choose an image for which to resolve the location of its subject. For example `DJI_0420.JPG`:
+Next, choose an image for which to resolve the location of its subject. For example `DJI_0419.JPG`:
 ![image of Thompson Park, GA with small shed and concrete area centered](DJI_0419_L.jpeg)
 
 Finally, run `parseImage.py`. To save time, the geoTiff file can be provided as the first argument after `python parseImage.py` (or `python3 parseImage.py` on Macs for example):
