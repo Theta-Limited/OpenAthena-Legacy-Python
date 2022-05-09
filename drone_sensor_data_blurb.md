@@ -4,9 +4,9 @@ The consumer models of some drones do not display their position, altitude, came
 
 ### parseImage.py
 
-[parseImage.py](./playground/parseImage.py) has an experimental feature for automatic extraction and use of EXIF/XMP sensor information from drone photos
+[parseImage.py](./playground/parseImage.py) has an experimental feature for automatic extraction and use of EXIF/XMP sensor information from drone photos (DJI drones only for this version)
 
-parseImage.py can be run in an **interactive** mode, or **headless** mode based on what arguments are given after `python parseImage.py`. **Interactive** is designed for use by humans with one or more images, **headless** is designed for use by automation with one or more images. The output of **headless** mode is subject to change in future versions
+parseImage.py can be run in an **interactive** mode, or **headless** mode based on how many arguments are given after `python parseImage.py`. **Interactive** is designed for use by humans with one or more images, **headless** is designed for use by automation with one or more images. The output of **headless** mode is subject to change in future versions
 
 #### interactive
 
@@ -40,7 +40,7 @@ Pretty good!
 
 #### headless
 
-If `parseImage.py` is given any additional arguments after a geoTiff file, it will try to read each as an image and put a resolved location in a file IMAGENAME.ATHENA for each image.
+If `parseImage.py` is given any additional arguments after a geoTiff file, it will be run in **headless** mode. It will try to read each argument (past the geoTiff file) as an image filename. It will try to resolve a target and put a resolved location in a file IMAGENAME.ATHENA for each image.
 
 Image parsing can fail for any image for a variety of reasons, including the search running out of bounds, location not covered by the geoTiff, etc. However, an IMAGENAME.ATHENA file will only be generated where both the image metadata extraction and the terrain search process were sucessful
 
@@ -59,7 +59,7 @@ exiv2 -P kt DJI_1234.JPG | grep -i "gimbal\|latitude\|longitude\|alt"
 ```
 
 
-`drone-dji.GimbalYawDegree` is the direction of the aircraft, from -180 (exclusive) to +180 (inclusive). 0 degrees is North, 90 is East, -90 is West, etc. Internally this number is converted to an `azimuth` for use by OpenAthena
+`drone-dji.GimbalYawDegree` is the direction of the aircraft's camera, from -180 (exclusive) to +180 (inclusive). 0 degrees is North, 90 is East, -90 is West, etc. Internally this number is converted to an `azimuth` for use by OpenAthena
 
 
 `drone-dji.GimbalPitchDegree` is the amount of pitch of the camera's gimbal. While the DJI displays this number as negative, Internally the absolute value of this number `theta` is used for OpenAthena. Values of below -90 (straight down) produce undefined behavior and are prohibitted from being entered during manual data input
