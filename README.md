@@ -74,7 +74,7 @@ Multi-copter rotary-wing aircraft (e.g. quadroters, drones, etc.) typically have
 
 They also typically have an "accelerometer" which allows it to stay level with the ground while in flight, and a camera.
 
-The camera starts level with the horizon level during normal operation, and the operator can pitch it downwards towards the ground for live camera feed and taking pictures. These pictures store GPS coordinates, altitude, and the azimuth and angle of declanation (pitch) in their XMP and EXIF metadata (attached with the image)
+The camera starts level with the horizon during normal operation, and the operator can pitch it downwards towards the ground for live camera feed and taking pictures. These pictures store GPS coordinates, altitude, and the azimuth and angle of declanation (pitch) in their XMP and EXIF metadata (attached with the image)
 
 Given that the lat/long and altitude of the rotary-wing aircraft is known, its azimuth is known, and it is possible to obtain accurate worldwide elevation data (within ~30m) from [this api](https://pypi.org/project/elevation/), it is a very simple math problem to calculate the position and altitude of the object aimed at by the camera.
 
