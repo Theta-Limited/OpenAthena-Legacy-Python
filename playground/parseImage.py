@@ -33,8 +33,18 @@ import decimal # more float precision with Decimal objects
 from osgeo import gdal # en.wikipedia.org/wiki/GDAL
 import mgrs # Military Grid ref converter
 
+from PIL import Image
+from PIL import ExifTags
+
+# XML
+#     read-only
+import xml.sax as sax
+#     write and mangle
+#     tutorialspoint.com/xml-parsing-in-python
+import xml.etree.ElementTree as ET
+
+
 # unused :(
-# import xml.sax
 # from libxmp.utils import file_to_dict # python-xmp-toolkit, (c) ESA
 
 from geotiff_play import getAltFromLatLon, binarySearchNearest
@@ -45,7 +55,6 @@ from getTarget import *
        and use resolveTarget() to give
        target location(s)
 
-    @TODO not finished yet!
 """
 def parseImage():
     images = []
@@ -91,12 +100,12 @@ def parseImage():
 
     if not images: # not run in headless mode
         imageName = ""
-        print("\nType \'exit\' to finish input\n")
-        while imageName.lower() != 'exit':
+        print("\nType \'done\' to finish input\n")
+        while imageName.lower() != 'done':
             print(f'Image filenames: {images}')
             imageName = str(input("Enter a drone image filename: "))
             imageName.strip()
-            if imageName.lower() != 'exit':
+            if imageName.lower() != 'done':
                 images.append(imageName)
         #
     #
@@ -119,14 +128,24 @@ def parseImage():
             xmp_str = d[xmp_start:xmp_end+12]
             fd.close()
 
+            exifData = {}
+            img = Image.open(thisImage)
+            exifDataRaw = img._getexif()
+            for tag, value in exifDataRaw.items():
+                decodedTag = ExifTags.TAGS.get(tag, tag)
+                exifData[decodedTag] = value
+
+            # print(exifData)
+
             # agisoft.com/forum/index.php?topic=5008.0
             # Alexey Pasumansky
-            makeTag = "tiff:Make="
+            # makeTag = "tiff:Make="
             if xmp_start != xmp_end:
-                tagStart = xmp_str.find(makeTag)
-                make = xmp_str[tagStart + len(makeTag) : tagStart + len(makeTag) + 10]
-                make = str(make.split('\"',3)[1])
-                # print(f'make: {make}')
+                # tagStart = xmp_str.find(makeTag)
+                # xmpMake = xmp_str[tagStart + len(makeTag) : tagStart + len(makeTag) + 10]
+                # xmpMake = str(xmpMake.split('\"',3)[1])
+                # print(f'xmpMake: {xmpMake}')
+                make = exifData["Make"].upper()
                 if make == "DJI":
                     sensData = handleDJI(xmp_str)
                     if sensData is not None:
@@ -136,6 +155,17 @@ def parseImage():
                         print(f'ERROR with {thisImage}, couldn\'t find sensor data', file=sys.stderr)
                         print(f'skipping {thisImage}', file=sys.stderr)
                         continue
+                elif make == "SKYDIO":
+                    print(f'ERROR with {thisImage}, Mfr. \'{make}\' not compatible with this program', file=sys.stderr)
+                    print(f'skipping {thisImage}', file=sys.stderr)
+                    # sensData = handleSKYDIO(xmp_str)
+                    # if sensData is not None:
+                    #     y, x, z, azimuth, theta = sensData
+                    #     target = resolveTarget(y, x, z, azimuth, theta, elevationData, xParams, yParams)
+                    # else:
+                    #     print(f'ERROR with {thisImage}, couldn\'t find sensor data', file=sys.stderr)
+                    #     print(f'skipping {thisImage}', file=sys.stderr)
+                    #     continue
                 elif False: # your drone make here
                     # <----YOUR HANDLER FUNCTION HERE---->
                     pass
@@ -162,11 +192,20 @@ def parseImage():
                 #     other than the file extension
                 filename = thisImage.split('.')[0] + ".ATHENA"
                 file_object = open(filename, 'w')
+
+                m = mgrs.MGRS()
+                targetMGRS = m.toMGRS(tarY, tarX)
+                targetMGRS10m = m.toMGRS(tarY,tarX, MGRSPrecision=4)
+                targetMGRS100m = m.toMGRS(tarY, tarX, MGRSPrecision=3)
+
                 file_object.write(str(tarY) + "\n")
                 file_object.write(str(tarX) + "\n")
                 file_object.write(str(terrainAlt) + "\n")
                 file_object.write(str(finalDist))
-                file_object.write("\n# format: lat, lon, alt, dist")
+                file_object.write(targetMGRS)
+                file_object.write(targetMGRS10m)
+                file_object.write(targetMGRS100m)
+                file_object.write("\n# format: lat, lon, alt, dist, MGRS 1m, MGRS 10m, MGRS 100m")
 
                 file_object.close()
             else:
@@ -184,11 +223,14 @@ def parseImage():
                 # via github.com/hobuinc/mgrs
                 m = mgrs.MGRS()
                 targetMGRS = m.toMGRS(tarY, tarX)
+                targetMGRS10m = m.toMGRS(tarY,tarX, MGRSPrecision=4)
+                targetMGRS100m = m.toMGRS(tarY, tarX, MGRSPrecision=3)
                 print(f'NATO MGRS: {targetMGRS}\n')
-
+                print(f'MGRS 10m: {targetMGRS10m}\n')
+                print(f'MGRS 100m: {targetMGRS100m}\n')
     #
 
-"""takes a xmp metadata from a DJI drone,
+"""takes a xmp metadata string from a DJI drone,
 returns tuple (y, x, z, azimuth, theta)
 
 Parameters
@@ -207,18 +249,16 @@ def handleDJI( xmp_str ):
                             "drone-dji:GimbalPitchDegree=",
                             # ...not relative to these values
                             # https://developer.dji.com/iframe/mobile-sdk-doc/android/reference/dji/sdk/Gimbal/DJIGimbal.html
-                            # may be different for other mfns.
+                            # could be different for other mfns.?
                             "drone-dji:FlightRollDegree=",
                             "drone-dji:FlightYawDegree=",
                             "drone-dji:FlightPitchDegree="]
-    dict = { }
-    if len(xmp_str.strip()) > 0:
-        for element in elements:
-            value = xmp_str[xmp_str.find(element) + len(element) : xmp_str.find(element) + len(element) + 10]
-            value = float(value.split('\"',3)[1])
-            dict[element] = value
-    else:
+
+    dict = xmp_parse( xmp_str, elements)
+    if dict is None:
         return None
+
+    # print( xmp_str )
 
     y = dict["drone-dji:GpsLatitude="]
     x = dict["drone-dji:GpsLongitude="]
@@ -232,6 +272,65 @@ def handleDJI( xmp_str ):
         return None
     else:
         return (y, x, z, azimuth, theta)
+
+"""takes a xmp metadata string from a Skydio drone,
+returns tuple (y, x, z, azimuth, theta)
+
+Parameters
+----------
+xmp_str: string
+    a string containing the contents of XMP metadata of a Skydio drone image
+"""
+def handleSKYDIO( xmp_str ):
+    # Skydio has multiple frame of reference tags with same children
+    #     (i.e. "Yaw", "Pitch", etc.)
+    #     will need to parse as XML :(
+    elements = ["drone-skydio:AbsoluteAltitude=",
+                            "drone-skydio:Latitude=",
+                            "drone-skydio:Longitude="
+                            "drone-skydio:Yaw=" # name collision :(
+
+                            ]
+
+
+    dict = xmp_parse( xmp_str, elements)
+    if dict is None:
+        return None
+
+    # print(xmp_str)
+
+    y = dict["drone-skydio:Latitude="]
+    x = dict["drone-skydio:Longitude="]
+    z = dict["drone-dji:AbsoluteAltitude="]
+
+    # azimuth = dict[
+    # theta = abs(
+    return None
+
+"""takes a xmp metadata string and a list of keys
+return a dictionary of key, value pairs
+       ...or None if xmp_str is empty
+
+Parameters
+----------
+xmp_str: string
+    a string containing the contents of XMP metadata
+elements: string[]
+    a list of strings, each string is a key for which to search XMP data
+    for its corresponding value
+"""
+def xmp_parse ( xmp_str, elements ):
+    dict = {}
+    if len(xmp_str.strip()) > 0:
+        for element in elements:
+            value = xmp_str[xmp_str.find(element) + len(element) : xmp_str.find(element) + len(element) + 10]
+            value = float(value.split('\"',3)[1])
+            dict[element] = value
+    else:
+        return None
+
+    return dict
+
 
 if __name__ == "__main__":
     parseImage()

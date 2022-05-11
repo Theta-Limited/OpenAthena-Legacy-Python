@@ -79,7 +79,11 @@ def getTarget():
         # via github.com/hobuinc/mgrs
         m = mgrs.MGRS()
         targetMGRS = m.toMGRS(tarY, tarX)
+        targetMGRS10m = m.toMGRS(tarY,tarX, MGRSPrecision=4)
+        targetMGRS100m = m.toMGRS(tarY, tarX, MGRSPrecision=3)
         print(f'NATO MGRS: {targetMGRS}\n')
+        print(f'MGRS 10m: {targetMGRS10m}\n')
+        print(f'MGRS 100m: {targetMGRS100m}\n')
 
 """get and open a geoFile named by a string
     e.g. from a command line argument
@@ -89,13 +93,10 @@ def getTarget():
 """
 def getGeoFileFromString(geofilename):
     geofilename.strip()
-    try:
-        geoFile = gdal.Open(geofilename)
-    except:
+    geoFile = gdal.Open(geofilename)
+    if geoFile is None:
         outstr = f'FATAL ERROR: can\'t find file with name \'{geofilename}\''
-        print(outstr, file=sys.stderr)
         sys.exit(outstr)
-    #
 
     band = geoFile.GetRasterBand(1)
     elevationData = band.ReadAsArray()
@@ -302,7 +303,7 @@ def resolveTarget(y, x, z, azimuth, theta, elevationData, xParams, yParams):
         avgAlt = curZ
         # deltaz should always be negative
         curZ += deltaz
-        avgAlt = (avgAlt + curZ) / decimal.Decimal(2)
+        avgAlt = (avgAlt + curZ) / 2
         curY, curX = inverse_haversine((curY,curX), horizScalar*increment, azimuth, avgAlt)
         #check for Out Of Bounds after each iteration
         if curY > y0 or curY < y1 or curX < x0 or curX > x1:
