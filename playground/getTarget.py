@@ -81,8 +81,8 @@ def getTarget():
         targetMGRS = m.toMGRS(tarY, tarX)
         targetMGRS10m = m.toMGRS(tarY,tarX, MGRSPrecision=4)
         targetMGRS100m = m.toMGRS(tarY, tarX, MGRSPrecision=3)
-        print(f'NATO MGRS: {targetMGRS}\n')
-        print(f'MGRS 10m: {targetMGRS10m}\n')
+        print(f'NATO MGRS: {targetMGRS}')
+        print(f'MGRS 10m: {targetMGRS10m}')
         print(f'MGRS 100m: {targetMGRS100m}\n')
 
 """get and open a geoFile named by a string

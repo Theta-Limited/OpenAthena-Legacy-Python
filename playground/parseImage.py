@@ -191,6 +191,8 @@ def parseImage():
                 # undefined behavior if there is a '.' in full filepath
                 #     other than the file extension
                 filename = thisImage.split('.')[0] + ".ATHENA"
+                dateTime = exifData["DateTime"]
+
                 file_object = open(filename, 'w')
 
                 m = mgrs.MGRS()
@@ -202,6 +204,8 @@ def parseImage():
                 file_object.write(str(tarX) + "\n")
                 file_object.write(str(terrainAlt) + "\n")
                 file_object.write(str(finalDist))
+                if dateTime is not None:
+                    file_object.write(str(dateTime) + "\n")
                 file_object.write(targetMGRS)
                 file_object.write(targetMGRS10m)
                 file_object.write(targetMGRS100m)
@@ -210,11 +214,16 @@ def parseImage():
                 file_object.close()
             else:
                 print(f'\n\nfilename: {thisImage}')
+                dateTime = exifData["DateTime"]
+                if dateTime is not None:
+                    print(f'Date/Time:{dateTime}')
+
                 print(f'\nApproximate range to target: {round(finalDist , 2)}\n')
 
                 if tarZ is not None:
                     print(f'Approximate alt (constructed): {round(tarZ , 2)}')
                 print(f'Approximate alt (terrain): {terrainAlt}\n')
+
 
 
                 print(f'Target (lat, lon): {round(tarY, 7)}, {round(tarX, 7)}')
@@ -225,8 +234,8 @@ def parseImage():
                 targetMGRS = m.toMGRS(tarY, tarX)
                 targetMGRS10m = m.toMGRS(tarY,tarX, MGRSPrecision=4)
                 targetMGRS100m = m.toMGRS(tarY, tarX, MGRSPrecision=3)
-                print(f'NATO MGRS: {targetMGRS}\n')
-                print(f'MGRS 10m: {targetMGRS10m}\n')
+                print(f'NATO MGRS: {targetMGRS}')
+                print(f'MGRS 10m: {targetMGRS10m}')
                 print(f'MGRS 100m: {targetMGRS100m}\n')
     #
 
