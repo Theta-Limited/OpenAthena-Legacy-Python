@@ -5,16 +5,17 @@ This file is responsible for extracting drone sensor data from still-capture ima
 
 This can be done in near real-time if images are automatically downloaded to a computer from the UAV's paired device
 
-Currently only photos from DJI-make drones are supported
-, and the only tested model(s) are below
-Support for more drone models can be added later with help from the OpenAthena
-user community
+Currently only photos from the following makes have been tested
 
-If your UAV make or model is not listed here, feel free to make a pull request:
+Support for more drone makes can be added later with help from the OpenAthena
+user community.
+
+Please email photo examples, with intact metadata and a locate-able subject in the direct center of image to matthew (at) krupczak (dot) org
+
+If your UAV make or model is not listed here, feel free to help out and make a pull request:
 Makes:
     DJI
-    Models:
-        DJI Mavic 2 Zoom
+    Skydio
 
 XMP:
 en.wikipedia.org/wiki/Extensible_Metadata_Platform
@@ -290,18 +291,32 @@ def handleSKYDIO( xmp_str ):
     #     (i.e. "Yaw", "Pitch", etc.)
     #     will need to parse differently :(
 
+    # print(xmp_str)
 
     element = "drone-skydio:CameraOrientationNED"
-    values = xmp_str[xmp_str.find(element) + len(element) : xmp_str.find(element) + len(element) + 100]
-    theta = float(values.split('\"')[3])
-    azimuth = float(values.split('\"')[5])
+    startIndex = xmp_str.find(element)
+    if startIndex == -1:
+        element = "drone-skydio:CameraOrientationFLU"
+        startIndex = xmp_str.find(element)
+        if startIndex == -1:
+            return None
+
+    values = xmp_str[startIndex + len(element) : startIndex + len(element) + 100]
+    theta = values.split('\"')[3]
+    azimuth = values.split('\"')[5]
+
+    try:
+        theta = float(theta)
+        azimuth = float(azimuth)
+    except ValueError:
+        return None
 
     theta = abs(theta)
 
     elements = ["drone-skydio:Latitude=",
                 "drone-skydio:Longitude=",
                 "drone-skydio:AbsoluteAltitude="]
-    gpsDict = xmp_parse( xmp_str, elements)
+    gpsDict = xmp_parse(xmp_str, elements)
 
     y = gpsDict["drone-skydio:Latitude="]
     x = gpsDict["drone-skydio:Longitude="]
