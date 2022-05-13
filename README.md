@@ -34,9 +34,14 @@ Aerial forward artillery observation with small consumer aircraft, even if not e
 
 Examples:
 
-In first-hand accounts (via Twitter user [@Jack_Watling](https://twitter.com/Jack_Watling)):
+In first-hand accounts (via reporter [@Jack_Watling](https://twitter.com/Jack_Watling)):
 [shashj/status/1519041368672415747](https://twitter.com/shashj/status/1519041368672415747)
 
+In reporting (via reporter [@HoansSolo](http://www.w3.org/1999/02/22-rdf-syntax-ns)): [HoansSolo/status/1523955057187860480](https://twitter.com/HoansSolo/status/1523955057187860480)
+
+forward artillery observation for destruction of concentrated armored units (unverified):
+[Blue_Sauron/status/1524742847664173057](https://twitter.com/Blue_Sauron/status/1524742847664173057)
+[kms_d4k/status/1524506214650028032](https://twitter.com/kms_d4k/status/1524506214650028032)
 
 forward artillery observation for counter-battery fire: [Osinttechnical/status/1511867981596434434](https://twitter.com/Osinttechnical/status/1511867981596434434)
 [alt video link](counter-battery-example.mp4)
