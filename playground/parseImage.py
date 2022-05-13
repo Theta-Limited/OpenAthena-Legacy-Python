@@ -36,12 +36,13 @@ import mgrs # Military Grid ref converter
 from PIL import Image
 from PIL import ExifTags
 
-# XML
-#     read-only
-import xml.sax as sax
 #     write and mangle
-#     tutorialspoint.com/xml-parsing-in-python
-import xml.etree.ElementTree as ET
+#     eli.thegreenplace.net/2012/03/15/processing-xml-in-python-with-elementtree
+# try:
+#     import xml.etree.cElementTree as ET # C implementation, much faster
+# except ImportError:
+#     import xml.etree.ElementTree as ET
+
 
 
 # unused :(
@@ -116,7 +117,7 @@ def parseImage():
 
         sensData = None, None, None, None, None
         target = None
-        try:
+        if True:
             #from stackoverflow.com/a/14637315
             #    if XMP in image is spread in multiple pieces, this
             #    approach will fail to extract data in all
@@ -156,16 +157,14 @@ def parseImage():
                         print(f'skipping {thisImage}', file=sys.stderr)
                         continue
                 elif make == "SKYDIO":
-                    print(f'ERROR with {thisImage}, Mfr. \'{make}\' not compatible with this program', file=sys.stderr)
-                    print(f'skipping {thisImage}', file=sys.stderr)
-                    # sensData = handleSKYDIO(xmp_str)
-                    # if sensData is not None:
-                    #     y, x, z, azimuth, theta = sensData
-                    #     target = resolveTarget(y, x, z, azimuth, theta, elevationData, xParams, yParams)
-                    # else:
-                    #     print(f'ERROR with {thisImage}, couldn\'t find sensor data', file=sys.stderr)
-                    #     print(f'skipping {thisImage}', file=sys.stderr)
-                    #     continue
+                    sensData = handleSKYDIO(xmp_str)
+                    if sensData is not None:
+                        y, x, z, azimuth, theta = sensData
+                        target = resolveTarget(y, x, z, azimuth, theta, elevationData, xParams, yParams)
+                    else:
+                        print(f'ERROR with {thisImage}, couldn\'t find sensor data', file=sys.stderr)
+                        print(f'skipping {thisImage}', file=sys.stderr)
+                        continue
                 elif False: # your drone make here
                     # <----YOUR HANDLER FUNCTION HERE---->
                     pass
@@ -173,15 +172,11 @@ def parseImage():
                     # <----YOUR HANDLER FUNCTION HERE---->
                     pass
                 else:
-                    print(f'ERROR with {thisImage}, Mfr. \'{make}\' not compatible with this program', file=sys.stderr)
+                    print(f'ERROR with {thisImage}, xmp data not found!', file=sys.stderr)
                     print(f'skipping {thisImage}', file=sys.stderr)
                     continue
-            else:
-                print(f'ERROR with {thisImage}, xmp data not found!', file=sys.stderr)
-                print(f'skipping {thisImage}', file=sys.stderr)
-                continue
 
-        except:
+        else:
             print(f'ERROR with filename {thisImage}, skipping...', file=sys.stderr)
             continue
         #
@@ -293,28 +288,29 @@ xmp_str: string
 def handleSKYDIO( xmp_str ):
     # Skydio has multiple frame of reference tags with same children
     #     (i.e. "Yaw", "Pitch", etc.)
-    #     will need to parse as XML :(
-    elements = ["drone-skydio:AbsoluteAltitude=",
-                            "drone-skydio:Latitude=",
-                            "drone-skydio:Longitude="
-                            "drone-skydio:Yaw=" # name collision :(
-
-                            ]
+    #     will need to parse differently :(
 
 
-    dict = xmp_parse( xmp_str, elements)
-    if dict is None:
+    element = "drone-skydio:CameraOrientationNED"
+    values = xmp_str[xmp_str.find(element) + len(element) : xmp_str.find(element) + len(element) + 100]
+    theta = float(values.split('\"')[3])
+    azimuth = float(values.split('\"')[5])
+
+    theta = abs(theta)
+
+    elements = ["drone-skydio:Latitude=",
+                "drone-skydio:Longitude=",
+                "drone-skydio:AbsoluteAltitude="]
+    gpsDict = xmp_parse( xmp_str, elements)
+
+    y = gpsDict["drone-skydio:Latitude="]
+    x = gpsDict["drone-skydio:Longitude="]
+    z = gpsDict["drone-skydio:AbsoluteAltitude="]
+
+    if y is None or x is None or z is None or azimuth is None or theta is None:
         return None
-
-    # print(xmp_str)
-
-    y = dict["drone-skydio:Latitude="]
-    x = dict["drone-skydio:Longitude="]
-    z = dict["drone-dji:AbsoluteAltitude="]
-
-    # azimuth = dict[
-    # theta = abs(
-    return None
+    else:
+        return (y, x, z, azimuth, theta)
 
 """takes a xmp metadata string and a list of keys
 return a dictionary of key, value pairs

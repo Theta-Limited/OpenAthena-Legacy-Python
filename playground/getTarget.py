@@ -221,7 +221,8 @@ yParams: tuple
 
 """
 def resolveTarget(y, x, z, azimuth, theta, elevationData, xParams, yParams):
-    decimal.getcontext().prec = 50
+    # jpl.nasa.gov/edu/news/2016/3/16/how-many-decimals-of-pi-do-we-really-need
+    decimal.getcontext().prec = 30
     y = decimal.Decimal(y)
     x = decimal.Decimal(x)
     z = decimal.Decimal(z)
