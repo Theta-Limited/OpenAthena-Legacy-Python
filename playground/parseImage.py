@@ -212,7 +212,7 @@ def parseImage():
                 print(f'\n\nfilename: {thisImage}')
                 dateTime = exifData["DateTime"]
                 if dateTime is not None:
-                    print(f'Date/Time:{dateTime}')
+                    print(f'Image Date/Time: {dateTime}')
 
                 print(f'\nApproximate range to target: {round(finalDist , 2)}\n')
 
