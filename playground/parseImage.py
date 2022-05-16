@@ -307,10 +307,11 @@ def handleSKYDIO( xmp_str ):
     element = "drone-skydio:CameraOrientationNED"
     startIndex = xmp_str.find(element)
     if startIndex == -1:
-        element = "drone-skydio:CameraOrientationFLU"
-        startIndex = xmp_str.find(element)
-        if startIndex == -1:
-            return None
+        # element = "drone-skydio:CameraOrientationFLU"
+        # startIndex = xmp_str.find(element)
+        # if startIndex == -1:
+        #     return None
+        return None
 
     values = xmp_str[startIndex + len(element) : startIndex + len(element) + 100]
     theta = values.split('\"')[3]
