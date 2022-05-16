@@ -37,6 +37,8 @@ import mgrs # Military Grid ref converter
 from PIL import Image
 from PIL import ExifTags
 
+import difflib
+
 #     write and mangle
 #     eli.thegreenplace.net/2012/03/15/processing-xml-in-python-with-elementtree
 # try:
@@ -148,6 +150,12 @@ def parseImage():
                 # xmpMake = str(xmpMake.split('\"',3)[1])
                 # print(f'xmpMake: {xmpMake}')
                 make = exifData["Make"].upper()
+                make = make.strip()
+                if make[-1] == "\0":
+                    # fix nul terminated string bug
+                    # joelonsoftware.com/2003/10/08/the-absolute-minimum-every-software-developer-absolutely-positively-must-know-about-unicode-and-character-sets-no-excuses
+                    make = make.rstrip("\0")
+
                 if make == "DJI":
                     sensData = handleDJI(xmp_str)
                     if sensData is not None:
@@ -173,9 +181,14 @@ def parseImage():
                     # <----YOUR HANDLER FUNCTION HERE---->
                     pass
                 else:
-                    print(f'ERROR with {thisImage}, xmp data not found!', file=sys.stderr)
+                    print(f'ERROR with {thisImage}, make {make} not compatible with this program!', file=sys.stderr)
                     print(f'skipping {thisImage}', file=sys.stderr)
                     continue
+
+            else:
+                print(f'ERROR with {thisImage}, xmp data not found!', file=sys.stderr)
+                print(f'skipping {thisImage}', file=sys.stderr)
+                continue
 
         except:
             print(f'ERROR with filename {thisImage}, skipping...', file=sys.stderr)
@@ -290,8 +303,6 @@ def handleSKYDIO( xmp_str ):
     # Skydio has multiple frame of reference tags with same children
     #     (i.e. "Yaw", "Pitch", etc.)
     #     will need to parse differently :(
-
-    # print(xmp_str)
 
     element = "drone-skydio:CameraOrientationNED"
     startIndex = xmp_str.find(element)
