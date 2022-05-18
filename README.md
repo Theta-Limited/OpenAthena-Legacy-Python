@@ -1,12 +1,12 @@
 # Open Athena
-![Carole Raddato - Statue of Athena wearing a Corinthian helmet - CC Share Alike license](athena_thumb.jpg)
+![Carole Raddato - Statue of Athena wearing a Corinthian helmet - CC Share Alike license](./assets/athena_thumb.jpg)
 
-Open Athena is a project to enable precision indirect fires that disrupt conventional combined arms warfare. This is accomplished by combining consumer rotary-wing aircraft (drones) [sensor data](./drone_sensor_data_blurb.md) with [geospatial topography data](https://github.com/mkrupczak3/OpenAthena/blob/main/playground/EIO_fetch_geotiff_example.md)
+Open Athena is a project to enable precision indirect fires that disrupt conventional combined arms warfare. This is accomplished by combining consumer rotary-wing aircraft (drones) [sensor data](./drone_sensor_data_blurb.md) with [geospatial topography data](./EIO_fetch_geotiff_example.md) to provide the instantaneous location of target(s)
 
 This software is in pre-alpha and results are not guaranteed to be accurate. Use appropriate caution when using data generated from this program
 
  [**Premise**](https://github.com/mkrupczak3/OpenAthena#premise)
-[![proof_of_concept](proof_of_concept.jpg)](https://github.com/mkrupczak3/OpenAthena#premise)
+[![proof_of_concept](./assets/proof_of_concept.jpg)](https://github.com/mkrupczak3/OpenAthena#premise)
 
 
  [**Installation**](https://github.com/mkrupczak3/OpenAthena#install)
@@ -39,7 +39,7 @@ In first-hand accounts (via reporter [@Jack_Watling](https://twitter.com/Jack_Wa
 
 In reporting (via reporter [@HoansSolo](http://www.w3.org/1999/02/22-rdf-syntax-ns)): [HoansSolo/status/1523955057187860480](https://twitter.com/HoansSolo/status/1523955057187860480)
 
-forward artillery observation for destruction of concentrated armored units (unverified):
+forward artillery observation for destruction of concentrated armored units:
 [Blue_Sauron/status/1524742847664173057](https://twitter.com/Blue_Sauron/status/1524742847664173057)
 [kms_d4k/status/1524506214650028032](https://twitter.com/kms_d4k/status/1524506214650028032)
 
@@ -59,7 +59,7 @@ forward artillery observation for logistics disruption:
 
 This project portends the possibility of one such upset to existing combined arms doctrine. Low cost remote-controlled consumer-grade aircraft are the instrument of such a change in the character of warfare. Such aircraft are easy to operate by infantry units and inexpensive to replace. Meanwhile, when used to guide indirect fire, such aircraft may provide an effective counter to concentrated infantry and armored units of an adversary accustomed to fighting under current combined arms doctrine.
 
-Due to the low altitude operation and inexpensive nature of such aircraft, they can counter concentrated combined arms forces even when higher-altitude air supremacy is not held or may not be achieved against an adversary. In such a fashion, low altitude consumer-grade aircraft upset the role of high-altitude military aircraft as the only effective foil to ground-based combined arms. High-altitude air supremacy becomes less important, especially in situations where the adversary is unable to field enough military aircraft to enforce an airborne presence or provide close air support.
+Due to the low altitude operation and inexpensive nature of such aircraft, they can counter concentrated combined arms forces even when higher-altitude air supremacy is not held or may not be achieved against an adversary. In such a fashion, low altitude consumer-grade aircraft upset the role of high-altitude military aircraft as the only effective foil to ground-based combined arms.
 
 Additionally, the combination of existing combined arms with new precision indirect fire capabilities may allow a unit to move more rapidly and gain ground at frightening speeds using classic fire-and-movement tactics. The advantage provided by precision indirect fire is that it can supress a target from beyond line of sight, reducing the burden of infantry units to supress a target while a friendly unit is in motion. Well executed maneuvers under such conditions may outpace a conventional force's ability to react, resupply, and reposition its own defenses.
 
@@ -73,23 +73,25 @@ Effort should be made into producing inexpensive 'bird of prey' aircraft that ca
 
 # Premise
 
-![concept whiteboard diagram](concept_whiteboard_diagram.jpg)
+![concept whiteboard diagram](./assets/concept_whiteboard_diagram.jpg)
 
 Multi-copter rotary-wing aircraft (e.g. quadroters, drones, etc.) typically have an onboard 3D A-GPS sensor for position/alt., a magnetometer for compass heading/azimuth,  and a sensitive barometer (atmospheric pressure sensor) for accurate absolute altitude relative to sea level.
 
 They also typically have an "accelerometer" which allows it to stay level with the ground while in flight, and a camera.
 
-The camera starts level with the horizon during normal operation, and the operator can pitch it downwards towards the ground for live camera feed and taking pictures. These pictures store GPS coordinates, altitude, and the azimuth and angle of declanation (pitch) in their XMP and EXIF metadata (attached with the image)
+The camera starts level with the horizon during normal operation, and the operator can pitch it downwards towards the ground for live camera feed and taking pictures. These pictures store GPS coordinates, altitude, and the azimuth and angle of declanation downward (pitch) in their XMP and EXIF metadata (attached with the image)
 
-Given that the lat/long and altitude of the rotary-wing aircraft is known, its azimuth is known, and it is possible to obtain accurate worldwide elevation data (within ~30m) from [this api](https://pypi.org/project/elevation/), it is a very simple math problem to calculate the position and altitude of the object aimed at by the camera.
+Given that the lat/long and altitude of the rotary-wing aircraft is known, its azimuth is known, and it is possible to obtain accurate worldwide elevation data (within ~30m) from [this api](https://pypi.org/project/elevation/), Open Athena calculates the position and altitude of the object aimed at by the camera.
 
-An invisible, imaginary mathematical line is "paramaterized" from the aircraft's camera towards the ground at its angle of declanation (theta). The point closest along this line to the aircraft yet reasonably near any geographic lat/long/alt data point is usually the target which the camera is aiming at. This provides the aircraft operator with an approximate latitude, longitude, and elevation of the target to which the camera is aiming in an extremely short period of time.
+An invisible, imaginary mathematical line is traced from the aircraft's camera towards the ground at its heading (azimuth) and angle of declanation downwards (theta) from the horizon. The point closest along this line to the aircraft yet reasonably near any geographic lat/long/alt data point is usually the target which the camera is aiming at. This provides the aircraft operator with a latitude, longitude, and elevation of the target to which the camera is aiming in an extremely short period of time.
 
 Such a rapid positional resolution may prove ideal for use by precision indirect fire teams
 
 # Install
 
 This software is in pre-alpha and results are not guaranteed to be accurate. Use appropriate caution when using data generated from this program
+
+[Python3](https://www.python.org/) (and the included pip package manager) must be installed first
 
 All you need to do is run `pip3 install gdal matplotlib mgrs`, then run `playground/geotiff_play.py` with python3:
 ```bash
@@ -106,9 +108,18 @@ python3 geotiff_play.py
 
 This software is in pre-alpha and results are not guaranteed to be accurate. Use appropriate caution when using data generated from this program
 
+### parseImage.py
+
+[parseImage.py](./playground/parseImage.py) can perform automatic extraction and use of EXIF/XMP sensor information from drone photos. This allows for the automatic extraction and use of data including the aircraft camera's lat/lon, altitude, azimuth, and angle of declenation (theta). OpenAthena (if provided [terrain elevation data](./EIO_fetch_geotiff_example.md)) will extract and use these values automaticaly to find the location on the ground in the exact center of the image
+
+[![image of command line on MacOS, command python3 parseImage.py bartow.tif, output and prompting user for drone image filename](./assets/parseImage_interactive_example2.png)](drone_sensor_data_blurb.md)
+
+
+More info [**here**](drone_sensor_data_blurb.md)
+
 ### geotiff_play.py
 
-Run python geotiff_play.py (while in the playground directory) for a demonstration of [geoTIFF](https://en.wikipedia.org/wiki/GeoTIFF) [DEM](https://en.wikipedia.org/wiki/Digital_elevation_model) parsing. The file `Rome-30m-DEM.tif` is provided in the `playground` directory as an example. A DEM covering a customized area can be [easily obtained](./playground/EIO_fetch_geotiff_example.md) using the python `elevation` API
+Run python geotiff_play.py (while in the playground directory) for a demonstration of [geoTIFF](https://en.wikipedia.org/wiki/GeoTIFF) [DEM](https://en.wikipedia.org/wiki/Digital_elevation_model) parsing. The file `Rome-30m-DEM.tif` is provided in the `playground` directory as an example. A DEM covering a customized area can be [easily obtained](./EIO_fetch_geotiff_example.md) using the python `elevation` API
 
 
 (counterintuitively, the x and y axis are backwards in the standard notation of a position via [latitude , longitude])
@@ -120,7 +131,7 @@ Run python geotiff_play.py (while in the playground directory) for a demonstrati
 user@mypc:~/projects/OpenAthena/playground$
 python geotiff_play.py
 ```
-![render of terrain around Rome](playground/render_cli_screenshot.png)
+![render of terrain around Rome](./assets/render_cli_screenshot.png)
 
 Then, exit the picture window that appears. You will now be prompted in the command line interface for a latitude and longitude, enter lat/long coordinates and the program will give you the approximate elevation using the nearest elevation data point
 
@@ -129,12 +140,6 @@ Then, exit the picture window that appears. You will now be prompted in the comm
 
 
 getTarget.py searches along the constructed line (emmitted from the camera center) for a terrain match
-
-
-This software is still in testing. Any match should be verified before it is used
-
-
-running `geotiff_play` in a seprate terminal session before and while running `getTarget.py` is favorable because it allows yourself to view the terrain data visually while experimenting with terrain resolution matches
 
 
 To start, `cd` into the `playground` directory, then run getTarget.py:
@@ -246,14 +251,7 @@ The values should be tested for correctness and not totally relied upon in the c
 
 The program `getTarget.py` will then exit
 
-### parseImage.py
 
-[parseImage.py](./playground/parseImage.py) has an experimental feature for automatic extraction and use of EXIF/XMP sensor information from drone photos. This allows for the automatic extraction and use of data including the aircraft camera's lat/lon, altitude, azimuth, and angle of declenation (theta)
-
-[![image of command line on MacOS, command python3 parseImage.py bartow.tif, output and prompting user for drone image filename](parseImage_interactive_example2.png)](drone_sensor_data_blurb.md)
-
-
-More info [**here**](drone_sensor_data_blurb.md)
 
 
 # Military Uses

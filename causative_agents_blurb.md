@@ -16,4 +16,4 @@ It is also interesting to note from two tables taken from studies conducted on B
 
 Table 14:
 
-[![causative agents table](./Causative_Agents_Casualties_WWII.png)](https://web.archive.org/web/20210317070618/https://history.amedd.army.mil/booksdocs/wwii/woundblstcs/chapter1.htm#table14)
+[![causative agents table](./assets/Causative_Agents_Casualties_WWII.png)](https://web.archive.org/web/20210317070618/https://history.amedd.army.mil/booksdocs/wwii/woundblstcs/chapter1.htm#table14)

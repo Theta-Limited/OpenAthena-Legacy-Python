@@ -1,5 +1,0 @@
-matthew@mycomputer:~/projects/OpenAerialForwardArtilleryObservation/playground$ python3 elevation_from_lat_long.py Rome-30m-DEM.tif
-GOT HERE
-Rome-30m-DEM.tif
-Okay, grabbing the GeoTIF file named:  Rome-30m-DEM.tif
-35

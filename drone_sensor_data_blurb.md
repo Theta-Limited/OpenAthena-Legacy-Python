@@ -10,10 +10,10 @@ parseImage.py can be run in an **interactive** mode, or **headless** mode based 
 
 #### interactive
 
-Before using parseImage.py, make sure you have a valid geoTiff file that covers at least the location of the drone and the possible location of its subject. One way to do this is to get the drone's location from an [image's metadata](drone_sensor_data_blurb.md#manual-extraction), then [clip a geoTiff file of the surrounding area](./playground/EIO_fetch_geotiff_example.md)
+Before using parseImage.py, make sure you have a valid geoTiff file that covers at least the location of the drone and the possible location of its subject. One way to do this is to get the drone's location from an [image's metadata](drone_sensor_data_blurb.md#manual-extraction), then [clip a geoTiff file of the surrounding area](./EIO_fetch_geotiff_example.md)
 
 Next, choose an image for which to resolve the location of its subject. For example `DJI_0419.JPG`:
-![image of Thompson Park, GA with small shed and concrete area centered](DJI_0419_L.jpeg)
+![image of Thompson Park, GA with small shed and concrete area centered](./assets/DJI_0419_L.jpeg)
 
 Finally, run `parseImage.py`. To save time, the geoTiff file can be provided as the first argument after `python parseImage.py` (or `python3 parseImage.py` on Macs for example):
 ```bash
@@ -21,20 +21,20 @@ python parseImage.py bartow.tif
 ```
 (Note: the file must end in `.tif`. If you do not provide a geoTiff file, you will be prompted for input of a filename)
 
-![image of command line on MacOS, command python3 parseImage.py bartow.tif](parseImage_interactive_example.png)
+![image of command line on MacOS, command python3 parseImage.py bartow.tif](./assets/parseImage_interactive_example.png)
 
 **RETURN**
 
-![image of command line on MacOS, command python3 parseImage.py bartow.tif, output and prompting user for drone image filename](parseImage_interactive_example2.png)
+![image of command line on MacOS, command python3 parseImage.py bartow.tif, output and prompting user for drone image filename](./assets/parseImage_interactive_example2.png)
 
 Enter the full file path of the drone image if it is not in the `playground` directory. Otherwise, just input the image filename and press **RETURN**
 
 Multiple images can be processed at once in **interactive** mode. When you're finished inputing images, type **`done`** to begin processing
 
-![image of the processed location in text in Thompson Park, GA](parseImage_interactive_example3.png)
+![image of the processed location in text in Thompson Park, GA](./assets/parseImage_interactive_example3.png)
 
 Let's copy that `NATO MGRS` into Google Maps:
-![zoomed image of thompson park drone photo, compared side by side with Google Maps of resolved location. The center point of the drone photo on the left is marked with a small red circle](pretty_good.jpg)
+![zoomed image of thompson park drone photo, compared side by side with Google Maps of resolved location. The center point of the drone photo on the left is marked with a small red circle](./assets/pretty_good.jpg)
 
 Pretty good!
 
