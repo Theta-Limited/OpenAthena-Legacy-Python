@@ -1,8 +1,8 @@
-# Fetch geoTiff file from internet
+# Fetch GeoTIFF file from internet
 From python elevation API's [read the docs](http://elevation.bopen.eu/en/stable/quickstart.html#command-line-usage)
 
 ## Install
-clipping geoTiff files requires the python `elevation` package
+clipping GeoTIFF files requires the python `elevation` package
 
 This can be installed on most systems with the command `pip install elevation`, or alternatively `pip3 install elevation`
 
