@@ -4,7 +4,7 @@ The consumer models of some drones do not display their position, altitude, came
 
 ### parseImage.py
 
-[parseImage.py](./playground/parseImage.py) has an experimental feature for automatic extraction and use of EXIF/XMP sensor information from drone photos
+[parseImage.py](./src/parseImage.py) has an experimental feature for automatic extraction and use of EXIF/XMP sensor information from drone photos
 
 parseImage.py can be run in an **interactive** mode, or **headless** mode based on how many arguments are given after `python parseImage.py`. **Interactive** is designed for use by humans with one or more images, **headless** is designed for use by automation with one or more images. The output of **headless** mode is subject to change in future versions
 
@@ -27,7 +27,7 @@ python parseImage.py bartow.tif
 
 ![image of command line on MacOS, command python3 parseImage.py bartow.tif, output and prompting user for drone image filename](./assets/parseImage_interactive_example2.png)
 
-Enter the full file path of the drone image if it is not in the `playground` directory. Otherwise, just input the image filename and press **RETURN**
+Enter the full file path of the drone image if it is not in the `src` directory. Otherwise, just input the image filename and press **RETURN**
 
 Multiple images can be processed at once in **interactive** mode. When you're finished inputing images, type **`done`** to begin processing
 

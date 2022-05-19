@@ -6,20 +6,28 @@ from math import sin, asin, cos, atan2, sqrt
 import decimal # more float precision with Decimal objects
 import getTarget
 # import numpy
-# import sys
+import sys
 
-# geotiff_play
+# parseGeoTIFF
 
 def main():
 
     print("Hello World!")
-    print("I'm geotiff_play.py")
+    print("I'm parseGeoTIFF.py")
     print("Which File would you like to read?")
 
-    geofile = input("Enter the GeoTIF filename: ")
+
+    if 1 < len(sys.argv) and len(sys.argv) < 3:
+        if sys.argv[1].split('.')[-1].lower() != "tif":
+            outstr = f'FATAL ERROR: got argument: {sys.argv[1]}, expected GeoTIFF DEM!'
+            sys.exit(outstr)
+        else:
+            geofile = sys.argv[1].strip()
+    else:
+        geofile = input("Enter the GeoTIF filename: ").strip()
     # geofile = 'Rome-30m-DEM.tif'
 
-    print("Okay, grabbing the GeoTIF file named: ", geofile)
+    print("Okay, grabbing the GeoTIF file named: ", geofile, "\n")
 
 
     # based on:
@@ -31,7 +39,7 @@ def main():
     elevation = band.ReadAsArray()
 
     print("The shape of the elevation data is: ", elevation.shape)
-    time.sleep(3)
+    time.sleep(1)
 
 
 

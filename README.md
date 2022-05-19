@@ -93,13 +93,13 @@ This software is in pre-alpha and results are not guaranteed to be accurate. Use
 
 [Python3](https://www.python.org/) (and the included pip package manager) must be installed first
 
-All you need to do is run `pip3 install gdal matplotlib mgrs`, then run `playground/geotiff_play.py` with python3:
+All you need to do is run `pip3 install gdal matplotlib mgrs`, then run `src/parseGeoTIFF.py` with python3:
 ```bash
 pip3 install gdal matplotlib mgrs
 # if this fails, instead install the GDAL package with your package manager (i.e. apt, yum, brew, pacman, etc.)
 git clone https://github.com/mkrupczak3/OpenAthena.git
-cd OpenAthena/playground
-python3 geotiff_play.py
+cd OpenAthena/src
+python3 parseGeoTIFF.py
 ```
 
 "pip3" and "python3" may just be called "pip" and "python" depending on the configuration of your system
@@ -110,16 +110,16 @@ This software is in pre-alpha and results are not guaranteed to be accurate. Use
 
 ### parseImage.py
 
-[parseImage.py](./playground/parseImage.py) can perform automatic extraction and use of EXIF/XMP sensor information from drone photos. This allows for the automatic extraction and use of data including the aircraft camera's lat/lon, altitude, azimuth, and angle of declenation (theta). OpenAthena (if provided [terrain elevation data](./EIO_fetch_geotiff_example.md)) will extract and use these values automaticaly to find the location on the ground in the exact center of the image
+[parseImage.py](./src/parseImage.py) can perform automatic extraction and use of EXIF/XMP sensor information from drone photos. This allows for the automatic extraction and use of data including the aircraft camera's lat/lon, altitude, azimuth, and angle of declenation (theta). OpenAthena (if provided [terrain elevation data](./EIO_fetch_geotiff_example.md)) will extract and use these values automaticaly to find the location on the ground in the exact center of the image
 
 [![image of command line on MacOS, command python3 parseImage.py bartow.tif, output and prompting user for drone image filename](./assets/parseImage_interactive_example2.png)](drone_sensor_data_blurb.md)
 
 
 More info [**here**](drone_sensor_data_blurb.md)
 
-### geotiff_play.py
+### parseGeoTIFF.py
 
-Run python geotiff_play.py (while in the playground directory) for a demonstration of [geoTIFF](https://en.wikipedia.org/wiki/GeoTIFF) [DEM](https://en.wikipedia.org/wiki/Digital_elevation_model) parsing. The file `Rome-30m-DEM.tif` is provided in the `playground` directory as an example. A DEM covering a customized area can be [easily obtained](./EIO_fetch_geotiff_example.md) using the python `elevation` API
+Run python parseGeoTIFF.py (while in the src directory) for a demonstration of [GeoTIFF](https://en.wikipedia.org/wiki/GeoTIFF) [DEM](https://en.wikipedia.org/wiki/Digital_elevation_model) parsing. The file `Rome-30m-DEM.tif` is provided in the `src` directory as an example. A DEM covering a customized area can be [easily obtained](./EIO_fetch_geotiff_example.md) using the python `elevation` API
 
 
 (counterintuitively, the x and y axis are backwards in the standard notation of a position via [latitude , longitude])
@@ -128,8 +128,8 @@ Run python geotiff_play.py (while in the playground directory) for a demonstrati
 
 
 ```
-user@mypc:~/projects/OpenAthena/playground$
-python geotiff_play.py
+user@mypc:~/projects/OpenAthena/src$
+python parseGeoTIFF.py
 ```
 ![render of terrain around Rome](./assets/render_cli_screenshot.png)
 
@@ -142,10 +142,10 @@ Then, exit the picture window that appears. You will now be prompted in the comm
 getTarget.py searches along the constructed line (emmitted from the camera center) for a terrain match
 
 
-To start, `cd` into the `playground` directory, then run getTarget.py:
+To start, `cd` into the `src` directory, then run getTarget.py:
 
 ```bash
-you@yourcomputer playground % python3 getTarget.py
+you@yourcomputer src % python3 getTarget.py
 ```
 
 You should then see the following prompt:
@@ -156,7 +156,7 @@ Which GeoTiff file would you like to read?
 Enter the GeoTIFF filename:
 ```
 
-You can clip [your own geoTIFF file](./playground/EIO_fetch_geotiff_example.md) from the [elevation API command line](http://elevation.bopen.eu/en/stable/quickstart.html#command-line-usage), or just use the provided example file `Rome-30m-DEM.tif` which contains the elevation data of the city of Rome, Italy and its outlying area
+You can clip [your own GeoTIFF file](./EIO_fetch_geotiff_example.md) from the [elevation API command line](http://elevation.bopen.eu/en/stable/quickstart.html#command-line-usage), or just use the provided example file `Rome-30m-DEM.tif` which contains the elevation data of the city of Rome, Italy and its outlying area
 
 
 ```bash
@@ -221,6 +221,8 @@ Target (lat, lon): 33.8352826, -84.5219971
 Google Maps: https://maps.google.com/?q=33.835283,-84.521997
 
 NATO MGRS: 16SGC2930646654
+MGRS 10m: 33TUG03953105
+MGRS 100m: 33TUG039310
 
 ```
 
@@ -246,7 +248,7 @@ The values should be tested for correctness and not totally relied upon in the c
 `Google Maps:` a link to the previous lat/lon on Google Maps. Each rounded to 6 decimal places
 
 
-`NATO MGRS: ` represents the target location in the [NATO Military Grid Reference System (MGRS)](https://en.wikipedia.org/wiki/Military_Grid_Reference_System), which is simmilar to [UTM](https://en.wikipedia.org/wiki/Universal_Transverse_Mercator_coordinate_system). This coordinate system does not include the altitude of the Target
+`NATO MGRS:` represents the target location in the [NATO Military Grid Reference System (MGRS)](https://en.wikipedia.org/wiki/Military_Grid_Reference_System), which is simmilar to [UTM](https://en.wikipedia.org/wiki/Universal_Transverse_Mercator_coordinate_system). This coordinate system does not include the altitude of the Target
 
 
 The program `getTarget.py` will then exit

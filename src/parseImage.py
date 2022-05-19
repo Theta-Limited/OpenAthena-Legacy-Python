@@ -51,7 +51,7 @@ import difflib
 # unused :(
 # from libxmp.utils import file_to_dict # python-xmp-toolkit, (c) ESA
 
-from geotiff_play import getAltFromLatLon, binarySearchNearest
+from parseGeoTIFF import getAltFromLatLon, binarySearchNearest
 from getTarget import *
 
 """prompt the user for options input,

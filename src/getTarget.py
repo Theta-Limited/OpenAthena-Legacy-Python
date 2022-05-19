@@ -15,7 +15,7 @@ import mgrs # Military Grid ref converter
 import math
 from math import sin, asin, cos, atan2, sqrt
 import decimal # more float precision with Decimal objects
-import geotiff_play
+import parseGeoTIFF
 import sys
 
 """get the pos of current subject of UAS camera
@@ -237,7 +237,7 @@ def resolveTarget(y, x, z, azimuth, theta, elevationData, xParams, yParams):
     #     if so, skip iterative search b/c target is directly
     #     below us:
     if math.isclose((math.pi / 2), theta):
-        terrainAlt = geotiff_play.getAltFromLatLon(y, x, xParams, yParams, elevationData)
+        terrainAlt = parseGeoTIFF.getAltFromLatLon(y, x, xParams, yParams, elevationData)
         finalDist = z - terrainAlt
         if finalDist < 0:
             print(f'\n ERROR: bad calculation!\n')
@@ -296,9 +296,9 @@ def resolveTarget(y, x, z, azimuth, theta, elevationData, xParams, yParams):
     curY = decimal.Decimal(y)
     curX = decimal.Decimal(x)
     curZ = decimal.Decimal(z)
-    altDiff = curZ - geotiff_play.getAltFromLatLon(curY, curX, xParams, yParams, elevationData)
+    altDiff = curZ - parseGeoTIFF.getAltFromLatLon(curY, curX, xParams, yParams, elevationData)
     while altDiff > threshold:
-        groundAlt = geotiff_play.getAltFromLatLon(curY, curX, xParams, yParams, elevationData)
+        groundAlt = parseGeoTIFF.getAltFromLatLon(curY, curX, xParams, yParams, elevationData)
         altDiff = curZ - groundAlt
 
         avgAlt = curZ
@@ -325,7 +325,7 @@ def resolveTarget(y, x, z, azimuth, theta, elevationData, xParams, yParams):
     # simple pythagorean theorem
     # may be inaccurate for very very large horizontal distances
     finalDist = sqrt(finalHorizDist ** 2 + finalVertDist ** 2)
-    terrainAlt = geotiff_play.getAltFromLatLon(curY, curX, xParams, yParams, elevationData)
+    terrainAlt = parseGeoTIFF.getAltFromLatLon(curY, curX, xParams, yParams, elevationData)
 
     return((finalDist, curY, curX, curZ, terrainAlt))
 
