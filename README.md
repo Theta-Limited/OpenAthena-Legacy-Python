@@ -3,6 +3,8 @@
 
 Open Athena is a project to enable precision indirect fires that disrupt conventional combined arms warfare. This is accomplished by combining consumer rotary-wing aircraft (drones) [sensor data](./drone_sensor_data_blurb.md) with [geospatial topography data](./EIO_fetch_geotiff_example.md) to provide the instantaneous location of target(s)
 
+🖼️👨‍💻 + 🧮⛰️ = 🎯📍
+
 This software is in pre-alpha and results are not guaranteed to be accurate. Use appropriate caution when using data generated from this program
 
  [**Premise**](https://github.com/mkrupczak3/OpenAthena#premise)
