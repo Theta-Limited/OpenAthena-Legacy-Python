@@ -21,11 +21,11 @@ python parseImage.py bartow.tif
 ```
 (Note: the file must end in `.tif`. If you do not provide a geoTiff file, you will be prompted for input of a filename)
 
-![image of command line on MacOS, command python3 parseImage.py bartow.tif](./assets/parseImage_interactive_example.png)
+ ![image of command line on MacOS, command python3 parseImage.py cobb.tif](./assets/parseImage_interactive_example.png)
 
 **RETURN**
 
-![image of command line on MacOS, command python3 parseImage.py bartow.tif, output and prompting user for drone image filename](./assets/parseImage_interactive_example2.png)
+![image of command line on MacOS, command python3 parseImage.py cobb.tif, output and prompting user for drone image filename and DJI_0419.JPG entered](./assets/parseImage_interactive_example2.png)
 
 Enter the full file path of the drone image if it is not in the `src` directory. Otherwise, just input the image filename and press **RETURN**
 

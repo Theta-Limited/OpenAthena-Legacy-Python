@@ -26,6 +26,7 @@ en.wikipedia.org/wiki/EXIF
 """
 
 import sys
+import os
 import time
 import math
 from math import sin, asin, cos, atan2, sqrt
@@ -197,9 +198,7 @@ def parseImage():
         if target is not None:
             finalDist, tarY, tarX, tarZ, terrainAlt = target
             if headless:
-                # undefined behavior if there is a '.' in full filepath
-                #     other than the file extension
-                filename = thisImage.split('.')[0] + ".ATHENA"
+                filename = ''.join(thisImage.split('.')[0:-1]) + ".ATHENA"
                 dateTime = exifData["DateTime"]
 
                 file_object = open(filename, 'w')
@@ -215,10 +214,10 @@ def parseImage():
                 file_object.write(str(finalDist))
                 if dateTime is not None:
                     file_object.write(str(dateTime) + "\n")
-                file_object.write(targetMGRS)
-                file_object.write(targetMGRS10m)
-                file_object.write(targetMGRS100m)
-                file_object.write("\n# format: lat, lon, alt, dist, MGRS 1m, MGRS 10m, MGRS 100m")
+                file_object.write(targetMGRS + "\n")
+                file_object.write(targetMGRS10m + "\n")
+                file_object.write(targetMGRS100m + "\n")
+                file_object.write("# format: lat, lon, alt, dist, MGRS 1m, MGRS 10m, MGRS 100m")
 
                 file_object.close()
             else:
@@ -329,6 +328,8 @@ def handleSKYDIO( xmp_str ):
                 "drone-skydio:Longitude=",
                 "drone-skydio:AbsoluteAltitude="]
     gpsDict = xmp_parse(xmp_str, elements)
+    if gpsDict is None:
+        return None
 
     y = gpsDict["drone-skydio:Latitude="]
     x = gpsDict["drone-skydio:Longitude="]
