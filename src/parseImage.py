@@ -26,7 +26,6 @@ en.wikipedia.org/wiki/EXIF
 """
 
 import sys
-import os
 import time
 import math
 from math import sin, asin, cos, atan2, sqrt
