@@ -3,7 +3,7 @@ getTarget.py
 
 This file should contain most of the math-heavy functions
 
-This file will focus instead on the core math of resolving the location
+This file will focus on the core math of resolving the location
     of a target in the UAS camera's direct center line-of-sight
 
 """

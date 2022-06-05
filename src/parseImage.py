@@ -1,6 +1,6 @@
 """
 parseImage.py
--
+
 This file is responsible for extracting drone sensor data from still-capture image(s) XMP and EXIF metadata
 
 This can be done in near real-time if images are automatically downloaded to a computer from the UAV's paired device
