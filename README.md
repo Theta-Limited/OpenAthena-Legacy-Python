@@ -5,16 +5,16 @@ Open Athena is a project to enable precision indirect fires that disrupt convent
 
 🖼️👨‍💻 + 🧮⛰️ = 🎯📍
 
-This software is in pre-alpha and results are not guaranteed to be accurate. Use appropriate caution when using data generated from this program
+This software is in pre-alpha. Use appropriate caution when using data generated from this program
 
- [**Premise**](https://github.com/mkrupczak3/OpenAthena#premise)
+# [**Premise**](https://github.com/mkrupczak3/OpenAthena#premise)
 [![proof_of_concept](./assets/proof_of_concept.jpg)](https://github.com/mkrupczak3/OpenAthena#premise)
 
 
- [**Installation**](https://github.com/mkrupczak3/OpenAthena#install)
+# [**Installation**](https://github.com/mkrupczak3/OpenAthena#install)
 
 
- [**Usage**](https://github.com/mkrupczak3/OpenAthena#usage)
+# [**Usage**](https://github.com/mkrupczak3/OpenAthena#usage)
 
 ---
 
@@ -91,7 +91,7 @@ Such a rapid positional resolution may prove ideal for use by precision indirect
 
 # Install
 
-This software is in pre-alpha and results are not guaranteed to be accurate. Use appropriate caution when using data generated from this program
+This software is in pre-alpha. Use appropriate caution when using data generated from this program
 
 [Python3](https://www.python.org/) (and the included pip package manager) must be installed first
 
@@ -107,8 +107,6 @@ python3 parseGeoTIFF.py
 "pip3" and "python3" may just be called "pip" and "python" depending on the configuration of your system
 
 # Usage:
-
-This software is in pre-alpha and results are not guaranteed to be accurate. Use appropriate caution when using data generated from this program
 
 ### parseImage.py
 
