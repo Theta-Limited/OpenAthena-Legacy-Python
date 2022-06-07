@@ -16,6 +16,7 @@ If your UAV make or model is not listed here, feel free to help out and make a p
 Makes:
     DJI
     Skydio
+    Autel Robotics (unverified accuracy)
 
 XMP:
 en.wikipedia.org/wiki/Extensible_Metadata_Platform
@@ -174,6 +175,19 @@ def parseImage():
                         print(f'ERROR with {thisImage}, couldn\'t find sensor data', file=sys.stderr)
                         print(f'skipping {thisImage}', file=sys.stderr)
                         continue
+                elif make == "AUTEL ROBOTICS":
+                    sensData = handleAUTEL(xmp_str, exifData)
+                    if sensData is not None:
+                        y, x, z, azimuth, theta = sensData
+                        target = resolveTarget(y, x, z, azimuth, theta, elevationData, xParams, yParams)
+                    else:
+                        print(f'ERROR with {thisImage}, couldn\'t find sensor data', file=sys.stderr)
+                        print(f'skipping {thisImage}', file=sys.stderr)
+                        continue
+                elif make == "PARROT":
+                    print("Parrot UAS's are not supported in this version")
+                    print(f'skipping {thisImage}', file=sys.stderr)
+                    continue
                 elif False: # your drone make here
                     # <----YOUR HANDLER FUNCTION HERE---->
                     pass
@@ -251,7 +265,7 @@ returns tuple (y, x, z, azimuth, theta)
 
 Parameters
 ----------
-xmp_str : string
+xmp_str : String
     a string containing the contents of XMP metadata of a DJI drone image
     may contain errant newline sequences, preventing parsing as true XML
 """
@@ -294,13 +308,16 @@ returns tuple (y, x, z, azimuth, theta)
 
 Parameters
 ----------
-xmp_str: string
+xmp_str: String
     a string containing the contents of XMP metadata of a Skydio drone image
 """
 def handleSKYDIO( xmp_str ):
     # Skydio has multiple frame of reference tags with same children
     #     (i.e. "Yaw", "Pitch", etc.)
     #     will need to parse differently :(
+    #
+    # More info:
+    #     https://support.skydio.com/hc/en-us/articles/4417425974683-Skydio-camera-and-metadata-overview
 
     element = "drone-skydio:CameraOrientationNED"
     startIndex = xmp_str.find(element)
@@ -339,15 +356,106 @@ def handleSKYDIO( xmp_str ):
     else:
         return (y, x, z, azimuth, theta)
 
+"""takes a xmp metadata string and exifData dictionary from an Autel drone,
+returns a tuple (y, x, z, azimuth, theta)
+
+Parameters
+----------
+xmp_str: String
+    a string containing the contents of XMP metadata of a Autel drone image
+exifData: Dict
+    a dictionary containing the EXIF metadata of a Autel drone image,
+    expressed as key:value pairs
+"""
+def handleAUTEL(xmp_str, exifData):
+    # print(exifData)
+    GPSInfo = exifData['GPSInfo']
+
+    # e.g. N or S
+    latDir = GPSInfo[1].strip().upper()
+    latDeg = GPSInfo[2][0]
+    latMin = GPSInfo[2][1]
+    latSec = GPSInfo[2][2]
+
+    y = latDeg
+    y += (latMin / 60.0)
+    y += (latSec / 3600.0)
+    if latDir == "S":
+        y = y * -1.0
+    y = float(y)
+
+    # e.g. E or W
+    lonDir = GPSInfo[3].strip().upper()
+    lonDeg = GPSInfo[4][0]
+    lonMin = GPSInfo[4][1]
+    lonSec = GPSInfo[4][2]
+
+    x = lonDeg
+    x += (lonMin / 60.0)
+    x += (lonSec / 3600.0)
+    if lonDir == "W":
+        x = x * -1.0
+    x = float(x)
+
+    z = GPSInfo[6]
+    z = float(z)
+
+    elements = ["Camera:Pitch=",
+                "Camera:Yaw=",
+                "Camera:Roll="]
+
+    dirDict = xmp_parse(xmp_str, elements)
+    azimuth = dirDict["Camera:Yaw="]
+    azimuth = float(azimuth)
+
+    theta = dirDict["Camera:Pitch="]
+    # AUTEL Camera pitch 0 is down, 90 is forward towards horizon
+    # so, we use its complement instead
+    theta = 90.0 - theta
+    theta = float(theta)
+    if theta < 0:
+        return None
+
+    if y is None or x is None or z is None or azimuth is None or theta is None:
+        return None
+    else:
+        return (y, x, z, azimuth, theta)
+
+
+"""takes a xmp metadata string and exifData dictionary from a Parrot drone,
+returns a tuple (y, x, z, azimuth, theta)
+
+Parameters
+----------
+xmp_str: String
+    a string containing the contents of XMP metadata of a Parrot drone image
+exifData: Dict
+    a dictionary containing the EXIF metadata of a Parrot drone image,
+    expressed as key:value pairs
+"""
+def handlePARROT(xmp_str, exifData):
+    # https://developer.parrot.com/docs/pdraw/photo-metadata.html
+    # https://support.pix4d.com/hc/en-us/articles/202558969-Yaw-Pitch-Roll-and-Omega-Phi-Kappa-angles#How%20to%20convert%20Yaw,%20Pitch,%20Roll%20to%20Omega,%20Phi,%20Kappa
+    # https://stackoverflow.com/questions/49790453/enu-ned-frame-conversion-using-quaternions
+
+    # Parrot drone (for some un-godly reason) only gives 3D direction in
+    #    East North Up (ENU), not North East Down (NED)
+    #
+    # very lame!
+    #
+    # Will have to convert to NED for use with OpenAthena
+    # This is really hard (math-wise), will finish later...
+    return None
+
 """takes a xmp metadata string and a list of keys
 return a dictionary of key, value pairs
        ...or None if xmp_str is empty
 
 Parameters
 ----------
-xmp_str: string
+xmp_str: String
     a string containing the contents of XMP metadata
-elements: string[]
+elements: String[]
     a list of strings, each string is a key for which to search XMP data
     for its corresponding value
 """
@@ -362,6 +470,7 @@ def xmp_parse ( xmp_str, elements ):
         return None
 
     return dict
+
 
 
 if __name__ == "__main__":
