@@ -1,7 +1,0 @@
-# .gitignore
-*.pyc
-*~
-\#*\#
-.\#*headless_output.xt
-*.tif
-*.tfw
