@@ -7,14 +7,14 @@ Open Athena is a project to enable precision indirect fires that disrupt convent
 
 This software is in pre-alpha. Use appropriate caution when using data generated from this program
 
-# [**Premise**](https://github.com/mkrupczak3/OpenAthena#premise)
+# [**Premise**](https://github.com/mkrupczak3/OpenAthena#premise-1)
 [![proof_of_concept](./assets/proof_of_concept.jpg)](https://github.com/mkrupczak3/OpenAthena#premise)
 
 
 # [**Installation**](https://github.com/mkrupczak3/OpenAthena#install)
 
 
-# [**Usage**](https://github.com/mkrupczak3/OpenAthena#usage)
+# [**Usage**](https://github.com/mkrupczak3/OpenAthena#usage-1)
 
 ---
 
