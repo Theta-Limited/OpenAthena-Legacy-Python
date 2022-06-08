@@ -16,7 +16,7 @@ If your UAV make or model is not listed here, feel free to help out and make a p
 Makes:
     DJI
     Skydio
-    Autel Robotics (unverified accuracy)
+    Autel Robotics (less accurate for some reason? IDK why)
 
 XMP:
 en.wikipedia.org/wiki/Extensible_Metadata_Platform
@@ -260,43 +260,62 @@ def parseImage():
                 print(f'MGRS 100m: {targetMGRS100m}\n')
     #
 
-"""takes a xmp metadata string from a DJI drone,
+"""takes a xmp metadata string from a drone image of type "DJI Meta Data",
 returns tuple (y, x, z, azimuth, theta)
 
 Parameters
 ----------
 xmp_str : String
-    a string containing the contents of XMP metadata of a DJI drone image
+    a string containing the contents of XMP metadata of "DJI Meta Data" format
     may contain errant newline sequences, preventing parsing as true XML
+elements : String[]
+    optionally passed in to override XMP tags to use for search
+    e.x.: with Autel drones, replace "drone-dji:GpsLatitude=" with "drone:GpsLatitude", etc.
 """
-def handleDJI( xmp_str ):
-    elements = ["drone-dji:AbsoluteAltitude=",
-                            "drone-dji:GpsLatitude=",
-                            "drone-dji:GpsLongitude=",
-                            # Gimbal values are absolute
-                            "drone-dji:GimbalRollDegree=", #should always be 0
-                            "drone-dji:GimbalYawDegree=",
-                            "drone-dji:GimbalPitchDegree=",
-                            # ...not relative to these values
-                            # https://developer.dji.com/iframe/mobile-sdk-doc/android/reference/dji/sdk/Gimbal/DJIGimbal.html
-                            # could be different for other mfns.?
-                            "drone-dji:FlightRollDegree=",
-                            "drone-dji:FlightYawDegree=",
-                            "drone-dji:FlightPitchDegree="]
+def handleDJI( xmp_str, elements=None):
+    # default, unless overridden
+    if elements == None:
+        elements = ["drone-dji:AbsoluteAltitude=",
+                    "drone-dji:GpsLatitude=",
+                    "drone-dji:GpsLongitude=",
+                    # Gimbal values are absolute
+                    "drone-dji:GimbalRollDegree=", #should always be 0
+                    "drone-dji:GimbalYawDegree=",
+                    "drone-dji:GimbalPitchDegree=",
+                    # ...not relative to these values
+                    # https://developer.dji.com/iframe/mobile-sdk-doc/android/reference/dji/sdk/Gimbal/DJIGimbal.html
+                    # could be different for other mfns.?
+                    "drone-dji:FlightRollDegree=",
+                    "drone-dji:FlightYawDegree=",
+                    "drone-dji:FlightPitchDegree="]
 
     dict = xmp_parse( xmp_str, elements)
     if dict is None:
         return None
 
     # print( xmp_str )
+    # print([e for e in elements if "GpsLongitude" in e][0])
 
-    y = dict["drone-dji:GpsLatitude="]
-    x = dict["drone-dji:GpsLongitude="]
-    z = dict["drone-dji:AbsoluteAltitude="]
+    y = float(dict[[e for e in elements if "GpsLatitude" in e][0]])
 
-    azimuth = dict["drone-dji:GimbalYawDegree="]
+    # Autel drones have a typo, "GpsLongtitude" instead of "GpsLongitude"
+    #     we must be able to handle either case, with or w/o typo
+    #     in case it is fixed later :(
+    typoAgnostic = [e for e in elements if "GpsLong" in e]
+    for e in typoAgnostic:
+        if dict[e] == None:
+            typoAgnostic.remove(e)
+    if len(typoAgnostic) == 1:
+        typoAgnostic = typoAgnostic[0]
+    else:
+        return None
+    x = float(dict[typoAgnostic])
 
-    theta = abs(dict["drone-dji:GimbalPitchDegree="])
+    z = float(dict[[e for e in elements if "AbsoluteAltitude" in e][0]])
+
+    azimuth = float(dict[[e for e in elements if "GimbalYawDegree" in e][0]])
+
+    theta = abs(float(dict[[e for e in elements if "GimbalPitchDegree" in e][0]]))
 
     if y is None or x is None or z is None or azimuth is None or theta is None:
         return None
@@ -347,9 +366,9 @@ def handleSKYDIO( xmp_str ):
     if gpsDict is None:
         return None
 
-    y = gpsDict["drone-skydio:Latitude="]
-    x = gpsDict["drone-skydio:Longitude="]
-    z = gpsDict["drone-skydio:AbsoluteAltitude="]
+    y = float(gpsDict["drone-skydio:Latitude="])
+    x = float(gpsDict["drone-skydio:Longitude="])
+    z = float(gpsDict["drone-skydio:AbsoluteAltitude="])
 
     if y is None or x is None or z is None or azimuth is None or theta is None:
         return None
@@ -370,6 +389,40 @@ exifData: Dict
 def handleAUTEL(xmp_str, exifData):
     # print(exifData)
     GPSInfo = exifData['GPSInfo']
+
+    elements = ["rdf:about="]
+    metadataAbout = xmp_parse(xmp_str, elements)
+    metadataAbout = metadataAbout["rdf:about="]
+    metadataAbout = metadataAbout.split(' ')[0]
+    metadataAbout = metadataAbout.upper()
+
+    # Newer firmware versions use simmilar XMP tags as DJI
+    if metadataAbout == "DJI":
+        # autel uses drone:tag instead of drone-dji:tag
+        # everything else format is the same as DJI
+        # v lame
+        elements = ["drone:AbsoluteAltitude=",
+                    "drone:GpsLatitude=",
+                    # typo in Autel robotics metada
+                    #     'Longtitude' instead of 'Longitude'
+                    #     OMFG
+                    "drone:GpsLongtitude=",
+                    # include without typo
+                    #     in case the typo is fixed in later firmware ver
+                    #     :'(
+                    "drone:GpsLongitude=",
+                    "drone:GimbalRollDegree=",
+                    "drone:GimbalYawDegree=",
+                    "drone:GimbalPitchDegree="]
+        return handleDJI(xmp_str, elements)
+    else:
+        # Older firmware versions use proprietary Autel Robotics XMP tags
+        #    If the metadata rdf:about is not "Autel Robotics Meta Data"
+        #    then this software can't parse metadata, so throw an error
+        if metadataAbout != "AUTEL":
+            errstr = "ERROR: unexpected metadata format while parsing Autel image"
+            print(errstr, file=sys.stderr)
+            return None
 
     # e.g. N or S
     latDir = GPSInfo[1].strip().upper()
@@ -405,14 +458,13 @@ def handleAUTEL(xmp_str, exifData):
                 "Camera:Roll="]
 
     dirDict = xmp_parse(xmp_str, elements)
-    azimuth = dirDict["Camera:Yaw="]
-    azimuth = float(azimuth)
+    azimuth = float(dirDict["Camera:Yaw="])
 
-    theta = dirDict["Camera:Pitch="]
+    theta = float(dirDict["Camera:Pitch="])
     # AUTEL Camera pitch 0 is down, 90 is forward towards horizon
     # so, we use its complement instead
     theta = 90.0 - theta
-    theta = float(theta)
+
     if theta < 0:
         return None
 
@@ -463,9 +515,12 @@ def xmp_parse ( xmp_str, elements ):
     dict = {}
     if len(xmp_str.strip()) > 0:
         for element in elements:
-            value = xmp_str[xmp_str.find(element) + len(element) : xmp_str.find(element) + len(element) + 10]
-            value = float(value.split('\"',3)[1])
-            dict[element] = value
+            if xmp_str.find(element) == -1:
+                dict[element] = None
+            else:
+                value = xmp_str[xmp_str.find(element) + len(element) : xmp_str.find(element) + len(element) + 10]
+                value = value.split('\"',3)[1]
+                dict[element] = value
     else:
         return None
 
