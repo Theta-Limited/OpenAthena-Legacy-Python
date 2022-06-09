@@ -338,41 +338,108 @@ def handleSKYDIO( xmp_str ):
     # More info:
     #     https://support.skydio.com/hc/en-us/articles/4417425974683-Skydio-camera-and-metadata-overview
 
+
     element = "drone-skydio:CameraOrientationNED"
     startIndex = xmp_str.find(element)
     if startIndex == -1:
-        # element = "drone-skydio:CameraOrientationFLU"
-        # startIndex = xmp_str.find(element)
-        # if startIndex == -1:
-        #     return None
         return None
+    substr = xmp_str[startIndex + len(element) :]
 
-    values = xmp_str[startIndex + len(element) : startIndex + len(element) + 100]
-    theta = values.split('\"')[3]
-    azimuth = values.split('\"')[5]
+    isNewFormat = False
+    canary = substr.split('\"')[1]
+    if canary == "Resource":
+        isNewFormat = True
+
+    CONED = substr
+
+    # # debug printout
+    # print(xmp_str)
+    # print(substr)
+
+    if isNewFormat:
+        # replace "<" open tag character with ">" close tag character
+        #     this way we can use the same character for splitting up the string
+        CONED = CONED.replace('<','>')
+
+        theta = CONED.find('Pitch')
+        if theta == -1:
+            return None
+        substr = CONED[theta :]
+        theta = substr.split('>')[1]
+
+        azimuth = CONED.find('Yaw')
+        if azimuth == -1:
+            return None
+        substr = CONED[azimuth :]
+        azimuth = substr.split('>')[1]
+
+    else:
+        theta = CONED.split('\"')[3]
+        azimuth = CONED.split('\"')[5]
+
 
     try:
         theta = float(theta)
         azimuth = float(azimuth)
     except ValueError:
+        errstr = f"ERROR: parsing isNewFormat: {isNewFormat} Skydio image failed"
+        errstr += f"with values theta: {theta} azimuth: {azimuth}"
+        print(errstr, file=sys.stderr)
         return None
 
     theta = abs(theta)
 
-    elements = ["drone-skydio:Latitude=",
-                "drone-skydio:Longitude=",
-                "drone-skydio:AbsoluteAltitude="]
-    gpsDict = xmp_parse(xmp_str, elements)
-    if gpsDict is None:
-        return None
+    if isNewFormat:
+        xmp_str = xmp_str.replace('<','>')
 
-    y = float(gpsDict["drone-skydio:Latitude="])
-    x = float(gpsDict["drone-skydio:Longitude="])
-    z = float(gpsDict["drone-skydio:AbsoluteAltitude="])
+        y = xmp_str.find('drone-skydio:Latitude')
+        if y == -1:
+            return None
+        substr = xmp_str[y :]
+        y = substr.split('>')[1]
+
+        x = xmp_str.find('drone-skydio:Longitude')
+        if x == -1:
+            return None
+        substr = xmp_str[x :]
+        x = substr.split('>')[1]
+
+        z = xmp_str.find('drone-skydio:AbsoluteAltitude')
+        if z == -1:
+            return None
+        substr = xmp_str[z :]
+        z = substr.split('>')[1]
+    else:
+        elements = ["drone-skydio:Latitude=",
+                    "drone-skydio:Longitude=",
+                    "drone-skydio:AbsoluteAltitude="]
+        gpsDict = xmp_parse(xmp_str, elements)
+        if gpsDict is None:
+            return None
+        y = gpsDict["drone-skydio:Latitude="]
+        x = gpsDict["drone-skydio:Longitude="]
+        z = gpsDict["drone-skydio:AbsoluteAltitude="]
+    #
+
+    try:
+        y = float(y)
+        x = float(x)
+        z = float(z)
+    except ValueError:
+        errstr = f"ERROR: parsing isNewFormat: {isNewFormat} Skydio image failed"
+        errstr += f" with values y: {y} x: {x} z: {z}"
+        print(errstr, file=sys.stderr)
+        return None
+    #
 
     if y is None or x is None or z is None or azimuth is None or theta is None:
+        errstr = f"ERROR: parsing isNewFormat: {isNewFormat} Skydio image failed!"
+        errstr += f": \"{y}\", \"{x}\", \"{z}\", \"{azimuth}\", \"{theta}\""
+        print(errstr, file=sys.stderr)
         return None
     else:
+        # # debug printout
+        # print(f'y: "{y}" x: "{x}" z: "{z}" azimuth: "{azimuth}" theta: "{theta}"')
         return (y, x, z, azimuth, theta)
 
 """takes a xmp metadata string and exifData dictionary from an Autel drone,
@@ -420,7 +487,7 @@ def handleAUTEL(xmp_str, exifData):
         #    If the metadata rdf:about is not "Autel Robotics Meta Data"
         #    then this software can't parse metadata, so throw an error
         if metadataAbout != "AUTEL":
-            errstr = "ERROR: unexpected metadata format while parsing Autel image"
+            errstr = f"ERROR: unexpected metadata format while parsing Autel image: '{metadataAbout}'"
             print(errstr, file=sys.stderr)
             return None
 
