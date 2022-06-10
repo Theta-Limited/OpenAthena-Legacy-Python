@@ -17,6 +17,8 @@ Makes:
     DJI
     Skydio
     Autel Robotics (less accurate for some reason? IDK why)
+    Parrot
+        Anafi
 
 XMP:
 en.wikipedia.org/wiki/Extensible_Metadata_Platform
@@ -152,6 +154,8 @@ def parseImage():
                 # print(f'xmpMake: {xmpMake}')
                 make = exifData["Make"].upper()
                 make = make.strip()
+                model = exifData["Model"].upper()
+                model = model.strip()
                 if make[-1] == "\0":
                     # fix nul terminated string bug
                     # joelonsoftware.com/2003/10/08/the-absolute-minimum-every-software-developer-absolutely-positively-must-know-about-unicode-and-character-sets-no-excuses
@@ -185,9 +189,23 @@ def parseImage():
                         print(f'skipping {thisImage}', file=sys.stderr)
                         continue
                 elif make == "PARROT":
-                    print("Parrot UAS's are not supported in this version")
-                    print(f'skipping {thisImage}', file=sys.stderr)
-                    continue
+                    # will whitelist more models as they are tested
+                    if model != "ANAFI":
+                        # for instance, the parrot disco fixed-wing doesn't
+                        #     have a camera gimbal
+                        print(f'ERROR with {thisImage}, Parrot {model} is not supported', file=sys.stderr)
+                        print(f'skipping {thisImage}', file=sys.stderr)
+                        continue
+                    else:
+                        sensData = handlePARROT(xmp_str, exifData)
+                        if sensData is not None:
+                            y, x, z, azimuth, theta = sensData
+                            target = resolveTarget(y, x, z, azimuth, theta, elevationData, xParams, yParams)
+                        else:
+                            print(f'ERROR with {thisImage}, couldn\'t find sensor data', file=sys.stderr)
+                            print(f'skipping {thisImage}', file=sys.stderr)
+                            continue
+
                 elif False: # your drone make here
                     # <----YOUR HANDLER FUNCTION HERE---->
                     pass
@@ -224,9 +242,11 @@ def parseImage():
                 file_object.write(str(tarY) + "\n")
                 file_object.write(str(tarX) + "\n")
                 file_object.write(str(terrainAlt) + "\n")
-                file_object.write(str(finalDist))
+                file_object.write(str(finalDist) + "\n")
                 if dateTime is not None:
                     file_object.write(str(dateTime) + "\n")
+                else:
+                    file_object.write("\n")
                 file_object.write(targetMGRS + "\n")
                 file_object.write(targetMGRS10m + "\n")
                 file_object.write(targetMGRS100m + "\n")
@@ -454,8 +474,10 @@ exifData: Dict
     expressed as key:value pairs
 """
 def handleAUTEL(xmp_str, exifData):
+    # # Debug printout
+    # print(xmp_str)
+    # print("\n")
     # print(exifData)
-    GPSInfo = exifData['GPSInfo']
 
     elements = ["rdf:about="]
     metadataAbout = xmp_parse(xmp_str, elements)
@@ -491,45 +513,24 @@ def handleAUTEL(xmp_str, exifData):
             print(errstr, file=sys.stderr)
             return None
 
-    # e.g. N or S
-    latDir = GPSInfo[1].strip().upper()
-    latDeg = GPSInfo[2][0]
-    latMin = GPSInfo[2][1]
-    latSec = GPSInfo[2][2]
-
-    y = latDeg
-    y += (latMin / 60.0)
-    y += (latSec / 3600.0)
-    if latDir == "S":
-        y = y * -1.0
-    y = float(y)
-
-    # e.g. E or W
-    lonDir = GPSInfo[3].strip().upper()
-    lonDeg = GPSInfo[4][0]
-    lonMin = GPSInfo[4][1]
-    lonSec = GPSInfo[4][2]
-
-    x = lonDeg
-    x += (lonMin / 60.0)
-    x += (lonSec / 3600.0)
-    if lonDir == "W":
-        x = x * -1.0
-    x = float(x)
-
-    z = GPSInfo[6]
-    z = float(z)
+    coords = exifGetYXZ(exifData)
+    if coords is None:
+        return None
+    y, x, z = coords
 
     elements = ["Camera:Pitch=",
                 "Camera:Yaw=",
                 "Camera:Roll="]
 
     dirDict = xmp_parse(xmp_str, elements)
+    # I've noticed this can be inaccurate sometimes
+    #     poor calibration of magnetometer for compass heading?
     azimuth = float(dirDict["Camera:Yaw="])
 
     theta = float(dirDict["Camera:Pitch="])
-    # AUTEL Camera pitch 0 is down, 90 is forward towards horizon
+    # AUTEL Camera pitch 0 is down, 90 is forward towards horizon?
     # so, we use its complement instead
+    # not quite sure if this is correct yet...
     theta = 90.0 - theta
 
     if theta < 0:
@@ -538,6 +539,8 @@ def handleAUTEL(xmp_str, exifData):
     if y is None or x is None or z is None or azimuth is None or theta is None:
         return None
     else:
+        # # debug printout
+        # print(f'y: "{y}" x: "{x}" z: "{z}" azimuth: "{azimuth}" theta: "{theta}"')
         return (y, x, z, azimuth, theta)
 
 
@@ -554,17 +557,43 @@ exifData: Dict
 """
 def handlePARROT(xmp_str, exifData):
     # https://developer.parrot.com/docs/pdraw/photo-metadata.html
-    # https://support.pix4d.com/hc/en-us/articles/202558969-Yaw-Pitch-Roll-and-Omega-Phi-Kappa-angles#How%20to%20convert%20Yaw,%20Pitch,%20Roll%20to%20Omega,%20Phi,%20Kappa
-    # https://stackoverflow.com/questions/49790453/enu-ned-frame-conversion-using-quaternions
+    #
+    # There are many different Parrot drones out there, each with different specs
+    #     for instance, the Parrot Disco fixed-wing doesn't have a camera gimbal.
+    #     Each and every drone model will have to be tested for compatibility
 
-    # Parrot drone (for some un-godly reason) only gives 3D direction in
-    #    East North Up (ENU), not North East Down (NED)
-    #
-    # very lame!
-    #
-    # Will have to convert to NED for use with OpenAthena
-    # This is really hard (math-wise), will finish later...
-    return None
+
+    """ Get theta and azimuth from XMP tags
+    """
+    # replace "<" open tag character with ">" close tag character
+    #     this way we can use the same character for splitting up the string
+    searchspace = xmp_str.replace('<','>')
+
+    theta = searchspace.find('drone-parrot:CameraPitchDegree')
+    if theta == -1:
+        return None
+    substr = searchspace[theta :]
+    theta = substr.split('>')[1]
+
+    azimuth = searchspace.find('drone-parrot:CameraYawDegree')
+    if azimuth == -1:
+        return None
+    substr = searchspace[azimuth :]
+    azimuth = substr.split('>')[1]
+
+    """ Get Lat, Lon, and Alt from EXIF GPS tags
+    """
+    coords = exifGetYXZ(exifData)
+    if coords is None:
+        return None
+    y, x, z = coords
+
+    if y is None or x is None or z is None or azimuth is None or theta is None:
+        return None
+    else:
+        # # debug printout
+        # print(f'y: "{y}" x: "{x}" z: "{z}" azimuth: "{azimuth}" theta: "{theta}"')
+        return (y, x, z, azimuth, theta)
 
 """takes a xmp metadata string and a list of keys
 return a dictionary of key, value pairs
@@ -593,6 +622,55 @@ def xmp_parse ( xmp_str, elements ):
 
     return dict
 
+"""takes a python dictionary generated from EXIF data
+return a tuple (y, x, z) of latitude, longitude, and altitude
+in decimal form
+
+Parameters
+----------
+exifData: dict {key : value}
+    a Python dictionary object containing key : value pairs of EXIF tags and their
+    corresponding values
+
+"""
+def exifGetYXZ(exifData):
+    GPSInfo = exifData['GPSInfo']
+    # e.g. N or S
+    latDir = GPSInfo[1].strip().upper()
+    latDeg = GPSInfo[2][0]
+    latMin = GPSInfo[2][1]
+    latSec = GPSInfo[2][2]
+
+    y = latDeg
+    y += (latMin / 60.0)
+    y += (latSec / 3600.0)
+    if latDir == "S":
+        y = y * -1.0
+
+
+    # e.g. E or W
+    lonDir = GPSInfo[3].strip().upper()
+    lonDeg = GPSInfo[4][0]
+    lonMin = GPSInfo[4][1]
+    lonSec = GPSInfo[4][2]
+
+    x = lonDeg
+    x += (lonMin / 60.0)
+    x += (lonSec / 3600.0)
+    if lonDir == "W":
+        x = x * -1.0
+
+    z = GPSInfo[6]
+
+    try:
+        y = float(y)
+        x = float(x)
+        z = float(z)
+    except ValueError:
+        print("ERROR: failed to extract GPS data from EXIF values", file=sys.stderr)
+        return None
+
+    return (y, x, z)
 
 
 if __name__ == "__main__":
