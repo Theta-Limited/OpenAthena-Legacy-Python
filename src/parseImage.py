@@ -588,6 +588,17 @@ def handlePARROT(xmp_str, exifData):
         return None
     y, x, z = coords
 
+    try:
+        theta = float(theta)
+        azimuth = float(azimuth)
+    except ValueError:
+        errstr = f"ERROR: parsing Parrot image"
+        errstr += f"with values theta: {theta} azimuth: {azimuth}"
+        print(errstr, file=sys.stderr)
+        return None
+
+    theta = abs(theta)
+
     if y is None or x is None or z is None or azimuth is None or theta is None:
         return None
     else:
