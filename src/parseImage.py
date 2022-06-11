@@ -492,9 +492,8 @@ def handleAUTEL(xmp_str, exifData):
     # print("\n")
     # print(exifData)
 
-    elements = ["rdf:about="]
-    metadataAbout = xmp_parse(xmp_str, elements)
-    metadataAbout = metadataAbout["rdf:about="]
+    metadataAbout = xmp_str.find("rdf:about=") + len("rdf:about=")
+    metadataAbout = xmp_str[metadataAbout : metadataAbout + 15]
     metadataAbout = metadataAbout.split(' ')[0]
     metadataAbout = metadataAbout.upper()
 
@@ -521,7 +520,7 @@ def handleAUTEL(xmp_str, exifData):
         # Older firmware versions use proprietary Autel Robotics XMP tags
         #    If the metadata rdf:about is not "Autel Robotics Meta Data"
         #    then this software can't parse metadata, so throw an error
-        if metadataAbout != "AUTEL":
+        if not "AUTEL" in metadataAbout:
             errstr = f"ERROR: unexpected metadata format while parsing Autel image: '{metadataAbout}'"
             print(errstr, file=sys.stderr)
             return None
@@ -535,18 +534,59 @@ def handleAUTEL(xmp_str, exifData):
                 "Camera:Yaw=",
                 "Camera:Roll="]
 
-    dirDict = xmp_parse(xmp_str, elements)
-    # I've noticed this can be inaccurate sometimes
-    #     poor calibration of magnetometer for compass heading?
-    azimuth = float(dirDict["Camera:Yaw="])
+    canary = xmp_str.find("Camera:Pitch=")
+    # print(f'canary: {canary}')
 
-    theta = float(dirDict["Camera:Pitch="])
-    # AUTEL (old firmware) Camera pitch 0 is down, 90 is forward towards horizon
-    # so, we use its complement instead
-    theta = 90.0 - theta
+    if canary != -1:
+        dirDict = xmp_parse(xmp_str, elements)
+        # I've noticed this can be inaccurate sometimes
+        #     poor calibration of magnetometer for compass heading?
+        azimuth = dirDict["Camera:Yaw="]
 
-    if theta < 0:
-        return None
+        theta = dirDict["Camera:Pitch="]
+        try:
+            theta = float(theta)
+            # AUTEL (old firmware) Camera pitch 0 is down, 90 is forward towards horizon
+            # so, we use its complement instead
+            theta = 90.0 - theta
+            azimuth = float(azimuth)
+        except ValueError:
+            errstr = f"ERROR: parsing Autel image "
+            errstr += f"with values theta: {theta} azimuth: {azimuth}"
+            print(errstr, file=sys.stderr)
+            return None
+
+        if theta < 0:
+            return None
+    else:
+        # replace "<" open tag character with ">" close tag character
+        #     this way we can use the same character for splitting up the string
+        searchspace = xmp_str.replace('<','>')
+
+        theta = searchspace.find("Camera:Pitch")
+        if theta == -1:
+            return None
+        substr = searchspace[theta :]
+        theta = substr.split('>', 3)[1]
+
+        azimuth = searchspace.find("Camera:Yaw")
+        if azimuth == -1:
+            return None
+        substr = searchspace[azimuth :]
+        azimuth = substr.split('>', 3)[1]
+        try:
+            theta = abs(float(theta))
+            # AUTEL (old firmware) Camera pitch 0 is down, 90 is forward towards horizon
+            # so, we use its complement instead
+            theta = 90 - theta
+            azimuth = float(azimuth)
+        except ValueError:
+            errstr = f"ERROR: parsing Autel image "
+            errstr += f"with values theta: {theta} azimuth: {azimuth}"
+            print(errstr, file=sys.stderr)
+            return None
+        if theta < 0:
+            return None
 
     if y is None or x is None or z is None or azimuth is None or theta is None:
         return None
@@ -604,7 +644,7 @@ def handlePARROT(xmp_str, exifData):
         theta = float(theta)
         azimuth = float(azimuth)
     except ValueError:
-        errstr = f"ERROR: parsing Parrot image"
+        errstr = f"ERROR: parsing Parrot image "
         errstr += f"with values theta: {theta} azimuth: {azimuth}"
         print(errstr, file=sys.stderr)
         return None
