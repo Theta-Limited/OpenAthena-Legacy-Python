@@ -251,7 +251,7 @@ def parseImage():
                 file_object.write(targetMGRS + "\n")
                 file_object.write(targetMGRS10m + "\n")
                 file_object.write(targetMGRS100m + "\n")
-                file_object.write("# format: lat, lon, alt, dist, MGRS 1m, MGRS 10m, MGRS 100m")
+                file_object.write("# format: lat, lon, alt, dist, time, MGRS 1m, MGRS 10m, MGRS 100m\n")
                 if make == "AUTEL ROBOTICS":
                     file_object.write(f'# CAUTION: in-accuracies have been observed with Autel drones. This result is from a "{model}" drone')
 
@@ -551,8 +551,8 @@ def handleAUTEL(xmp_str, exifData):
     if y is None or x is None or z is None or azimuth is None or theta is None:
         return None
     else:
-        # debug printout
-        print(f'y: "{y}" x: "{x}" z: "{z}" azimuth: "{azimuth}" theta: "{theta}"')
+        # # debug printout
+        # print(f'y: "{y}" x: "{x}" z: "{z}" azimuth: "{azimuth}" theta: "{theta}"')
         return (y, x, z, azimuth, theta)
 
 
