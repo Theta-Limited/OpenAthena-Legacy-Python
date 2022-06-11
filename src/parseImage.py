@@ -16,7 +16,7 @@ If your UAV make or model is not listed here, feel free to help out and make a p
 Makes:
     DJI
     Skydio
-    Autel Robotics (less accurate for some reason? IDK why)
+    Autel Robotics (CAUTION: sometimes less accurate)
     Parrot
         Anafi
 
@@ -124,6 +124,7 @@ def parseImage():
         sensData = None, None, None, None, None
         target = None
         try:
+        # if True:
             #from stackoverflow.com/a/14637315
             #    if XMP in image is spread in multiple pieces, this
             #    approach will fail to extract data in all
@@ -221,7 +222,7 @@ def parseImage():
                 print(f'ERROR with {thisImage}, xmp data not found!', file=sys.stderr)
                 print(f'skipping {thisImage}', file=sys.stderr)
                 continue
-
+        # else:
         except:
             print(f'ERROR with filename {thisImage}, skipping...', file=sys.stderr)
             continue
@@ -251,6 +252,8 @@ def parseImage():
                 file_object.write(targetMGRS10m + "\n")
                 file_object.write(targetMGRS100m + "\n")
                 file_object.write("# format: lat, lon, alt, dist, MGRS 1m, MGRS 10m, MGRS 100m")
+                if make == "AUTEL ROBOTICS":
+                    file_object.write(f'# CAUTION: in-accuracies have been observed with Autel drones. This result is from a "{model}" drone')
 
                 file_object.close()
             else:
@@ -467,6 +470,9 @@ def handleSKYDIO( xmp_str ):
 """takes a xmp metadata string and exifData dictionary from an Autel drone,
 returns a tuple (y, x, z, azimuth, theta)
 
+WARNING: in-accuracies have been observed from Autel's reported altitude and azimuth
+    result quality is sub-optimal, proceed with caution
+
 Parameters
 ----------
 xmp_str: String
@@ -476,6 +482,11 @@ exifData: Dict
     expressed as key:value pairs
 """
 def handleAUTEL(xmp_str, exifData):
+    warnStr = "USER CAUTION: in-accuracies have been observed sometimes from Autel's reported altitude, azimuth, and theta.\n"
+    warnStr +="    PROCEED WITH CAUTION"
+    print(warnStr)
+
+
     # # Debug printout
     # print(xmp_str)
     # print("\n")
@@ -530,9 +541,8 @@ def handleAUTEL(xmp_str, exifData):
     azimuth = float(dirDict["Camera:Yaw="])
 
     theta = float(dirDict["Camera:Pitch="])
-    # AUTEL Camera pitch 0 is down, 90 is forward towards horizon?
+    # AUTEL (old firmware) Camera pitch 0 is down, 90 is forward towards horizon
     # so, we use its complement instead
-    # not quite sure if this is correct yet...
     theta = 90.0 - theta
 
     if theta < 0:
@@ -541,8 +551,8 @@ def handleAUTEL(xmp_str, exifData):
     if y is None or x is None or z is None or azimuth is None or theta is None:
         return None
     else:
-        # # debug printout
-        # print(f'y: "{y}" x: "{x}" z: "{z}" azimuth: "{azimuth}" theta: "{theta}"')
+        # debug printout
+        print(f'y: "{y}" x: "{x}" z: "{z}" azimuth: "{azimuth}" theta: "{theta}"')
         return (y, x, z, azimuth, theta)
 
 
