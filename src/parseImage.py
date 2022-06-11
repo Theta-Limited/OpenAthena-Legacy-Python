@@ -340,6 +340,8 @@ def handleDJI( xmp_str, elements=None):
     if y is None or x is None or z is None or azimuth is None or theta is None:
         return None
     else:
+        # # debug printout
+        # print(f'y: "{y}" x: "{x}" z: "{z}" azimuth: "{azimuth}" theta: "{theta}"')
         return (y, x, z, azimuth, theta)
 
 """takes a xmp metadata string from a Skydio drone,

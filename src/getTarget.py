@@ -149,7 +149,7 @@ def ensureValidGeotiff(dxdy, dydx):
     # If dxdy or dydx aren't 0, then this will be incorrect
     # we cannot deal with rotated or skewed images in current version
     if dxdy != 0 or dydx != 0:
-        outstr = "FATAL ERROR: geoTIFF is rotated or skewed!"
+        outstr = "FATAL ERROR: GeoTIFF is rotated or skewed!"
         outstr += "\ncannot proceed with file: "
         outstr += geofilename
         print(outstr, file=sys.stderr)
@@ -296,9 +296,18 @@ def resolveTarget(y, x, z, azimuth, theta, elevationData, xParams, yParams):
     curY = decimal.Decimal(y)
     curX = decimal.Decimal(x)
     curZ = decimal.Decimal(z)
-    altDiff = curZ - parseGeoTIFF.getAltFromLatLon(curY, curX, xParams, yParams, elevationData)
+    groundAlt = parseGeoTIFF.getAltFromLatLon(curY, curX, xParams, yParams, elevationData)
+    if groundAlt is None:
+        print(f'ERROR: resolveTarget ran out of bounds at {round(curY,4)}, {round(curX,4)}, {round(curZ,4)}m', file=sys.stderr)
+        print('ERROR: Please ensure target location is within GeoTIFF dataset bounds', file=sys.stderr)
+        return None
+    altDiff = curZ - groundAlt
     while altDiff > threshold:
         groundAlt = parseGeoTIFF.getAltFromLatLon(curY, curX, xParams, yParams, elevationData)
+        if groundAlt is None:
+            print(f'ERROR: resolveTarget ran out of bounds at {round(curY,4)}, {round(curX,4)}, {round(curZ,4)}m', file=sys.stderr)
+            print('ERROR: Please ensure target location is within GeoTIFF dataset bounds', file=sys.stderr)
+            return None
         altDiff = curZ - groundAlt
 
         avgAlt = curZ
@@ -308,8 +317,8 @@ def resolveTarget(y, x, z, azimuth, theta, elevationData, xParams, yParams):
         curY, curX = inverse_haversine((curY,curX), horizScalar*increment, azimuth, avgAlt)
         #check for Out Of Bounds after each iteration
         if curY > y0 or curY < y1 or curX < x0 or curX > x1:
-            print(f'ERROR: resolveTarget ran out of bounds at {curY}, {curX}, {curZ}m')
-            print('ERROR: Please ensure target location is within geoTIFF dataset bounds')
+            print(f'ERROR: resolveTarget ran out of bounds at {round(curY,4)}, {round(curX,4)}, {round(curZ,4)}m')
+            print('ERROR: Please ensure target location is within GeoTIFF dataset bounds')
             return None
         #
         #end iteration
