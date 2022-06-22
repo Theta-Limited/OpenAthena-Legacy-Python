@@ -97,7 +97,7 @@ This software is in pre-alpha. Use appropriate caution when using data generated
 
 All you need to do is run `pip3 install gdal matplotlib mgrs`, then run `src/parseGeoTIFF.py` with python3:
 ```bash
-pip3 install gdal matplotlib mgrs
+pip3 install gdal matplotlib mgrs pyproj
 # if this fails, instead install the GDAL package with your package manager (i.e. apt, yum, brew, pacman, etc.)
 git clone https://github.com/mkrupczak3/OpenAthena.git
 cd OpenAthena/src
