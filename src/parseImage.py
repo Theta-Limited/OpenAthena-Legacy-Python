@@ -25,7 +25,6 @@ en.wikipedia.org/wiki/Extensible_Metadata_Platform
 
 EXIF:
 en.wikipedia.org/wiki/EXIF
-
 """
 
 import sys
@@ -38,13 +37,10 @@ from osgeo import gdal # en.wikipedia.org/wiki/GDAL
 # https://pypi.org/project/mgrs/
 import mgrs # Military Grid ref converter
 # https://pypi.org/project/pyproj/
-# import pyproj # Python interface to PROJ (cartographic projections and coordinate transformations library)
-from pyproj import Transformer
+from pyproj import Transformer # Python interface to PROJ (cartographic projections and coordinate transformations library)
 
 from PIL import Image
 from PIL import ExifTags
-
-import difflib
 
 #     write and mangle
 #     eli.thegreenplace.net/2012/03/15/processing-xml-in-python-with-elementtree
@@ -53,14 +49,8 @@ import difflib
 # except ImportError:
 #     import xml.etree.ElementTree as ET
 
-
-
-# unused :(
-# from libxmp.utils import file_to_dict # python-xmp-toolkit, (c) ESA
-
 from parseGeoTIFF import getAltFromLatLon, binarySearchNearest
 from getTarget import *
-# from WGS84_SK42_Translator import Translator as converter # rafasaurus' SK42 coord translator
 
 """prompt the user for options input,
        then extract data from image(s)
@@ -256,7 +246,27 @@ def parseImage():
                 file_object.write(targetMGRS + "\n")
                 file_object.write(targetMGRS10m + "\n")
                 file_object.write(targetMGRS100m + "\n")
-                file_object.write("# format: lat, lon, alt, dist, time, MGRS 1m, MGRS 10m, MGRS 100m\n")
+                file_object.write("# format: lat, lon, alt, dist, time, MGRS 1m, MGRS 10m, MGRS 100m, SK42 Lat (EXPERIMENTAL), SK42 Lon (EXPERIMENTAL)\n")
+
+                # normal decimal like GPS co-ords, "WGS84"
+                wgs84 = "epsg:4326"
+                # SK-42, A.K.A Pulkovo 1942 A.K.A Gauss Kruger
+                # alternative, ellipsoidal projection used by
+                # many old soviet maps
+                #
+                # coordinates expressed as Y, X, units in meters
+                #
+                # ID:
+                #     CM 159 E
+                #     epsg:4284
+                #     https://spatialreference.org/ref/epsg/4284/
+                sk42 = "epsg:28468"
+                transformer = Transformer.from_crs(wgs84, sk42)
+                targetSK42Lon, targetSK42Lat = transformer.transform(float(tarX), float(tarY))
+
+                file_object.write(f'{targetSK42Lat}Y\n')
+                file_object.write(f'{targetSK42Lon}X\n')
+
                 if make == "AUTEL ROBOTICS":
                     file_object.write(f'# CAUTION: in-accuracies have been observed with Autel drones. This result is from a "{model}" drone')
 
@@ -306,12 +316,6 @@ def parseImage():
                 targetSK42Lat = str(round(targetSK42Lat,0)).split('.')[0]
                 print(f'SK42 (TESTING ONLY): {targetSK42Lat} Y, {targetSK42Lon} X')
 
-                # targetSK42Lat = converter.WGS84_SK42_Lat(float(tarX), float(tarY), float(tarZ))
-                # targetSK42Lon = converter.WGS84_SK42_Long(float(tarX), float(tarY), float(tarZ))
-                # # reverse lat/lon since it is mistaken in converter code?
-                # # I'm not happy with this :(
-                # targetSK42Lat, targetSK42Lon = targetSK42Lon, targetSK42Lat
-                # print(f'SK42 (TESTING ONLY): {round(targetSK42Lat, 6)}, {round(targetSK42Lon, 6)}')
 
     #
 
