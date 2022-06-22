@@ -35,7 +35,11 @@ from math import sin, asin, cos, atan2, sqrt
 import decimal # more float precision with Decimal objects
 
 from osgeo import gdal # en.wikipedia.org/wiki/GDAL
+# https://pypi.org/project/mgrs/
 import mgrs # Military Grid ref converter
+# https://pypi.org/project/pyproj/
+# import pyproj # Python interface to PROJ (cartographic projections and coordinate transformations library)
+from pyproj import Transformer
 
 from PIL import Image
 from PIL import ExifTags
@@ -56,6 +60,7 @@ import difflib
 
 from parseGeoTIFF import getAltFromLatLon, binarySearchNearest
 from getTarget import *
+# from WGS84_SK42_Translator import Translator as converter # rafasaurus' SK42 coord translator
 
 """prompt the user for options input,
        then extract data from image(s)
@@ -281,6 +286,33 @@ def parseImage():
                 print(f'NATO MGRS: {targetMGRS}')
                 print(f'MGRS 10m: {targetMGRS10m}')
                 print(f'MGRS 100m: {targetMGRS100m}\n')
+
+                # normal decimal like GPS co-ords, "WGS84"
+                wgs84 = "epsg:4326"
+                # SK-42, A.K.A Pulkovo 1942 A.K.A Gauss Kruger
+                # alternative, ellipsoidal projection used by
+                # many old soviet maps
+                #
+                # coordinates expressed as Y, X, units in meters
+                #
+                # ID:
+                #     CM 159 E
+                #     epsg:4284
+                #     https://spatialreference.org/ref/epsg/4284/
+                sk42 = "epsg:28468"
+                transformer = Transformer.from_crs(wgs84, sk42)
+                targetSK42Lon, targetSK42Lat = transformer.transform(float(tarX), float(tarY))
+                targetSK42Lon = str(round(targetSK42Lon,0)).split('.')[0]
+                targetSK42Lat = str(round(targetSK42Lat,0)).split('.')[0]
+                print(f'SK42 (TESTING ONLY): {targetSK42Lat} Y, {targetSK42Lon} X')
+
+                # targetSK42Lat = converter.WGS84_SK42_Lat(float(tarX), float(tarY), float(tarZ))
+                # targetSK42Lon = converter.WGS84_SK42_Long(float(tarX), float(tarY), float(tarZ))
+                # # reverse lat/lon since it is mistaken in converter code?
+                # # I'm not happy with this :(
+                # targetSK42Lat, targetSK42Lon = targetSK42Lon, targetSK42Lat
+                # print(f'SK42 (TESTING ONLY): {round(targetSK42Lat, 6)}, {round(targetSK42Lon, 6)}')
+
     #
 
 """takes a xmp metadata string from a drone image of type "DJI Meta Data",
