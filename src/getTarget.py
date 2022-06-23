@@ -15,7 +15,10 @@ import mgrs # Military Grid ref converter
 import math
 from math import sin, asin, cos, atan2, sqrt
 import decimal # more float precision with Decimal objects
+
 import parseGeoTIFF
+from WGS84_SK42_Translator import Translator as converter # rafasaurus' SK42 coord translator
+
 import sys
 
 """get the pos of current subject of UAS camera
@@ -72,8 +75,8 @@ def getTarget():
             print(f'Approximate alt (constructed): {round(tarZ , 2)}')
         print(f'Approximate alt (terrain): {terrainAlt}\n')
 
-
-        print(f'Target (lat, lon): {round(tarY, 7)}, {round(tarX, 7)}')
+        print('Target:')
+        print(f'WGS84 (lat, lon): {round(tarY, 7)}, {round(tarX, 7)}')
         print(f'Google Maps: https://maps.google.com/?q={round(tarY,6)},{round(tarX,6)}\n')
         # en.wikipedia.org/wiki/Military_Grid_Reference_System
         # via github.com/hobuinc/mgrs
@@ -84,6 +87,10 @@ def getTarget():
         print(f'NATO MGRS: {targetMGRS}')
         print(f'MGRS 10m: {targetMGRS10m}')
         print(f'MGRS 100m: {targetMGRS100m}\n')
+
+        targetSK42Lat = converter.WGS84_SK42_Lat(float(tarY), float(tarX), float(tarZ))
+        targetSK42Lon = converter.WGS84_SK42_Long(float(tarY), float(tarX), float(tarZ))
+        print(f'SK42: {round(targetSK42Lat, 6)}, {round(targetSK42Lon, 6)}')
 
 """get and open a geoFile named by a string
     e.g. from a command line argument

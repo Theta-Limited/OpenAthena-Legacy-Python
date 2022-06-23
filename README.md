@@ -95,9 +95,9 @@ This software is in pre-alpha. Use appropriate caution when using data generated
 
 [Python3](https://www.python.org/) (and the included pip package manager) must be installed first
 
-All you need to do is run `pip3 install gdal matplotlib mgrs pyproj pillow`, then run `src/parseGeoTIFF.py` with python3:
+All you need to do is run `pip3 install gdal matplotlib mgrs pillow`, then run `src/parseGeoTIFF.py` with python3:
 ```bash
-pip3 install gdal matplotlib mgrs pyproj pillow
+pip3 install gdal matplotlib mgrs pillow
 # if this fails, instead install the GDAL package with your package manager (i.e. apt, yum, brew, pacman, etc.)
 git clone https://github.com/mkrupczak3/OpenAthena.git
 cd OpenAthena/src
@@ -217,12 +217,15 @@ Approximate range to target: 1035.03
 Approximate alt (constructed): 146.01
 Approximate alt (terrain): 146.5
 
-Target (lat, lon): 33.8352826, -84.5219971
-Google Maps: https://maps.google.com/?q=33.835283,-84.521997
+Target:
+WGS84 (lat, lon): 41.8071606, 12.6400355
+Google Maps: https://maps.google.com/?q=41.807161,12.640036
 
-NATO MGRS: 16SGC2930646654
+NATO MGRS: 33TUG0395831058
 MGRS 10m: 33TUG03953105
 MGRS 100m: 33TUG039310
+
+SK42: 41.807634, 12.641757
 
 ```
 
@@ -244,12 +247,14 @@ The values should be tested for correctness and not totally relied upon in the c
 `Approximate alt (terrain):` represents the aproximate altitude (in meters from sea level) of the target according to the terrain data point closest to the final lat./lon. pair
 
 
-`Target (lat, lon):` represents the latitude and longitude of the target to which the camera is likely aiming at.
+`WGS84 (lat, lon):` represents the latitude and longitude of the target to which the camera is likely aiming at. These values, in degrees, are from the common [WGS84 coordinate system](https://en.wikipedia.org/wiki/World_Geodetic_System)
 `Google Maps:` a link to the previous lat/lon on Google Maps. Each rounded to 6 decimal places
 
 
 `NATO MGRS:` represents the target location in the [NATO Military Grid Reference System (MGRS)](https://en.wikipedia.org/wiki/Military_Grid_Reference_System), which is simmilar to [UTM](https://en.wikipedia.org/wiki/Universal_Transverse_Mercator_coordinate_system). This coordinate system does not include the altitude of the Target
 
+
+`SK42:` represents the target latitude and longitude (in degrees) according to the [SK-42 (A.K.A. CK-42) coordinate system](https://en.wikipedia.org/wiki/SK-42_reference_system) (Russian: Система координат 1942 года). This system is commonly used in old Soviet and post-Soviet style maps, and is based on a differend ellipsoidal projection than WGS84
 
 The program `getTarget.py` will then exit
 
