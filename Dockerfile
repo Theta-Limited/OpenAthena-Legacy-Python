@@ -28,6 +28,8 @@ RUN pip3 install -r requirements.txt && rm requirements.txt
 
 COPY src/*.py ./
 COPY src/Rome-30m-DEM.tif .
+COPY src/cobb.tif .
+COPY src/DJI_0419.JPG .
 
 VOLUME /home/user
 
