@@ -46,6 +46,25 @@ Image parsing can fail for any image for a variety of reasons, including the sea
 
 In a future version, these files of extention `.ATHENA` will be replaced by `.gpx` and be of the [GPS Exchange Format](https://en.wikipedia.org/wiki/GPS_Exchange_Format)
 
+A Docker image for `parseImage.py` is available [**here**](https://hub.docker.com/repository/docker/t3l3tubie/openathena/general)
+
+The openathena Docker image is convenient because it comes with all pre-requisites and openathena in a ready-to-go container that can be run on demand
+
+For running with your own GeoTIFF DEM and drone images, mount a directory on your host system your desired files to a directory inside the `/home/user` in the container. Then pass as arguments a GeoTIFF file and one or more drone images using relative file paths like `./recon-photos/Altis.tif` and `./recon-photos/DJI_0666.JPG`
+
+NOTE: relative file paths for drone images will only work on versions > 1.25-pre-alpha. Relative file path for a GeoTIFF file will work on 1.25-pre-alpha however. This notice will be removed in v0.1.26-pre-alpha
+
+It is _**highly recommended**_ to choose a particular tag from the [releases page](https://github.com/mkrupczak3/OpenAthena/releases) rather than using the `latest` tag whenever openathena is to be used in a automated production environment
+
+E.g (with [Docker already installed](https://docs.docker.com/engine/install/)):
+```bash
+docker pull t3l3tubie/openathena:latest
+docker run -v ~/Desktop/recon-photos/:/home/user/recon-photos openathena:latest ./recon-photos/Altis.tif ./recon-photos/DJI_0666.JPG
+```
+
+The container will run and perform its task, then exit. A file like `~/Desktop/recon-photos/DJI_0666.JPG.ATHENA` will be available on the host filesystem, containing the data of the target calculated by OpenAthena
+
+
 ### manual extraction
 
 One tool to view EXIF and XMP metadata on Mac, Linux, and Windows is Phil Harvey's (not affiliated with this project) [exiftool](https://exiftool.org/)
