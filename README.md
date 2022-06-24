@@ -117,6 +117,29 @@ python3 parseGeoTIFF.py
 
 More info [**here**](drone_sensor_data_blurb.md)
 
+A Docker image for `parseImage.py` is available [**here**](https://hub.docker.com/repository/docker/t3l3tubie/openathena/general)
+
+The openathena Docker image is convenient because it comes with all pre-requisites and openathena in a ready-to-go container that can be run on demand
+
+E.g (with [Docker already installed](https://docs.docker.com/engine/install/)):
+```bash
+docker pull t3l3tubie/openathena:v0.1.25-pre-alpha
+docker run -it openathena cobb.tif
+```
+
+For running with your own GeoTIFF DEM and drone images, mount a directory on your host system your desired files to a directory inside the `/home/user` in the container. Then pass as arguments a GeoTIFF file and one or more drone images using relative file paths like `./recon-photos/Altis.tif` and `./recon-photos/DJI_0666.JPG`
+
+NOTE: relative file paths for drone images will only work on versions > 1.25-pre-alpha. Relative file path for a GeoTIFF file will work on 1.25-pre-alpha however. This notice will be removed in v0.1.26-pre-alpha
+
+It is _**highly recommended**_ to choose a particular tag from the [releases page](https://github.com/mkrupczak3/OpenAthena/releases) rather than using the `latest` tag whenever openathena is to be used in a automated production environment
+
+```bash
+docker pull t3l3tubie/openathena:latest
+docker run -v ~/Desktop/recon-photos/:/home/user/recon-photos openathena:latest ./recon-photos/Altis.tif ./recon-photos/DJI_0666.JPG
+```
+
+The container will run and perform its task, then exit. A file like `~/Desktop/recon-photos/DJI_0666.JPG.ATHENA` will be available on the host filesystem, containing the data of the target calculated by OpenAthena
+
 ### parseGeoTIFF.py
 
 Run python parseGeoTIFF.py (while in the src directory) for a demonstration of [GeoTIFF](https://en.wikipedia.org/wiki/GeoTIFF) [DEM](https://en.wikipedia.org/wiki/Digital_elevation_model) parsing. The file `Rome-30m-DEM.tif` is provided in the `src` directory as an example. A DEM covering a customized area can be [easily obtained](./EIO_fetch_geotiff_example.md) using the python `elevation` API
