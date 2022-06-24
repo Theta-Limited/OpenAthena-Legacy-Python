@@ -1,4 +1,6 @@
-FROM osgeo/gdal:ubuntu-full-3.1.0
+FROM osgeo/gdal:ubuntu-small-3.5.0
+LABEL maintainer="Matthew Krupczak <matthew@krupczak.org>"
+RUN echo $(cat /etc/*release*)
 # # ----------GDAL-STUFF----------
 # RUN apt-get update
 # RUN apt-get upgrade -y
@@ -17,13 +19,15 @@ FROM osgeo/gdal:ubuntu-full-3.1.0
 # # ----------END-GDAL-STUFF----------
 
 RUN apt-get update -y && DEBIAN_FRONTEND=noninteractive apt-get install -y --fix-missing --no-install-recommends python3-pip${APT_ARCH_SUFFIX}
+RUN echo $(pip3 --version)
 
 RUN useradd -ms /bin/bash user
 USER user
 WORKDIR /home/user
 
 COPY requirements.txt .
-RUN echo $(pip3 --version)
+
+
 RUN pip3 install -r requirements.txt && rm requirements.txt
 
 COPY src/*.py ./

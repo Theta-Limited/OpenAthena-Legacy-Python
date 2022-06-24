@@ -227,7 +227,7 @@ def parseImage():
         if target is not None:
             finalDist, tarY, tarX, tarZ, terrainAlt = target
             if headless:
-                filename = ''.join(thisImage.split('.')[0:-1]) + ".ATHENA"
+                filename = thisImage + ".ATHENA"
                 dateTime = exifData["DateTime"]
 
                 file_object = open(filename, 'w')

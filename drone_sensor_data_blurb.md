@@ -40,9 +40,9 @@ Pretty good!
 
 #### headless
 
-If `parseImage.py` is given any additional arguments after a geoTiff file, it will be run in **headless** mode. It will try to read each argument (past the geoTiff file) as an image filename. It will try to resolve a target and put a resolved location in a file IMAGENAME.ATHENA for each image.
+If `parseImage.py` is given any additional arguments after a geoTiff file, it will be run in **headless** mode. It will try to read each argument (past the geoTiff file) as an image filename. It will try to resolve a target and put a resolved location in a file IMAGENAME.JPG.ATHENA for each image.
 
-Image parsing can fail for any image for a variety of reasons, including the search running out of bounds, location not covered by the geoTiff, etc. However, an IMAGENAME.ATHENA file will only be generated where both the image metadata extraction and the terrain search process were sucessful
+Image parsing can fail for any image for a variety of reasons, including the search running out of bounds, location not covered by the geoTiff, etc. However, an IMAGENAME.JPG.ATHENA file will only be generated where both the image metadata extraction and the terrain search process were sucessful
 
 In a future version, these files of extention `.ATHENA` will be replaced by `.gpx` and be of the [GPS Exchange Format](https://en.wikipedia.org/wiki/GPS_Exchange_Format)
 
