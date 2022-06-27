@@ -36,7 +36,7 @@ import decimal # more float precision with Decimal objects
 from osgeo import gdal # en.wikipedia.org/wiki/GDAL
 # https://pypi.org/project/mgrs/
 import mgrs # Military Grid ref converter
-# # https://pypi.org/project/pyproj/
+# # # https://pypi.org/project/pyproj/
 # from pyproj import Transformer # Python interface to PROJ (cartographic projections and coordinate transformations library)
 
 from PIL import Image
@@ -53,6 +53,7 @@ from parseGeoTIFF import getAltFromLatLon, binarySearchNearest
 from getTarget import *
 
 from WGS84_SK42_Translator import Translator as converter # rafasaurus' SK42 coord translator
+from SK42_Gauss_Kruger import Projector as Projector      # Matt's Gauss Kruger projector for SK42 (adapted from Nickname Nick)
 
 """prompt the user for options input,
        then extract data from image(s)
@@ -283,15 +284,17 @@ def parseImage():
                 if dateTime is not None:
                     print(f'Image Date/Time: {dateTime}')
 
-                print(f'\nApproximate range to target: {round(finalDist , 2)}\n')
+                print(f'\nApproximate range to target: {int(round(finalDist))}\n')
 
                 if tarZ is not None:
-                    print(f'Approximate alt (constructed): {round(tarZ , 2)}')
-                print(f'Approximate alt (terrain): {terrainAlt}\n')
-
+                    print(f'Approximate WGS84 alt (constructed): {math.ceil(tarZ)}')
+                else:
+                    # edge case where drone camera is pointed straight down
+                    tarZ = float(terrainAlt)
+                print(f'Approximate WGS84 alt (terrain): {terrainAlt}\n')
 
                 print('Target:')
-                print(f'WGS84 (lat, lon): {round(tarY, 6)}, {round(tarX, 6)}')
+                print(f'WGS84 (lat, lon): {round(tarY, 6)}, {round(tarX, 6)} Alt: {math.ceil(tarZ)}')
                 print(f'Google Maps: https://maps.google.com/?q={round(tarY,6)},{round(tarX,6)}\n')
                 # en.wikipedia.org/wiki/Military_Grid_Reference_System
                 # via github.com/hobuinc/mgrs
@@ -299,32 +302,52 @@ def parseImage():
                 targetMGRS = m.toMGRS(tarY, tarX)
                 targetMGRS10m = m.toMGRS(tarY,tarX, MGRSPrecision=4)
                 targetMGRS100m = m.toMGRS(tarY, tarX, MGRSPrecision=3)
-                print(f'NATO MGRS: {targetMGRS}')
+                gzdEndIndex = 2
+                while(targetMGRS[gzdEndIndex].isalpha()):
+                    gzdEndIndex += 1
+                print(f'NATO MGRS: {targetMGRS[0:gzdEndIndex]}\033[4m{targetMGRS[gzdEndIndex:]}\033[0;0m Alt: \033[4m{math.ceil(tarZ)}\033[0;0m')
                 print(f'MGRS 10m: {targetMGRS10m}')
                 print(f'MGRS 100m: {targetMGRS100m}\n')
 
                 # # normal decimal like GPS co-ords, "WGS84"
                 # wgs84 = "epsg:4326"
-                # # SK-42, A.K.A CK-42 A.KA Pulkovo 1942 A.K.A Gauss Kruger
-                # # alternative, ellipsoidal projection used by
-                # # many old soviet maps
-                # #
-                # # coordinates expressed as Y, X, units in meters
-                # #
-                # # ID:
-                # #     CM 159 E
-                # #     epsg:4284
-                # #     https://spatialreference.org/ref/epsg/4284/
+                # SK-42, A.K.A CK-42 A.KA Pulkovo 1942 A.K.A Gauss Kruger
+                # alternative, ellipsoidal projection used by
+                # many old soviet maps
+                #
+                # coordinates expressed as Y, X, units in meters
+                #
+                # ID:
+                #     CM 159 E
+                #     epsg:4284
+                #     https://spatialreference.org/ref/epsg/4284/
                 # sk42 = "epsg:4284"
+                # sk42 = "epsg:4024"
                 # transformer = Transformer.from_crs(wgs84, sk42)
-                # targetSK42Lon, targetSK42Lat = transformer.transform(float(tarX), float(tarY))
-                # targetSK42Lon = str(round(targetSK42Lon,0)).split('.')[0]
-                # targetSK42Lat = str(round(targetSK42Lat,0)).split('.')[0]
-                # print(f'SK42 (TESTING ONLY): {targetSK42Lat} Y, {targetSK42Lon} X')
+                # targetSK42Lon, targetSK42Lat, targetSK42Alt = transformer.transform(float(tarX), float(tarY), float(tarZ))
+                # targetSK42Lon = round(targetSK42Lon,6)
+                # targetSK42Lat = round(targetSK42Lat,6)
+                # print(f'SK42 (TESTING ONLY): {targetSK42Lat}, {targetSK42Lon}, Alt: {targetSK42Lat}')
 
                 targetSK42Lat = converter.WGS84_SK42_Lat(float(tarY), float(tarX), float(tarZ))
                 targetSK42Lon = converter.WGS84_SK42_Long(float(tarY), float(tarX), float(tarZ))
-                print(f'SK42: {round(targetSK42Lat, 6)}, {round(targetSK42Lon, 6)}')
+                targetSK42Alt = float(tarZ) - converter.SK42_WGS84_Alt(targetSK42Lat, targetSK42Lon, 0.0)
+                targetSK42Alt = int(round(targetSK42Alt))
+                print('SK42 (истема координат 1942 года):')
+                print(f'    Geodetic (°): {round(targetSK42Lat, 6)}, {round(targetSK42Lon, 6)} Alt: {targetSK42Alt}')
+                targetSK42LatDMS, targetSK42LonDMS = decimalToDegreeMinuteSecond(targetSK42Lat, targetSK42Lon)
+                print('    Geodetic (° " \'):')
+                print('      '+targetSK42LatDMS)
+                print('      '+targetSK42LonDMS)
+                GK_zone, targetSK42_N_GK, targetSK42_E_GK = Projector.SK42_Gauss_Kruger(targetSK42Lat, targetSK42Lon)
+                targetSK42_E_GK -= GK_zone * 1e6
+                targetSK42_N_GK, targetSK42_E_GK = int(round(targetSK42_N_GK)), int(round(targetSK42_E_GK))
+                SK42_N_GK_10k_Grid, SK42_E_GK_10k_Grid = (targetSK42_N_GK % 100000), (targetSK42_E_GK % 100000)
+                # ANSI escape sequences \033[ for underlining: stackabuse.com/how-to-print-colored-text-in-python
+                print(f'    Gauss-Krüger (meters): ZONE: {GK_zone} X: {int((targetSK42_N_GK - SK42_N_GK_10k_Grid)/100000)} \033[4m{SK42_N_GK_10k_Grid}\033[0;0m Y: {int((targetSK42_E_GK - SK42_E_GK_10k_Grid)/100000)} \033[4m{SK42_E_GK_10k_Grid}\033[0;0m Alt: \033[4m{targetSK42Alt}\033[0;0m')
+                # print(f'Gauss-Krüger (meters): ZONE: {GK_zone} X: {targetSK42_N_GK} Y: {targetSK42_E_GK}')
+
+
 
 
     #
@@ -783,6 +806,59 @@ def exifGetYXZ(exifData):
         return None
 
     return (y, x, z)
+
+"""takes a decimal +/- Lat and Lon and returns a tuple of two strings containing Degrees Minutes Seconds each
+
+Note: this funtion will work with Geodetic coords of any ellipsoid
+
+Fn from Glen Bambrick: glenbambrick.com/2015/06/24/dd-to-dms/
+
+Parameters
+----------
+Lat: float
+    A latitude, positive or negative, in degrees
+Lon: float
+    A longitude, positive or negative, in degrees
+"""
+def decimalToDegreeMinuteSecond(Lat, Lon):
+
+    split_degx = math.modf(Lon)
+
+    # the whole number [index 1] is the degrees
+    degrees_x = int(split_degx[1])
+
+    # multiply the decimal part by 60: 0.3478 * 60 = 20.868
+    # split the whole number part of the total as the minutes: 20
+    # abs() absoulte value - no negative
+    minutes_x = abs(int(math.modf(split_degx[0] * 60)[1]))
+
+    # multiply the decimal part of the split above by 60 to get the seconds
+    # 0.868 x 60 = 52.08, round excess decimal places to 2 places
+    # abs() absoulte value - no negative
+    seconds_x = abs(round(math.modf(split_degx[0] * 60)[0] * 60,2))
+
+    # repeat for Lat
+    split_degy = math.modf(Lat)
+    degrees_y = int(split_degy[1])
+    minutes_y = abs(int(math.modf(split_degy[0] * 60)[1]))
+    seconds_y = abs(round(math.modf(split_degy[0] * 60)[0] * 60,2))
+
+    # account for E/W & N/S
+    if degrees_x < 0:
+        EorW = "W"
+    else:
+        EorW = "E"
+
+    if degrees_y < 0:
+        NorS = "S"
+    else:
+        NorS = "N"
+
+    # abs() remove negative from degrees, was only needed for if-else above
+    latDMS = str(abs(degrees_y)) + "° " + str(minutes_y) + "' " + str(seconds_y) + "\" " + NorS
+    lonDMS = str(abs(degrees_x)) + "° " + str(minutes_x) + "' " + str(seconds_x) + "\" " + EorW
+
+    return (latDMS, lonDMS)
 
 
 if __name__ == "__main__":
