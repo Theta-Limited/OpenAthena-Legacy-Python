@@ -192,7 +192,7 @@ Please enter aircraft latitude in (+/-) decimal form:
 The preceeding numbers are provided for the user as debug information, but are not necessary during normal operation
 
 
-Next, enter the latitude, then longitude, then altitude of the aircraft:
+Next, enter the latitude, then longitude, then altitude of the aircraft (standard WGS84):
 
 
 ```bash
@@ -213,20 +213,25 @@ The accuracy of the positional resolution is better at steep angles (high theta)
 Please enter camera azimuth (0 is north) in decimal form (degrees): 315
 Please enter angle of declanation (degrees down from forward) in decimal form: 20
 
-Approximate range to target: 1035.03
+Approximate range to target: 1031
 
-Approximate alt (constructed): 146.01
-Approximate alt (terrain): 146.5
+Approximate WGS84 alt (constructed): 148
+Approximate alt (terrain): 148
 
 Target:
-WGS84 (lat, lon): 41.8071606, 12.6400355
+WGS84 (lat, lon): 41.807161, 12.640036 Alt: 148
 Google Maps: https://maps.google.com/?q=41.807161,12.640036
 
-NATO MGRS: 33TUG0395831058
+NATO MGRS: 33TUG0395831058 Alt: 148
 MGRS 10m: 33TUG03953105
 MGRS 100m: 33TUG039310
 
-SK42: 41.807634, 12.641757
+SK42:
+    Geodetic (°): 41.807634, 12.641757 Alt: 98
+    Geodetic (° ' "):
+      41° 48' 27.48" N
+      12° 38' 30.33" E
+    Gauss-Krüger (meters): ZONE: 3 X: 46 33042 Y: 3 4021 Alt: 98
 
 ```
 
@@ -236,7 +241,7 @@ The distance of each iterative step, in meters, is defined by the `increment` va
 The information in the following output lines represents the final positional resolution obtained by the approximate intersection of the constructed line emitted from the aircraft's camera and the ground as represented by the terrain data
 
 
-The values should be tested for correctness and not totally relied upon in the current version of this program.
+The values should be tested for correctness
 
 
 `Approximate range to target:` represents the direct-line distance in meters from the aircraft to the target. This may be useful for an operator to determine if the target match is in the expected place. To obtain the horizontal distance, multiply this number times the cosine of theta
@@ -252,10 +257,20 @@ The values should be tested for correctness and not totally relied upon in the c
 `Google Maps:` a link to the previous lat/lon on Google Maps. Each rounded to 6 decimal places
 
 
-`NATO MGRS:` represents the target location in the [NATO Military Grid Reference System (MGRS)](https://en.wikipedia.org/wiki/Military_Grid_Reference_System), which is simmilar to [UTM](https://en.wikipedia.org/wiki/Universal_Transverse_Mercator_coordinate_system). This coordinate system does not include the altitude of the Target
+`NATO MGRS:` represents the target location in the [NATO Military Grid Reference System (MGRS)](https://en.wikipedia.org/wiki/Military_Grid_Reference_System), which is simmilar to [UTM](https://en.wikipedia.org/wiki/Universal_Transverse_Mercator_coordinate_system). The first 4 (or 5) digits defines the Grid Zone Designator (GZD). The next 10 digits represent the Grid Ref (1 meter square) of the target. The 10 digits of the grid, as well as the Altitude, are underlined in the output for easy reference.
 
 
-`SK42:` represents the target latitude and longitude (in degrees) according to the [SK-42 (A.K.A. CK-42) coordinate system](https://en.wikipedia.org/wiki/SK-42_reference_system) (Russian: Система координат 1942 года). This system is commonly used in old Soviet and post-Soviet style maps, and is based on a differend ellipsoidal projection than WGS84
+`MGRS 10m:` same as `NATO MGRS:` except as an 8 digit (10m square) containing the target
+
+
+`MGRS 100m:` same as `MGRS 10m:` except as a 6 digit (100m square) containing th target
+
+
+`SK42 (истема координат 1942 года):` represents the target location according to the [SK-42 (A.K.A. CK-42) coordinate system](https://en.wikipedia.org/wiki/SK-42_reference_system) (Russian: Система координат 1942 года). This system is commonly used in old Soviet and post-Soviet style maps, and is based on a different ellipsoidal projection than WGS84 (called the  Krassowsky 1940 ellipsoid)
+`    Geodetic (°)` represents the target location as latitude and longitude degrees outward from the center of the Krassowsky ellipsoid.
+`    Geodetic (° ' ")` The same value, split up into degrees, minutes, and seconds. Old Soviet style maps are commonly marked by degree (°) and minute (') on the axes as subscript.
+`    Gauss-Krüger (meters):` The same value, as a offest value (in meters)on a [Gauss-Krüger](https://desktop.arcgis.com/en/arcmap/latest/map/projections/gauss-kruger.htm) projection. The last 5 digits of the offset Northing and Easting values are commonly used as grid labels on old Soviet style maps. "Northing" refers to a vertical line defined by an `X` value. "Easting" refers to a horizontal line defined by a `Y` value. `ZONE` specifies the GK longitudinal-zone (in 6° increments, possible values 1-60 inclusive). The smallest 5 digits of the Northing and Easting values, as well as the Altitude, are underlined in the output for easy reference.
+
 
 The program `getTarget.py` will then exit
 

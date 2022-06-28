@@ -35,9 +35,9 @@ class Translator(object):
 
     # Эллипсоид WGS84 (GRS80, эти два эллипсоида сходны по большинству параметров)
     # Ellipsoid WGS84 (GRS80, these two ellipsoids are similar in most parameters)
-    aW = np.float64(6378137) # Большая полуось
-    alW = np.float64(1 / 298.257223563) # Сжатие
-    e2W = np.float64(2 * alW - math.pow(alW, 2)) # Квадрат эксцентриситета
+    aW = np.float64(6378137) # Большая полуось # Major axis
+    alW = np.float64(1 / 298.257223563) # Сжатие # Compression
+    e2W = np.float64(2 * alW - math.pow(alW, 2)) # Квадрат эксцентриситета # Square of eccentricity
 
     # Вспомогательные значения для преобразования эллипсоидов
     # Auxiliary values ​​for transforming ellipsoids
@@ -67,17 +67,6 @@ class Translator(object):
         return Bd - cls.dB(Bd, Ld, H) / 3600
 
     #
-    # convert from SK-42 to WGS-84.
-    # @param Bd longitude
-    # @param Ld latitude
-    # @param H altitude
-    # @return longitude in WGS-84
-    #
-    @classmethod
-    def SK42_WGS84_Lat(cls, Bd, Ld, H):
-        return Bd + cls.dB(Bd, Ld, H) / 3600
-
-    #
     # convert from WGS-84 to SK-42.
     # @param Bd longitude
     # @param Ld latitude
@@ -87,17 +76,6 @@ class Translator(object):
     @classmethod
     def WGS84_SK42_Long(cls, Bd, Ld, H):
         return Ld - cls.dL(Bd, Ld, H) / 3600
-
-    #
-    # convert from SK-42 to WGS-84.
-    # @param Bd longitude
-    # @param Ld latitude
-    # @param H altitude
-    # @return latitude in WGS-84
-    #
-    @classmethod
-    def SK42_WGS84_Long(cls, Bd, Ld, H):
-        return Ld + cls.dL(Bd, Ld, H) / 3600
 
     #
     # @param Bd longitude
@@ -138,10 +116,10 @@ class Translator(object):
     # @return
     #
     @classmethod
-    def WGS84Alt(cls, Bd, Ld, H):
+    def SK42_WGS84_Alt(cls, Bd, Ld, H):
         """ generated source for method WGS84Alt """
         B = Bd * math.pi / 180
         L = Ld * math.pi / 180
-        N = a * math.pow((1 - e2 * math.pow(math.sin(B), 2)), -0.5)
-        dH = -a / N * cls.da + N * math.pow(math.sin(B), 2) * de2 / 2 + (dx * math.cos(L) + dy * math.sin(L)) * math.cos(B) + cls.dz * math.sin(B) - N * e2 * math.sin(B) * math.cos(B) * (wx / ro * math.sin(L) - wy / ro * math.cos(L)) + (math.pow(a, 2) / N + H) * cls.ms
+        N = cls.a * math.pow((1 - cls.e2 * math.pow(math.sin(B), 2)), -0.5)
+        dH = -cls.a / N * cls.da + N * math.pow(math.sin(B), 2) * cls.de2 / 2 + (cls.dx * math.cos(L) + cls.dy * math.sin(L)) * math.cos(B) + cls.dz * math.sin(B) - N * cls.e2 * math.sin(B) * math.cos(B) * (cls.wx / cls.ro * math.sin(L) - cls.wy / cls.ro * math.cos(L)) + (math.pow(cls.a, 2) / N + H) * cls.ms
         return H + dH
