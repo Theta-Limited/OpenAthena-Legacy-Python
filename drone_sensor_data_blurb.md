@@ -17,7 +17,7 @@ Next, choose an image for which to resolve the location of its subject. For exam
 
 Finally, run `parseImage.py`. To save time, the geoTiff file can be provided as the first argument after `python parseImage.py` (or `python3 parseImage.py` on Macs for example):
 ```bash
-python parseImage.py bartow.tif
+python parseImage.py cobb.tif
 ```
 (Note: the file must end in `.tif`. If you do not provide a geoTiff file, you will be prompted for input of a filename)
 
@@ -34,9 +34,15 @@ Multiple images can be processed at once in **interactive** mode. When you're fi
 ![image of the processed location in text in Thompson Park, GA](./assets/parseImage_interactive_example3.png)
 
 Let's copy that `NATO MGRS` into Google Maps:
+
+
+
+
 ![zoomed image of thompson park drone photo, compared side by side with Google Maps of resolved location. The center point of the drone photo on the left is marked with a small red circle](./assets/pretty_good.jpg)
 
 Pretty good!
+
+(note: the NATO 10-digit grid without GZD is underlined for easy reference. We need to include the full MGRS with GZD to give the precise location. An alternate, Warsaw pact style SK42 Gauss-Krüger grid ref is similarly underlined)
 
 #### headless
 
@@ -52,14 +58,12 @@ The openathena Docker image is convenient because it comes with all pre-requisit
 
 For running with your own GeoTIFF DEM and drone images, mount a directory on your host system your desired files to a directory inside the `/home/user` in the container. Then pass as arguments a GeoTIFF file and one or more drone images using relative file paths like `./recon-photos/Altis.tif` and `./recon-photos/DJI_0666.JPG`
 
-NOTE: relative file paths for drone images will only work on versions > 1.25-pre-alpha. Relative file path for a GeoTIFF file will work on 1.25-pre-alpha however. This notice will be removed in v0.1.26-pre-alpha
-
 It is _**highly recommended**_ to choose a particular tag from the [releases page](https://github.com/mkrupczak3/OpenAthena/releases) rather than using the `latest` tag whenever openathena is to be used in a automated production environment
 
 E.g (with [Docker already installed](https://docs.docker.com/engine/install/)):
 ```bash
-docker pull t3l3tubie/openathena:latest
-docker run -v ~/Desktop/recon-photos/:/home/user/recon-photos openathena:latest ./recon-photos/Altis.tif ./recon-photos/DJI_0666.JPG
+docker pull t3l3tubie/openathena:v0.1.26-pre-alpha
+docker run -v ~/Desktop/recon-photos/:/home/user/recon-photos openathena:v0.1.26-pre-alpha ./recon-photos/Altis.tif ./recon-photos/DJI_0666.JPG
 ```
 
 The container will run and perform its task, then exit. A file like `~/Desktop/recon-photos/DJI_0666.JPG.ATHENA` will be available on the host filesystem, containing the data of the target calculated by OpenAthena

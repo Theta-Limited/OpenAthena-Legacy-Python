@@ -227,7 +227,9 @@ def parseImage():
         #
         if target is not None:
             finalDist, tarY, tarX, tarZ, terrainAlt = target
+
             if headless:
+
                 filename = thisImage + ".ATHENA"
                 dateTime = exifData["DateTime"]
 
@@ -240,7 +242,9 @@ def parseImage():
 
                 file_object.write(str(tarY) + "\n")
                 file_object.write(str(tarX) + "\n")
-                file_object.write(str(terrainAlt) + "\n")
+                if tarZ is None:
+                    tarZ = terrainAlt
+                file_object.write(str(tarZ) + "\n")
                 file_object.write(str(finalDist) + "\n")
                 if dateTime is not None:
                     file_object.write(str(dateTime) + "\n")
@@ -269,10 +273,17 @@ def parseImage():
 
                 targetSK42Lat = converter.WGS84_SK42_Lat(float(tarY), float(tarX), float(tarZ))
                 targetSK42Lon = converter.WGS84_SK42_Long(float(tarY), float(tarX), float(tarZ))
-                file_object.write(f'{targetSK42Lat}Y\n')
-                file_object.write(f'{targetSK42Lon}X\n')
+                targetSK42Alt = float(tarZ) - converter.SK42_WGS84_Alt(targetSK42Lat, targetSK42Lon, 0.0)
+                file_object.write(f'{targetSK42Lat}\n')
+                file_object.write(f'{targetSK42Lon}\n')
+                file_object.write(f'{targetSK42Alt}\n')
+                GK_zone, targetSK42_N_GK, targetSK42_E_GK = Projector.SK42_Gauss_Kruger(targetSK42Lat, targetSK42Lon)
+                targetSK42_E_GK -= GK_zone * 1e6
+                file_object.write(f'{GK_zone}\n')
+                file_object.write(f'{targetSK42_N_GK}\n')
+                file_object.write(f'{targetSK42_E_GK}\n')
 
-                file_object.write("# format: lat, lon, alt, dist, time, MGRS 1m, MGRS 10m, MGRS 100m, SK42 Lat, SK42 Lon\n")
+                file_object.write("# format: lat, lon, alt, dist, time, MGRS 1m, MGRS 10m, MGRS 100m, SK42 Lat, SK42 Lon, SK42 Alt., SK42 Gauss-Krüger Zone, SK42 Gauss-Krüger Northing (X), SK42 Gauss-Krüger Easting (Y),  \n")
 
                 if make == "AUTEL ROBOTICS":
                     file_object.write(f'# CAUTION: in-accuracies have been observed with Autel drones. This result is from a "{model}" drone')
@@ -568,6 +579,7 @@ def handleAUTEL(xmp_str, exifData):
     metadataAbout = xmp_str[metadataAbout : metadataAbout + 15]
     metadataAbout = metadataAbout.split(' ')[0]
     metadataAbout = metadataAbout.upper()
+    metadataAbout = metadataAbout.replace('"', '')
 
     # Newer firmware versions use simmilar XMP tags as DJI
     if metadataAbout == "DJI":
