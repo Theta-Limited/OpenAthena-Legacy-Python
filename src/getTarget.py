@@ -103,7 +103,7 @@ def getTarget():
         print('SK42 (истема координат 1942 года):')
         print(f'    Geodetic (°): {round(targetSK42Lat, 6)}, {round(targetSK42Lon, 6)} Alt: {targetSK42Alt}')
         targetSK42LatDMS, targetSK42LonDMS = decimalToDegreeMinuteSecond(targetSK42Lat, targetSK42Lon)
-        print('    Geodetic (° " \'):')
+        print('    Geodetic (° \' "):')
         print('      '+targetSK42LatDMS)
         print('      '+targetSK42LonDMS)
         GK_zone, targetSK42_N_GK, targetSK42_E_GK = Projector.SK42_Gauss_Kruger(targetSK42Lat, targetSK42Lon)

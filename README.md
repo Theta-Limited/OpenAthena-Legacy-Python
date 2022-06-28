@@ -228,7 +228,7 @@ MGRS 100m: 33TUG039310
 
 SK42:
     Geodetic (°): 41.807634, 12.641757 Alt: 98
-    Geodetic (° " '):
+    Geodetic (° ' "):
       41° 48' 27.48" N
       12° 38' 30.33" E
     Gauss-Krüger (meters): ZONE: 3 X: 46 33042 Y: 3 4021 Alt: 98
@@ -268,7 +268,7 @@ The values should be tested for correctness
 
 `SK42 (истема координат 1942 года):` represents the target location according to the [SK-42 (A.K.A. CK-42) coordinate system](https://en.wikipedia.org/wiki/SK-42_reference_system) (Russian: Система координат 1942 года). This system is commonly used in old Soviet and post-Soviet style maps, and is based on a different ellipsoidal projection than WGS84 (called the  Krassowsky 1940 ellipsoid)
 `    Geodetic (°)` represents the target location as latitude and longitude degrees outward from the center of the Krassowsky ellipsoid.
-`    Geodetic (° " ')` The same value, split up into degrees, minutes, and seconds. Old Soviet style maps are commonly marked by degree (°) and minute (') on the axes as subscript.
+`    Geodetic (° ' ")` The same value, split up into degrees, minutes, and seconds. Old Soviet style maps are commonly marked by degree (°) and minute (') on the axes as subscript.
 `    Gauss-Krüger (meters):` The same value, as a offest value (in meters)on a [Gauss-Krüger](https://desktop.arcgis.com/en/arcmap/latest/map/projections/gauss-kruger.htm) projection. The last 5 digits of the offset Northing and Easting values are commonly used as grid labels on old Soviet style maps. "Northing" refers to a vertical line defined by an `X` value. "Easting" refers to a horizontal line defined by a `Y` value. `ZONE` specifies the GK longitudinal-zone (in 6° increments, possible values 1-60 inclusive). The smallest 5 digits of the Northing and Easting values, as well as the Altitude, are underlined in the output for easy reference.
 
 
