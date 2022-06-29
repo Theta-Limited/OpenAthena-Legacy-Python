@@ -5,7 +5,7 @@ Open Athena is a project to enable precision indirect fires that disrupt convent
 
 🖼️👨‍💻 + 🧮⛰️ = 🎯📍
 
-This technique may greatly reduce the incidence of errors during the process of [forward artillery observation](https://en.wikipedia.org/wiki/Artillery_observer), with a profound impact towards reducing harm to civilian lives and property in warfare. OpenAthena may also prove especially useful for life-saving civillian search and rescure (SAR) and other applications
+This technique may greatly reduce the incidence of errors during the process of [forward artillery observation](https://en.wikipedia.org/wiki/Artillery_observer), with a profound impact towards reducing harm to civilian lives and property in warfare. OpenAthena may also prove especially useful for life-saving civilian search and rescue (SAR) and other applications
 
 This software is in pre-alpha. Use appropriate caution when using data generated from this program
 
@@ -26,7 +26,7 @@ While the [importance of indirect fire](causative_agents_blurb.md) (e.g. mortars
 
 Mastery of combined arms through maneuver warfare and air superiority remain the determinate factors of supremacy in current doctrine, preventing the effective application of indirect fire. This is in large part due to the lack of precision and immediacy that are critical for its usage against a highly-mobile adversary.
 
-As former U.S. Army Chief of Staff Gen. Mark A. Milley wrote in the forward to U.S. Army Training and Doctrine Command Pamphlet 525-3-1, [The U.S. Army in Multi-Domain Operations 2028](https://adminpubs.tradoc.army.mil/pamphlets/TP525-3-1.pdf): “emerging technologies” are “driving a fundamental change in the character of war.” They have “the potential to revolutionize battlefields unlike anything since the integration of machine guns, tanks, and aviation which began the era of combined arms warfare.”
+As U.S. Army Chief of Staff Gen. Mark A. Milley wrote in the forward to U.S. Army Training and Doctrine Command Pamphlet 525-3-1, [The U.S. Army in Multi-Domain Operations 2028](https://adminpubs.tradoc.army.mil/pamphlets/TP525-3-1.pdf): “emerging technologies” are “driving a fundamental change in the character of war.” They have “the potential to revolutionize battlefields unlike anything since the integration of machine guns, tanks, and aviation which began the era of combined arms warfare.”
 
 # A new introduction to combined arms doctrine
 
@@ -66,7 +66,7 @@ This project portends the possibility of one such upset to existing combined arm
 
 Due to the low altitude operation and inexpensive nature of such aircraft, they can counter concentrated combined arms forces even when higher-altitude air supremacy is not held or may not be achieved against an adversary. In such a fashion, low altitude consumer-grade aircraft upset the role of high-altitude military aircraft as the only effective foil to ground-based combined arms.
 
-Additionally, the combination of existing combined arms with new precision indirect fire capabilities may allow a unit to move more rapidly and gain ground at frightening speeds using classic fire-and-movement tactics. The advantage provided by precision indirect fire is that it can supress a target from beyond line of sight, reducing the burden of infantry units to supress a target while a friendly unit is in motion. Well executed maneuvers under such conditions may outpace a conventional force's ability to react, resupply, and reposition its own defenses.
+Additionally, the combination of existing combined arms with new precision indirect fire capabilities may allow a unit to move more rapidly and gain ground at frightening speeds using classic fire-and-movement tactics. The advantage provided by precision indirect fire is that it can suppress a target from beyond line of sight, reducing the burden of infantry units to suppress a target while a friendly unit is in motion. Well executed maneuvers under such conditions may out-pace a conventional force's ability to react, resupply, and reposition its own defenses.
 
 # Adapting to an upset
 
@@ -80,15 +80,15 @@ Effort should be made into producing inexpensive 'bird of prey' aircraft that ca
 
 ![concept whiteboard diagram](./assets/concept_whiteboard_diagram.jpg)
 
-Multi-copter rotary-wing aircraft (e.g. quadroters, drones, etc.) typically have an onboard 3D A-GPS sensor for position/alt., a magnetometer for compass heading/azimuth,  and a sensitive barometer (atmospheric pressure sensor) for accurate absolute altitude relative to sea level.
+Multi-copter rotary-wing aircraft (e.g. quadrotors, drones, etc.) typically have an on-board 3D A-GPS sensor for position/alt., a magnetometer for compass heading/azimuth,  and a sensitive barometer (atmospheric pressure sensor) for accurate absolute altitude relative to sea level.
 
 They also typically have an "accelerometer" which allows it to stay level with the ground while in flight, and a camera.
 
-The camera starts level with the horizon during normal operation, and the operator can pitch it downwards towards the ground for live camera feed and taking pictures. These pictures store GPS coordinates, altitude, and the azimuth and angle of declanation downward (pitch) in their XMP and EXIF metadata (attached with the image)
+The camera starts level with the horizon during normal operation, and the operator can pitch it downwards towards the ground for live camera feed and taking pictures. These pictures store GPS coordinates, altitude, and the azimuth and angle of declination downward (pitch) in their XMP and EXIF metadata (attached with the image)
 
 Given that the lat/long and altitude of the rotary-wing aircraft is known, its azimuth is known, and it is possible to obtain accurate worldwide elevation data (within ~30m) from [this api](https://pypi.org/project/elevation/), Open Athena calculates the position and altitude of the object aimed at by the camera.
 
-An invisible, imaginary mathematical line is traced from the aircraft's camera towards the ground at its heading (azimuth) and angle of declanation downwards (theta) from the horizon. The point closest along this line to the aircraft yet reasonably near any geographic lat/long/alt data point is usually the target which the camera is aiming at. This provides the aircraft operator with a latitude, longitude, and elevation of the target to which the camera is aiming in an extremely short period of time.
+An invisible, imaginary mathematical line is traced from the aircraft's camera towards the ground at its heading (azimuth) and angle of declination downwards (theta) from the horizon. The point closest along this line to the aircraft yet reasonably near any geographic lat/long/alt data point is usually the target which the camera is aiming at. This provides the aircraft operator with a latitude, longitude, and elevation of the target to which the camera is aiming in an extremely short period of time.
 
 Such a rapid positional resolution may prove ideal for use by precision indirect fire teams
 
@@ -113,7 +113,7 @@ python3 parseGeoTIFF.py
 
 ### parseImage.py
 
-[parseImage.py](./src/parseImage.py) can perform automatic extraction and use of EXIF/XMP sensor information from drone photos. This allows for the automatic extraction and use of data including the aircraft camera's lat/lon, altitude, azimuth, and angle of declenation (theta). OpenAthena (if provided [terrain elevation data](./EIO_fetch_geotiff_example.md)) will extract and use these values automaticaly to find the location on the ground in the exact center of the image
+[parseImage.py](./src/parseImage.py) can perform automatic extraction and use of EXIF/XMP sensor information from drone photos. This allows for the automatic extraction and use of data including the aircraft camera's lat/lon, altitude, azimuth, and angle of declination (theta). OpenAthena (if provided [terrain elevation data](./EIO_fetch_geotiff_example.md)) will extract and use these values automaticaly to find the location on the ground in the exact center of the image
 
 [![image of command line on MacOS, command python3 parseImage.py bartow.tif, output and prompting user for drone image filename](./assets/parseImage_interactive_example2.png)](drone_sensor_data_blurb.md)
 
@@ -143,7 +143,7 @@ Then, exit the picture window that appears. You will now be prompted in the comm
 ### getTarget.py
 
 
-getTarget.py searches along the constructed line (emmitted from the camera center) for a terrain match
+getTarget.py searches along the constructed line (emitted from the camera center) for a terrain match
 
 
 To start, `cd` into the `src` directory, then run getTarget.py:
@@ -192,7 +192,7 @@ Please enter aircraft latitude in (+/-) decimal form:
 ```
 
 
-The preceeding numbers are provided for the user as debug information, but are not necessary during normal operation
+The preceding numbers are provided for the user as debug information, but are not necessary during normal operation
 
 
 Next, enter the latitude, then longitude, then altitude of the aircraft (standard WGS84):
@@ -206,7 +206,7 @@ Please enter camera azimuth (0 is north) in decimal form (degrees):
 ```
 
 
-Next, enter the heading of the aircraft (in degrees, 0 is north and increasing clock-wise) and the angle of declanation \[theta\] of the camera (in degrees, 0 is straight forward and increasing up to a maximum of 90 which is straight downwards)
+Next, enter the heading of the aircraft (in degrees, 0 is north and increasing clock-wise) and the angle of declination \[theta\] of the camera (in degrees, 0 is straight forward and increasing up to a maximum of 90 which is straight downwards)
 
 
 The accuracy of the positional resolution is better at steep angles (high theta) when the camera is not close to parallel with the ground near the target
@@ -214,7 +214,7 @@ The accuracy of the positional resolution is better at steep angles (high theta)
 
 ```bash
 Please enter camera azimuth (0 is north) in decimal form (degrees): 315
-Please enter angle of declanation (degrees down from forward) in decimal form: 20
+Please enter angle of declination (degrees down from forward) in decimal form: 20
 
 Approximate range to target: 1031
 
@@ -281,9 +281,9 @@ The program `getTarget.py` will then exit
 
 
 # Military Uses
-Especially when employed with precision smart munitions (e.g. [artillery](https://asc.army.mil/web/portfolio-item/ammo-excalibur-xm982-m982-and-m982a1-precision-guided-extended-range-projectile/), aerial, etc.) this would greatly aid the safety and processes of the [forward artillery observer](https://en.wikipedia.org/wiki/Artillery_observer) using soley inexpensive consumer electronics, all while reducing the risk of operator error (mismeasurement, miscalculation, etc.) and subsequent risk of friendly-fire incidents and risk to civilian lives.
+Especially when employed with precision smart munitions (e.g. [artillery](https://asc.army.mil/web/portfolio-item/ammo-excalibur-xm982-m982-and-m982a1-precision-guided-extended-range-projectile/), aerial, etc.) this project will greatly aid the safety and processes of the [forward artillery observer](https://en.wikipedia.org/wiki/Artillery_observer) using soley inexpensive consumer electronics, all while reducing the risk of operator error (mismeasurement, miscalculation, etc.) and subsequent risk of friendly-fire incidents and risk to civilian lives.
 
-In addition, a passive optical-based approach to target identification does not trigger the active protection system(s) of targets, including armored vehicles. This can be highly beneficial depending on the usage environment.
+In addition: unlike a laser rangefinder/designator,  a passive optical-based approach to target identification does not emit any signature which may forewarn a target or a group of targets (including armored vehicles). This may be highly beneficial depending on the usage environment.
 
 # Civilian Uses
 
