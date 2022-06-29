@@ -10,8 +10,8 @@ This technique may greatly reduce the incidence of errors during the process of 
 This software is in pre-alpha. Use appropriate caution when using data generated from this program
 
 # [**Premise**](https://github.com/mkrupczak3/OpenAthena#premise-1)
-[![pretty_good_skydio](./assets/pretty_good_skydio.jpg)](https://github.com/mkrupczak3/OpenAthena#premise)
-[![proof_of_concept](./assets/proof_of_concept.jpg)](https://github.com/mkrupczak3/OpenAthena#premise)
+[![pretty_good_skydio](./assets/pretty_good_skydio.jpg)](https://github.com/mkrupczak3/OpenAthena#premise-1)
+[![proof_of_concept](./assets/proof_of_concept.jpg)](https://github.com/mkrupczak3/OpenAthena#premise-1)
 
 
 # [**Installation**](https://github.com/mkrupczak3/OpenAthena#install)
