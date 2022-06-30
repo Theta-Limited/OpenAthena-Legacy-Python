@@ -81,8 +81,8 @@ def main():
     plt.imshow(elevation, cmap='gist_earth', extent=[x0, x1, y1, y0])
     plt.show()
     while True:
-        lat = inputNumber('please enter a latitude: ', y1, y0)
-        lon = inputNumber('please enter a longitude: ', x0, x1)
+        lat = getTarget.inputNumber('please enter a latitude: ', y1, y0)
+        lon = getTarget.inputNumber('please enter a longitude: ', x0, x1)
         result = getAltFromLatLon(lat, lon, xParams, yParams, elevation)
         print(f'Elevation of ({round(lat,6)}, {round(lon,6)}) is: {result}')
 
