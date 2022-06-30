@@ -59,6 +59,8 @@ class Projector(object):
         N = I+II* math.pow(Lon-Lon0,2)+III* math.pow(Lon-Lon0,4)+IIIA* math.pow(Lon-Lon0,6)
         E = E0+IV*(Lon-Lon0)+V* math.pow(Lon-Lon0,3)+VI* math.pow(Lon-Lon0,5)
 
+        E -= zone * 1e6 # subtract the zone number back out from the Easting reference
+
         return(zone, N, E)
 
     # end def SK42_Gauss_Kruger

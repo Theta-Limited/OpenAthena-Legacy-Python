@@ -98,6 +98,10 @@ def getTarget():
 
         targetSK42Lat = converter.WGS84_SK42_Lat(float(tarY), float(tarX), float(tarZ))
         targetSK42Lon = converter.WGS84_SK42_Long(float(tarY), float(tarX), float(tarZ))
+        # Note: This altitude calculation assumes the SK42 and WGS84 ellipsoid have the exact same center
+        #     This is not totally correct, but in practice is close enough to the actual value
+        #     @TODO Could be refined at a later time with better math
+        #     See: https://gis.stackexchange.com/a/88499
         targetSK42Alt = float(tarZ) - converter.SK42_WGS84_Alt(targetSK42Lat, targetSK42Lon, 0.0)
         targetSK42Alt = int(round(targetSK42Alt))
         print('SK42 (истема координат 1942 года):')
@@ -107,7 +111,6 @@ def getTarget():
         print('      '+targetSK42LatDMS)
         print('      '+targetSK42LonDMS)
         GK_zone, targetSK42_N_GK, targetSK42_E_GK = Projector.SK42_Gauss_Kruger(targetSK42Lat, targetSK42Lon)
-        targetSK42_E_GK -= GK_zone * 1e6
         targetSK42_N_GK, targetSK42_E_GK = int(round(targetSK42_N_GK)), int(round(targetSK42_E_GK))
         SK42_N_GK_10k_Grid, SK42_E_GK_10k_Grid = (targetSK42_N_GK % 100000), (targetSK42_E_GK % 100000)
         # ANSI escape sequences \033[ for underlining: stackabuse.com/how-to-print-colored-text-in-python
