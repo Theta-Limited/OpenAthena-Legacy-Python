@@ -37,32 +37,32 @@ def gui():
     m.title('OpenAthena GUI')
     m.geometry("500x500")
 
-    sk42 = BooleanVar()
+    gui.sk42 = BooleanVar()
     sk42_l = 'sk42'
-    mgrs = BooleanVar()
+    gui.mgrs = BooleanVar()
     mgrs_l = 'mgrs'
-    sk42.set(False)
-    mgrs.set(True)
+    gui.sk42.set(False)
+    gui.mgrs.set(True)
 
-    mgrs_cb = Checkbutton(m, text = mgrs_l, variable = mgrs)
-    sk42_cb = Checkbutton(m, text = sk42_l, variable = sk42)
+    gui.mgrs_cb = Checkbutton(m, text = mgrs_l, variable = gui.mgrs)
+    gui.sk42_cb = Checkbutton(m, text = sk42_l, variable = gui.sk42)
 
     file_ex_l = 'Select a GeoTIFF digital elevation model file'
-    label_file_explorer = Label(m,
+    gui.label_file_explorer = Label(m,
                             text = file_ex_l,
                             width = 100, height = 4,
                             fg = "blue")
 
     button_explore_l = 'Browse Files'
-    button_explore = Button(m,
+    gui.button_explore = Button(m,
                             text = button_explore_l,
                             command = browseGeoTIFF)
 
-    mgrs_cb.grid(column=2, row = 2)
-    sk42_cb.grid(column=2, row = 3)
+    gui.mgrs_cb.grid(column=2, row = 2)
+    gui.sk42_cb.grid(column=2, row = 3)
 
-    label_file_explorer.grid(column = 1, row = 1)
-    button_explore.grid(column = 1, row = 2)
+    gui.label_file_explorer.grid(column = 1, row = 1)
+    gui.button_explore.grid(column = 1, row = 2)
 
     m.mainloop()
 
@@ -70,11 +70,12 @@ def browseGeoTIFF():
     filename = filedialog.askopenfilename(initialdir = "/",
                                           title = "Select a GeoTIFF Digital Elevation Model File",
                                           filetypes = (("GeoTIFF",
-                                                        ["*.tif*", "*.TIF*"]),
+                                                        ["*.tif", "*.TIF"]),
                                                        ("all files",
                                                         "*.*")))
 
-    label_file_explorer.configure(text="File Opened: "+filename)
+    gui.label_file_explorer.configure(text="File Opened: "+filename)
+    gui.filename = filename
 
 if __name__ == "__main__":
     gui()
