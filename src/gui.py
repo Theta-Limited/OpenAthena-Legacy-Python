@@ -25,7 +25,7 @@ from parseGeoTIFF import getAltFromLatLon, binarySearchNearest
 from getTarget import *
 
 from WGS84_SK42_Translator import Translator as converter # rafasaurus' SK42 coord translator
-from SK42_Gauss_Kruger import Projector as Projector      # Matt's Gauss Kruger projector for SK42 (adapted from Nickname Nick)
+from SK42_Gauss_Kruger import Projector as Projector      # Matt's Gauss Krüger projector for SK42 (adapted from Nickname Nick)
 
 from parseImage import *
 
