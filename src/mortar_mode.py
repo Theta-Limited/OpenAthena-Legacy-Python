@@ -54,7 +54,7 @@ def mortar_mode():
         segment = sys.argv[i]
         if segment.lower() == "--lat":
             if i + 1 >= len(sys.argv):
-                sys.exit("Fatal ERROR: expected value after '--lat'")
+                sys.exit("FATAL ERROR: expected value after '--lat'")
             else:
                 lat = sys.argv[i + 1]
             try:
@@ -64,7 +64,7 @@ def mortar_mode():
                 sys.exit(errstr)
         elif segment.lower() == "--lon":
             if i + 1 >= len(sys.argv):
-                sys.exit("Fatal ERROR: expected value after '--lon'")
+                sys.exit("FATAL ERROR: expected value after '--lon'")
             else:
                 lon = sys.argv[i + 1]
             try:
@@ -74,7 +74,7 @@ def mortar_mode():
                 sys.exit(errstr)
         elif segment.lower() == "--mgrs":
             if i + 1 >= len(sys.argv):
-                sys.exit("Fatal ERROR: expected value after '--mgrs'")
+                sys.exit("FATAL ERROR: expected value after '--mgrs'")
             else:
                 my_mgrs = sys.argv[i + 1]
             try:
@@ -84,13 +84,18 @@ def mortar_mode():
                 sys.exit(errstr)
         elif segment.lower() == "--mag":
             if i + 1 >= len(sys.argv):
-                sys.exit("Fatal ERROR: expected value after '--mag'")
+                sys.exit("FATAL ERROR: expected value after '--mag'")
             else:
                 mag = sys.argv[i + 1]
+
             try:
                 mag = float(mag)
             except ValueError:
                 errstr = f"FATAL ERROR: expected compass mag declination, got: {mag}"
+                sys.exit(errstr)
+
+            if mag < -180.0 or mag > 360.0:
+                errstr = f"FATAL ERROR: compas mag declination out of range"
                 sys.exit(errstr)
         elif segment.lower() == "--alt":
             if i + 1 >= len(sys.argv):
@@ -117,7 +122,7 @@ def mortar_mode():
     mag = -1 * mag # instead of magnetic -> true heading, we go true -> magnetic (so we must invert)
     if mag != 0.0:
         warnStr = '\033[1;31;m' #ANSI escape sequence, bold and red
-        warnStr += f"WARNING: adjusting target headings by {mag}° for use with analog magnetic compass\n"
+        warnStr += f"WARNING: adjusting target headings by {'+' if mag > 0 else ''}{mag}° for use with analog magnetic compass\n"
         warnStr += "    please ensure this offset direction is correct and your compass decl. is set to 0°"
         warnStr +="\033[0;0m" #ANSI escape sequence, reset terminal to normal colors
         warnStr +="\n"
