@@ -563,7 +563,7 @@ exifData: Dict
     expressed as key:value pairs
 """
 def handleAUTEL(xmp_str, exifData):
-    warnStr = '\033[1;31;m' #ANSI escape sequence, underlined and red
+    warnStr = '\033[1;31;m' #ANSI escape sequence, bold and red
     warnStr += 'USER WARNING: in-accuracies have been observed from Autels\'\n'
     warnStr += '    reported altitude, azimuth, and theta. This may result in bad target res.\n\n'
     warnStr += '    PROCEED WITH CAUTION '
