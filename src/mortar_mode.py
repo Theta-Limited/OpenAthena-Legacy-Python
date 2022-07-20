@@ -11,6 +11,7 @@ Only intended for short range distances, otherwise will be inaccurate (curvature
 
 """
 import sys
+import os
 import time
 import math
 from math import sin, asin, cos, atan2, sqrt
@@ -45,6 +46,7 @@ def mortar_mode():
     my_mgrs = None
     alt = None
     mag = 0.0
+    directory = None
 
     if len(sys.argv) <= 1:
         errstr = f'FATAL ERROR: no location specified, please use --lat YY.YYYY --lon XX.XXXX (WGS84)'
@@ -107,6 +109,21 @@ def mortar_mode():
             except ValueError:
                 errstr = f"FATAL ERROR: expected WGS84 altitude, got: {alt}"
                 sys.exit(errstr)
+        elif segment.lower() == "--dir":
+            if i + 1 >= len(sys.argv):
+                sys.exit("FATAL ERROR: expected path after '--dir'")
+            else:
+                directory = sys.argv[i + 1]
+            try:
+                if not os.path.exists(directory):
+                    print(f"FATAL ERROR: {directory} does not exist!")
+                    raise OSError()
+                directory = os.path.expanduser(directory) # expand out ~ (Unix)
+                directory = os.path.expandvars(directory) # expand like %UserProfile% (Win) ${name} (Unix)
+            except OSError:
+                errstr = f"FATAL ERROR: path {directory} could not be processed"
+                sys.exit(errstr)
+
         elif segment.split('.')[-1].lower() == "tif":
             geofilename = segment
             elevationData, (x0, dx, dxdy, y0, dydx, dy) = getGeoFileFromString(geofilename)
@@ -122,8 +139,8 @@ def mortar_mode():
     mag = -1 * mag # instead of magnetic -> true heading, we go true -> magnetic (so we must invert)
     if mag != 0.0:
         warnStr = '\033[1;31;m' #ANSI escape sequence, bold and red
-        warnStr += f"WARNING: adjusting target headings by {'+' if mag > 0 else ''}{mag}° for use with analog magnetic compass\n"
-        warnStr += "    please ensure this offset direction is correct and your compass decl. is set to 0°"
+        warnStr += f"WARNING: adjusting target headings by {'+' if mag > 0 else ''}{mag}° for use with analog compass\n"
+        warnStr += "    please ensure this direction is correct and your compass decl. is set to 0°"
         warnStr +="\033[0;0m" #ANSI escape sequence, reset terminal to normal colors
         warnStr +="\n"
         print(warnStr)
@@ -156,7 +173,13 @@ def mortar_mode():
         warnStr +="\n"
         print(warnStr)
 
-    # @TODO process targets here
+    if directory is None:
+        directory = os.getcwd()
+
+    # targets_prosecuted = []
+    # targets_queued = []
+    # for root, dirs, files in os.walk(directory):
+
 
 if __name__ == "__main__":
     mortar_mode()
