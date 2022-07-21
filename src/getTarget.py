@@ -269,6 +269,8 @@ def resolveTarget(y, x, z, azimuth, theta, elevationData, xParams, yParams):
     #     below us:
     if math.isclose((math.pi / 2), theta):
         terrainAlt = parseGeoTIFF.getAltFromLatLon(y, x, xParams, yParams, elevationData)
+        if terrainAlt is None:
+            return None
         finalDist = z - terrainAlt
         if finalDist < 0:
             print(f'\n ERROR: bad calculation!\n')
@@ -329,14 +331,14 @@ def resolveTarget(y, x, z, azimuth, theta, elevationData, xParams, yParams):
     curZ = decimal.Decimal(z)
     groundAlt = parseGeoTIFF.getAltFromLatLon(curY, curX, xParams, yParams, elevationData)
     if groundAlt is None:
-        print(f'ERROR: resolveTarget ran out of bounds at {round(curY,4)}, {round(curX,4)}, {round(curZ,4)}m', file=sys.stderr)
+        print(f'ERROR: resolveTarget ran out of bounds at {round(curY,4)}, {round(curX,4)}, {round(curZ,1)}m', file=sys.stderr)
         print('ERROR: Please ensure target location is within GeoTIFF dataset bounds', file=sys.stderr)
         return None
     altDiff = curZ - groundAlt
     while altDiff > threshold:
         groundAlt = parseGeoTIFF.getAltFromLatLon(curY, curX, xParams, yParams, elevationData)
         if groundAlt is None:
-            print(f'ERROR: resolveTarget ran out of bounds at {round(curY,4)}, {round(curX,4)}, {round(curZ,4)}m', file=sys.stderr)
+            print(f'ERROR: resolveTarget ran out of bounds at {round(curY,4)}, {round(curX,4)}, {round(curZ,1)}m', file=sys.stderr)
             print('ERROR: Please ensure target location is within GeoTIFF dataset bounds', file=sys.stderr)
             return None
         altDiff = curZ - groundAlt
