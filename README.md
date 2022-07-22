@@ -104,6 +104,7 @@ python3 -m pip install --upgrade pip
 ```
 
 Install the GDAL package with your package manager (i.e. apt, yum, brew, pacman, etc.):
+
 Example (MacOS):
 ```bash
 brew install gdal
@@ -112,7 +113,6 @@ brew install gdal
 Then, all you need to do is run `pip3 install matplotlib mgrs pillow`, then run `src/parseGeoTIFF.py` with python3:
 ```bash
 pip3 install matplotlib mgrs pillow
-# if this fails, instead
 git clone https://github.com/mkrupczak3/OpenAthena.git
 cd OpenAthena/src
 python3 parseGeoTIFF.py
