@@ -3,7 +3,7 @@ mortar_mode.py
 
 This file is for an alternate targeting mode where target match locations are provided in relative terms (bearing, distance, elevation change) for use by short-distance indirect fire teams (e.g. mortars)
 
-The mortar location may be specified either using WGS84 Geodetic Lat/Lon or NATO MGRS (with altitude optional).
+The mortar's fixed location may be specified either using WGS84 Geodetic Lat/Lon or NATO MGRS (with altitude optional).
 
 If desired, Magnetic Declination can be optionally specified so that the target bearing will be output in magnetic heading (instead of true heading), e.g. for use with a handheld analog compass. This is not necessary for most digital compasses (e.g. a smartphone)
 
@@ -176,90 +176,129 @@ def mortar_mode():
     if directory is None:
         directory = os.getcwd()
 
+    # used as a priority stack, newest dateTime popped first
     targets_queued = []
-    targets_prosecuted = []
+    files_queued = []
+    files_prosecuted = []
 
-    for root, dirs, files in os.walk(directory):
-        for aFile in files:
-            ext = aFile.split('.')[-1].lower()
-            if ext != 'jpg': # and ext != 'dng': # DNG raws not supported at this time
-                continue
-            elif aFile in targets_prosecuted:
-                continue
-            else:
-                #from stackoverflow.com/a/14637315
-                #    if XMP in image is spread in multiple pieces, this
-                #    approach will fail to extract data in all
-                #    but the first XMP piece of image
-                fd = open(aFile, 'rb') #read as binary
-                d = str(fd.read()) # ...but convert to string
-                xmp_start = d.find('<x:xmpmeta')
-                xmp_end = d.find('</x:xmpmeta')
-                xmp_str = d[xmp_start:xmp_end+12]
-                fd.close()
+    while True: # only break if list is empty after file walk
+        files_queued = []
+        for aTuple in targets_queued:
+            files_queued.append(aTuple[1])
 
-                exifData = {}
-                img = Image.open(aFile)
-                exifDataRaw = img._getexif()
-                if exifDataRaw is None or (xmp_start == xmp_end):
-                    print(f'{aFile} - no usable metadata detected, skipping...')
+        for root, dirs, files in os.walk(directory):
+            for aFile in files:
+                ext = aFile.split('.')[-1].lower()
+                if ext != 'jpg': # and ext != 'dng': # DNG raws not supported at this time
                     continue
-                for tag, value in exifDataRaw.items():
-                    decodedTag = ExifTags.TAGS.get(tag, tag)
-                    exifData[decodedTag] = value
-                make = exifData["Make"].upper()
-                make = make.strip()
-                model = exifData["Model"].upper()
-                model = model.strip()
-                if make[-1] == "\0":
-                    # fix nul terminated string bug
-                    make = make.rstrip("\0")
+                elif aFile in files_prosecuted or aFile in files_queued:
+                    continue
+                else:
+                    #from stackoverflow.com/a/14637315
+                    #    if XMP in image is spread in multiple pieces, this
+                    #    approach will fail to extract data in all
+                    #    but the first XMP piece of image
+                    fd = open(aFile, 'rb') #read as binary
+                    d = str(fd.read()) # ...but convert to string
+                    xmp_start = d.find('<x:xmpmeta')
+                    xmp_end = d.find('</x:xmpmeta')
+                    xmp_str = d[xmp_start:xmp_end+12]
+                    fd.close()
 
-                print(aFile)
+                    exifData = {}
+                    img = Image.open(aFile)
+                    exifDataRaw = img._getexif()
+                    if exifDataRaw is None or (xmp_start == xmp_end):
+                        print(f'{aFile} - no usable metadata detected, skipping...')
+                        files_prosecuted.append(aFile)
+                        continue
+                    for tag, value in exifDataRaw.items():
+                        decodedTag = ExifTags.TAGS.get(tag, tag)
+                        exifData[decodedTag] = value
+                    make = exifData["Make"].upper()
+                    make = make.strip()
+                    dateTime = exifData["DateTime"]
+                    model = exifData["Model"].upper()
+                    model = model.strip()
+                    if make[-1] == "\0":
+                        # fix nul terminated string bug
+                        make = make.rstrip("\0")
 
-                if make == "DJI":
-                    sensData = parseImage.handleDJI(xmp_str)
-                    if sensData is not None:
-                        y, x, z, azimuth, theta = sensData
-                        target = resolveTarget(y, x, z, azimuth, theta, elevationData, xParams, yParams)
-                elif make == "SKYDIO":
-                    sensData = parseImage.handleSKYDIO(xmp_str)
-                    if sensData is not None:
-                        y, x, z, azimuth, theta = sensData
-                        target = resolveTarget(y, x, z, azimuth, theta, elevationData, xParams, yParams)
-                    else:
-                        print(f'ERROR with {aFile}, couldn\'t find sensor data', file=sys.stderr)
-                        print(f'skipping {aFile}', file=sys.stderr)
-                        continue
-                elif make == "AUTEL ROBOTICS":
-                    sensData = parseImage.handleAUTEL(xmp_str, exifData)
-                    if sensData is not None:
-                        y, x, z, azimuth, theta = sensData
-                        target = resolveTarget(y, x, z, azimuth, theta, elevationData, xParams, yParams)
-                    else:
-                        print(f'ERROR with {aFile}, couldn\'t find sensor data', file=sys.stderr)
-                        print(f'skipping {aFile}', file=sys.stderr)
-                        continue
-                elif make == "PARROT":
-                    # will whitelist more models as they are tested
-                    if model != "ANAFI":
-                        # for instance, the parrot disco fixed-wing doesn't
-                        #     have a camera gimbal
-                        print(f'ERROR with {aFile}, Parrot {model} is not supported', file=sys.stderr)
-                        print(f'skipping {aFile}', file=sys.stderr)
-                        continue
-                    else:
-                        sensData = parseImage.handlePARROT(xmp_str, exifData)
+
+                    print(aFile)
+
+                    if make == "DJI":
+                        sensData = parseImage.handleDJI(xmp_str)
                         if sensData is not None:
                             y, x, z, azimuth, theta = sensData
                             target = resolveTarget(y, x, z, azimuth, theta, elevationData, xParams, yParams)
                         else:
                             print(f'ERROR with {aFile}, couldn\'t find sensor data', file=sys.stderr)
                             print(f'skipping {aFile}', file=sys.stderr)
-                else:
-                    print(f'ERROR with {aFile}, make {make} not compatible with this program!', file=sys.stderr)
-                    print(f'skipping {aFile}', file=sys.stderr)
-                    continue
+                            files_prosecuted.append(aFile)
+                            continue
+                    elif make == "SKYDIO":
+                        sensData = parseImage.handleSKYDIO(xmp_str)
+                        if sensData is not None:
+                            y, x, z, azimuth, theta = sensData
+                            target = resolveTarget(y, x, z, azimuth, theta, elevationData, xParams, yParams)
+                        else:
+                            print(f'ERROR with {aFile}, couldn\'t find sensor data', file=sys.stderr)
+                            print(f'skipping {aFile}', file=sys.stderr)
+                            files_prosecuted.append(aFile)
+                            continue
+                    elif make == "AUTEL ROBOTICS":
+                        sensData = parseImage.handleAUTEL(xmp_str, exifData)
+                        if sensData is not None:
+                            y, x, z, azimuth, theta = sensData
+                            target = resolveTarget(y, x, z, azimuth, theta, elevationData, xParams, yParams)
+                        else:
+                            print(f'ERROR with {aFile}, couldn\'t find sensor data', file=sys.stderr)
+                            print(f'skipping {aFile}', file=sys.stderr)
+                            files_prosecuted.append(aFile)
+                            continue
+                    elif make == "PARROT":
+                        # will whitelist more models as they are tested
+                        if model == "ANAFI":
+                            sensData = parseImage.handlePARROT(xmp_str, exifData)
+                            if sensData is not None:
+                                y, x, z, azimuth, theta = sensData
+                                target = resolveTarget(y, x, z, azimuth, theta, elevationData, xParams, yParams)
+                            else:
+                                print(f'ERROR with {aFile}, couldn\'t find sensor data', file=sys.stderr)
+                                print(f'skipping {aFile}', file=sys.stderr)
+                                files_prosecuted.append(aFile)
+                                continue
+                        else:
+                            # for instance, the parrot disco fixed-wing doesn't
+                            #     have a camera gimbal
+                            print(f'ERROR with {aFile}, Parrot {model} is not supported', file=sys.stderr)
+                            print(f'skipping {aFile}', file=sys.stderr)
+                            files_prosecuted.append(aFile)
+                            continue
+
+                    else:
+                        print(f'ERROR with {aFile}, make {make} not compatible with this program!', file=sys.stderr)
+                        print(f'skipping {aFile}', file=sys.stderr)
+                        continue
+
+                    if target is not None:
+                        item = (dateTime, aFile, target)
+                        targets_queued.append(item)
+                    else:
+                        files_prosecuted.append(aFile)
+        #} end file walk for loop
+
+        if not targets_queued:
+            break # break out of 'while True' loop if no more targets
+        else:
+            targets_queued.sort()
+            this = targets_queued.pop() # get newest image available after each walk
+            print(this[1])
+            print(this[2])
+            files_prosecuted.append(this[1])
+
+    #} end while True loop
 
 if __name__ == "__main__":
     mortar_mode()
