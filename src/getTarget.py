@@ -484,6 +484,34 @@ def haversine(lon1, lat1, lon2, lat2, alt):
     r = decimal.Decimal(r)
     return c * r
 
+"""takes two lat/lon pairs (a start A and a destination B) and finds the heading of the shortest direction of travel from A to B
+Note: this function will work with Geodetic coords of any ellipsoid (as long as both pairs' ellipsoid are the same)
+
+adapted from https://stackoverflow.com/a/64747209
+
+Parameters
+----------
+lon1 : float
+    longitude of the first point
+lat1 : float
+    latitude of the first point
+lon2 : float
+    longitude of the second point
+lat2 : float
+    latitude of the second point
+
+"""
+def haversine_bearing(lon1, lat1, lon2, lat2):
+    dLon = (lon2 - lon1)
+    x = math.cos(math.radians(lat2)) * math.sin(math.radians(dLon))
+    y = math.cos(math.radians(lat1)) * math.sin(math.radians(lat2)) - math.sin(math.radians(lat1)) * math.cos(math.radians(lat2)) * math.cos(math.radians(dLon))
+    brng = math.atan2(x,y)
+    brng = normalize(brng)
+    brng = math.degrees(brng)
+
+    return brng
+
+
 """takes a decimal +/- Lat and Lon and returns a tuple of two strings containing Degrees Minutes Seconds each
 
 Note: this funtion will work with Geodetic coords of any ellipsoid

@@ -1,9 +1,9 @@
 """
-mortar_mode.py
+find_me_mode.py
 
-This file is for an alternate targeting mode where target match locations are provided in relative terms (bearing, distance, elevation change) for use by short-distance indirect fire teams (e.g. mortars)
+This file is for an alternate targeting mode where target match locations are provided in relative terms (bearing, distance, elevation change) for use by on the ground search and rescue teams, short-distance indirect fire teams (e.g. mortars) and the like
 
-The mortar's fixed location may be specified either using WGS84 Geodetic Lat/Lon or NATO MGRS (with altitude optional).
+nA single fixed location may be specified either using WGS84 Geodetic Lat/Lon or NATO MGRS (with altitude optional).
 
 If desired, Magnetic Declination can be optionally specified so that the target bearing will be output in magnetic heading (instead of true heading), e.g. for use with a handheld analog compass. This is not necessary for most digital compasses (e.g. a smartphone)
 
@@ -14,6 +14,7 @@ import sys
 import os
 import time
 import math
+import numpy
 from math import sin, asin, cos, atan2, sqrt
 import decimal # more float precision with Decimal objects
 
@@ -29,7 +30,7 @@ import parseImage
 from parseGeoTIFF import getAltFromLatLon, binarySearchNearest
 from getTarget import *
 
-def mortar_mode():
+def find_me_mode():
     images = []
 
     elevationData = None
@@ -47,6 +48,9 @@ def mortar_mode():
     alt = None
     mag = 0.0
     directory = None
+
+    # jpl.nasa.gov/edu/news/2016/3/16/how-many-decimals-of-pi-do-we-really-need
+    decimal.getcontext().prec = 30
 
     if len(sys.argv) <= 1:
         errstr = f'FATAL ERROR: no location specified, please use --lat YY.YYYY --lon XX.XXXX (WGS84)'
@@ -164,6 +168,10 @@ def mortar_mode():
 
     if alt is None:
         alt = getAltFromLatLon(lat, lon, xParams, yParams, elevationData)
+        if alt is None:
+            errstr = "FATAL ERROR: could not determine your altitude!"
+            sys.exit(errstr)
+        alt = decimal.Decimal(float(alt))
 
         warnStr = '\033[1;31;m' #ANSI escape sequence, bold and red
         warnStr += "WARNING: you did not input your current altitude\n"
@@ -292,13 +300,22 @@ def mortar_mode():
         if not targets_queued:
             break # break out of 'while True' loop if no more targets
         else:
-            targets_queued.sort()
+            targets_queued.sort() # first tuple item is dateTime, so is sorted lexigraphic (and chronologic) order
             this = targets_queued.pop() # get newest image available after each walk
-            print(this[1])
-            print(this[2])
+            dateTime, imgName = this[0], this[1]
+            print("\n")
+            print(imgName)
+            print(dateTime)
+
+            tarY, tarX, tarZ = this[2][1], this[2][2], this[2][3]
+            brng = haversine_bearing(lon, lat, tarX, tarY)
+            print(f"{'Magnetic Bearing' if mag != 0.0 else 'Bearing'}: {round(brng + mag,2)}" + "°" + f" {'(' + ('+' if mag > 0 else '') + str(mag)+'°)' if mag != 0.0 else ''}")
+            rangeToTarget = haversine(lon, lat, tarX, tarY, alt)
+            print(f"Range: {round(rangeToTarget)}")
+
             files_prosecuted.append(this[1])
 
     #} end while True loop
 
 if __name__ == "__main__":
-    mortar_mode()
+    find_me_mode()
