@@ -314,7 +314,7 @@ def find_me_mode():
             print(f"Range 🏹 : {round(rangeToTarget)}m")
 
             deltaZ = tarZ - alt
-            print(f"𝚫 Altitude⛰️ : {'+' if deltaZ > 0 else ''}{round(deltaZ)}m")
+            print(f"𝚫 Elevation⛰️ : {'+' if deltaZ > 0 else ''}{round(deltaZ)}m")
 
             files_prosecuted.append(this[1])
 
