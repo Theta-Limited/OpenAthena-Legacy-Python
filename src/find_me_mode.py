@@ -3,7 +3,7 @@ find_me_mode.py
 
 This file is for an alternate targeting mode where target match locations are provided in relative terms (bearing, distance, elevation change) for use by on the ground search and rescue teams, short-distance indirect fire teams (e.g. mortars) and the like
 
-nA single fixed location may be specified either using WGS84 Geodetic Lat/Lon or NATO MGRS (with altitude optional).
+A single fixed location may be specified either using WGS84 Geodetic Lat/Lon or NATO MGRS (with altitude optional).
 
 If desired, Magnetic Declination can be optionally specified so that the target bearing will be output in magnetic heading (instead of true heading), e.g. for use with a handheld analog compass. This is not necessary for most digital compasses (e.g. a smartphone)
 
@@ -309,9 +309,12 @@ def find_me_mode():
 
             tarY, tarX, tarZ = this[2][1], this[2][2], this[2][3]
             brng = haversine_bearing(lon, lat, tarX, tarY)
-            print(f"{'Magnetic Bearing' if mag != 0.0 else 'Bearing'}: {round(brng + mag,2)}" + "°" + f" {'(' + ('+' if mag > 0 else '') + str(mag)+'°)' if mag != 0.0 else ''}")
+            print(f"{'Magnetic Bearing 🧭' if mag != 0.0 else 'Bearing'}: {round(brng + mag,2)}" + "°" + f" {'(' + ('+' if mag > 0 else '') + str(mag)+'°)' if mag != 0.0 else ''}")
             rangeToTarget = haversine(lon, lat, tarX, tarY, alt)
-            print(f"Range: {round(rangeToTarget)}")
+            print(f"Range 🏹 : {round(rangeToTarget)}m")
+
+            deltaZ = tarZ - alt
+            print(f"𝚫 Altitude⛰️ : {round(deltaZ)}m")
 
             files_prosecuted.append(this[1])
 
