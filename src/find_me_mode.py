@@ -10,9 +10,10 @@ If desired, Magnetic Declination can be optionally specified so that the target 
 Only intended for short range distances, otherwise will be inaccurate (curvature of the earth, great circle distance, etc.)
 
 """
-import sys
+import sys, tty, termios
 import os
 import time
+import datetime
 import math
 import numpy
 from math import sin, asin, cos, atan2, sqrt
@@ -189,6 +190,9 @@ def find_me_mode():
     files_queued = []
     files_prosecuted = []
 
+    Nadjust = decimal.Decimal(0.0)
+    Eadjust = decimal.Decimal(0.0)
+
     while True: # only break if list is empty after file walk
         files_queued = []
         for aTuple in targets_queued:
@@ -303,22 +307,140 @@ def find_me_mode():
             targets_queued.sort() # first tuple item is dateTime, so is sorted lexigraphic (and chronologic) order
             this = targets_queued.pop() # get newest image available after each walk
             dateTime, imgName = this[0], this[1]
-            print("\n")
-            print(imgName)
-            print(dateTime)
 
-            tarY, tarX, tarZ = this[2][1], this[2][2], this[2][3]
-            brng = haversine_bearing(lon, lat, tarX, tarY)
-            print(f"{'Magnetic Bearing 🧭' if mag != 0.0 else 'Bearing'}: {round(brng + mag,2)}" + "°" + f" {'(' + ('+' if mag > 0 else '') + str(mag)+'°)' if mag != 0.0 else ''}")
-            rangeToTarget = haversine(lon, lat, tarX, tarY, alt)
-            print(f"Range 🏹 : {round(rangeToTarget)}m")
 
-            deltaZ = tarZ - alt
-            print(f"𝚫 Elevation⛰️ : {'+' if deltaZ > 0 else ''}{round(deltaZ)}m")
+
+            literalY, literalX, literalZ = this[2][1], this[2][2], this[2][3]
+            literalY, literalX, literalZ = decimal.Decimal(literalY), decimal.Decimal(literalX), decimal.Decimal(literalZ)
+            brng = haversine_bearing(decimal.Decimal(lon), decimal.Decimal(lat), literalX, literalY)
+
+            deltaZ = literalZ - alt
+
+            ch = ''
+            # user-provided adjustment, i.e. for windage
+            #     increments of 4.0m (about one car-length)
+
+            ## initialized outside this loop
+            # Nadjust = decimal.Decimal(0.0)
+            # Eadjust = decimal.Decimal(0.0)
+
+            inkey = _Getch()
+
+            while not '   ' in ch:
+                clear()
+                print(f'Target🎯:{imgName}')
+                print(f'Date/Time🕰️ :{dateTime}')
+                print("")
+
+                tarY = inverse_haversine((literalY, literalX), Nadjust, 0.0, literalZ)[0]
+                tarX = inverse_haversine((literalY, literalX), Eadjust, math.pi / 2, literalZ)[1]
+
+                brng = haversine_bearing(decimal.Decimal(lon), decimal.Decimal(lat), decimal.Decimal(tarX), decimal.Decimal(tarY))
+                print(f"{'Magnetic Bearing 🧭' if mag != 0.0 else 'Bearing'}: {round(brng + mag,2)}" + "°" + f" {'(' + ('+' if mag > 0 else '') + str(mag)+'°)' if mag != 0.0 else ''}")
+
+                rangeToTarget = haversine(lon, lat, tarX, tarY, alt)
+                print(f"Range 🏹 : {round(rangeToTarget)}m")
+
+                # target elevation does not change, even with windage adjustment
+                print(f"𝚫 Elevation⛰️ : {'+' if deltaZ > 0 else ''}{round(deltaZ)}m")
+                print("")
+                print(f'Nadjust: {Nadjust}')
+                print(f'Eadjust: {Eadjust}')
+                print("")
+                print("   N ")
+                print("   ↑ ")
+                print("W ←↓→ E")
+                print("   S ")
+                print("")
+                print("Windage💨: use ←↓↑→ to adjust, RETURN x3 (↩↩↩) to reset")
+                print("Press SPACEBAR x3 switch to newest available target")
+
+                if 'MAX' in imgName:
+                    warnStr = '\033[1;31;m' #ANSI escape sequence, bold and red
+                    warnStr += 'USER WARNING: in-accuracies have been observed from Autels\'\n'
+                    warnStr += '    reported altitude, azimuth, and theta. This may result in bad target res.\n\n'
+                    warnStr += '    PROCEED WITH CAUTION '
+                    warnStr +="\033[0;0m" #ANSI escape sequence, reset terminal to normal colors
+                    print(warnStr)
+
+                while(True):
+                    ch = inkey()
+                    if ch != '': break
+                if ch == '\x1b[A':
+                    Nadjust += decimal.Decimal(4.0)
+                elif ch == '\x1b[B':
+                    Nadjust -= decimal.Decimal(4.0)
+                elif ch == '\x1b[C':
+                    Eadjust += decimal.Decimal(4.0)
+                elif ch == '\x1b[D':
+                    Eadjust -= decimal.Decimal(4.0)
+                elif '\r\r\r' in ch:
+                    Nadjust = 0
+                    Eadjust = 0
 
             files_prosecuted.append(this[1])
 
     #} end while True loop
+def clear():
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+def get():
+        inkey = _Getch()
+        while(True):
+                k=inkey()
+                if k!='':break
+        print(k)
+        if k=='\x1b[A':
+                print("up")
+        elif k=='\x1b[B':
+                print("down")
+        elif k=='\x1b[C':
+                print("right")
+        elif k=='\x1b[D':
+                print("left")
+        elif k==' ':
+                print("space")
+        elif k=='\r':
+                print("return")
+        else:
+                print("not an arrow key!")
+
+class _Getch:
+    """Gets a single character from standard input.  Does not echo to the
+screen."""
+    def __init__(self):
+        try:
+            self.impl = _GetchWindows()
+        except ImportError:
+            self.impl = _GetchUnix()
+
+    def __call__(self): return self.impl()
+
+
+class _GetchUnix:
+    def __init__(self):
+        import tty, sys
+
+    def __call__(self):
+        import sys, tty, termios
+        fd = sys.stdin.fileno()
+        old_settings = termios.tcgetattr(fd)
+        try:
+            tty.setraw(sys.stdin.fileno())
+            ch = sys.stdin.read(3)
+        finally:
+            termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+        return ch
+
+
+class _GetchWindows:
+    def __init__(self):
+        import msvcrt
+
+    def __call__(self):
+        import msvcrt
+        return msvcrt.getch()
+
 
 if __name__ == "__main__":
     find_me_mode()

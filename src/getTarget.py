@@ -429,6 +429,9 @@ alt : float
     the approximate altitude, added to the radius of the great circle
 """
 def inverse_haversine(point, distance, azimuth, alt):
+    if distance < 0.0:
+        # reverse direction and make distance a positive number
+        return inverse_haversine(point, -distance, normalize(azimuth + math.pi), alt)
     lat, lon = point
     lat, lon = map(math.radians, (lat, lon))
     d = distance
