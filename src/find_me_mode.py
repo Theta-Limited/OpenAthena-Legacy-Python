@@ -10,7 +10,7 @@ If desired, Magnetic Declination can be optionally specified so that the target 
 Only intended for short range distances, otherwise will be inaccurate (curvature of the earth, great circle distance, etc.)
 
 """
-import sys, tty, termios
+import sys
 import os
 import time
 import datetime
