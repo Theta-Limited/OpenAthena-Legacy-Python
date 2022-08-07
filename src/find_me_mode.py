@@ -182,7 +182,7 @@ def find_me_mode():
         warnStr +="\033[0;0m" #ANSI escape sequence, reset terminal to normal colors
         warnStr +="\n"
         print(warnStr)
-        time.sleep(2)
+        time.sleep(4)
 
     if directory is None:
         directory = os.getcwd()
@@ -328,7 +328,7 @@ def find_me_mode():
 
             inkey = _Getch()
 
-            while not '   ' in ch:
+            while not ' ' in ch:
                 clear()
                 print(f'Target🎯:{imgName}')
                 print(f'Date/Time🕰️ :{dateTime}')
@@ -354,8 +354,8 @@ def find_me_mode():
                 print("W ←↓→ E")
                 print("   S ")
                 print("")
-                print("Windage💨: use ←↓↑→ to adjust, RETURN x3 (↩↩↩) to reset")
-                print("Press SPACEBAR x3 switch to newest available target")
+                print("Windage💨: use ←↓↑→ to adjust, RETURN (↩) to reset")
+                print("Press SPACEBAR (' ') switch to newest available target")
 
                 if 'MAX' in imgName:
                     warnStr = '\033[1;31;m' #ANSI escape sequence, bold and red
@@ -367,7 +367,11 @@ def find_me_mode():
 
                 while(True):
                     ch = inkey()
+                    if ch == '\x1b': # char \x1b
+                        ch += inkey() # char [
+                        ch += inkey() # char in {A, B, C, D}
                     if ch != '': break
+                print(str(ch))
                 if ch == '\x1b[A':
                     Nadjust += decimal.Decimal(4.0)
                 elif ch == '\x1b[B':
@@ -376,7 +380,7 @@ def find_me_mode():
                     Eadjust += decimal.Decimal(4.0)
                 elif ch == '\x1b[D':
                     Eadjust -= decimal.Decimal(4.0)
-                elif '\r\r\r' in ch:
+                elif '\r' in ch:
                     Nadjust = 0
                     Eadjust = 0
 
@@ -429,7 +433,7 @@ class _GetchUnix:
         old_settings = termios.tcgetattr(fd)
         try:
             tty.setraw(sys.stdin.fileno())
-            ch = sys.stdin.read(3)
+            ch = sys.stdin.read(1)
         finally:
             termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
         return ch
