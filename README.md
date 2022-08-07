@@ -126,11 +126,39 @@ python3 parseGeoTIFF.py
 
 [parseImage.py](./src/parseImage.py) can perform automatic extraction and use of EXIF/XMP sensor information from drone photos. This allows for the automatic extraction and use of data including the aircraft camera's lat/lon, altitude, azimuth, and angle of declination (theta). OpenAthena (if provided [terrain elevation data](./EIO_fetch_geotiff_example.md)) will extract and use these values automaticaly to find the location on the ground in the exact center of the image
 
-[![image of command line on MacOS, command python3 parseImage.py bartow.tif, output and prompting user for drone image filename](./assets/parseImage_interactive_example2.png)](drone_sensor_data_blurb.md)
+[![image of command line on MacOS, showing a target location calculated by OpenAthena parseImage.py](./assets/parseImage_interactive_example3.png)](drone_sensor_data_blurb.md)
 
 
 More info [**here**](drone_sensor_data_blurb.md)
 
+### find_me_mode.py
+
+[`find_me_mode.py`](./src/find_me_mode.py) provides an alternate targeting mode where target match locations are provided in relative terms (bearing, distance, elevation change) from a fixed point for use by on the ground search and rescue teams, short-distance indirect fire teams (e.g. mortars) and the like
+
+
+This mode is only intended for short range distances, otherwise will be inaccurate (curvature of the earth, etc.)
+
+
+<a href="find_me_mode.md"><img width="565" alt="Target🎯:DJI_0419.JPG
+Date/Time🕰️ :2022:05:05 15:43:34
+
+Magnetic Bearing 🧭: 212.87° (+5.43°)
+Range 🏹 : 95m
+𝚫 Elevation⛰️ : -15m
+
+Nadjust: 0m
+Eadjust: 0m
+
+   N
+   ↑
+W ←↓→ E
+   S
+
+Windage💨: use ←↓↑→ to adjust, RETURN (↩) to reset
+Press SPACEBAR (' ') switch to newest available target" src="./assets/find_me_mode_interactive_example3.png"></a>
+
+
+More info [**here**](find_me_mode.md)
 
 ### parseGeoTIFF.py
 
