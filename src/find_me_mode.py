@@ -173,7 +173,6 @@ def find_me_mode():
         if alt is None:
             errstr = "FATAL ERROR: could not determine your altitude!"
             sys.exit(errstr)
-        alt = decimal.Decimal(float(alt))
 
         warnStr = '\033[1;31;m' #ANSI escape sequence, bold and red
         warnStr += "WARNING: you did not input your current altitude\n"
@@ -183,6 +182,8 @@ def find_me_mode():
         warnStr +="\n"
         print(warnStr)
         time.sleep(4)
+
+    alt = decimal.Decimal(float(alt))
 
     if directory is None:
         directory = os.getcwd()
@@ -346,8 +347,8 @@ def find_me_mode():
                 # target elevation does not change, even with windage adjustment
                 print(f"𝚫 Elevation⛰️ : {'+' if deltaZ > 0 else ''}{round(deltaZ)}m")
                 print("")
-                print(f'Nadjust: {Nadjust}')
-                print(f'Eadjust: {Eadjust}')
+                print(f'Nadjust: {Nadjust}m')
+                print(f'Eadjust: {Eadjust}m')
                 print("")
                 print("   N ")
                 print("   ↑ ")
