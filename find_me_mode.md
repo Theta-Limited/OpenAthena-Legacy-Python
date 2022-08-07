@@ -34,23 +34,7 @@ find_me_mode will provide a distinct user warning if the `--mag` flag **is** use
 
 
 A few seconds later, the following output will appear on the terminal interface:
-<img width="565" alt="Target🎯:DJI_0419.JPG
-Date/Time🕰️ :2022:05:05 15:43:34
-
-Magnetic Bearing 🧭: 212.87° (+5.43°)
-Range 🏹 : 95m
-𝚫 Elevation⛰️ : -15m
-
-Nadjust: 0m
-Eadjust: 0m
-
-   N
-   ↑
-W ←↓→ E
-   S
-
-Windage💨: use ←↓↑→ to adjust, RETURN (↩) to reset
-Press SPACEBAR (' ') switch to newest available target" src="find_me_mode_interactive_example3.png">
+<img width="565" alt="output from find_me_mode.py in the terminal" src="./assets/find_me_mode_interactive_example3.png">
 
 ### output information
 

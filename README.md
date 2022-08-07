@@ -139,23 +139,7 @@ More info [**here**](drone_sensor_data_blurb.md)
 This mode is only intended for short range distances, otherwise will be inaccurate (curvature of the earth, etc.)
 
 
-<a href="find_me_mode.md"><img width="565" alt="Target🎯:DJI_0419.JPG
-Date/Time🕰️ :2022:05:05 15:43:34
-
-Magnetic Bearing 🧭: 212.87° (+5.43°)
-Range 🏹 : 95m
-𝚫 Elevation⛰️ : -15m
-
-Nadjust: 0m
-Eadjust: 0m
-
-   N
-   ↑
-W ←↓→ E
-   S
-
-Windage💨: use ←↓↑→ to adjust, RETURN (↩) to reset
-Press SPACEBAR (' ') switch to newest available target" src="./assets/find_me_mode_interactive_example3.png"></a>
+<a href="find_me_mode.md"><img width="565" alt="output from find_me_mode.py in the terminal" src="./assets/find_me_mode_interactive_example3.png"></a>
 
 
 More info [**here**](find_me_mode.md)
