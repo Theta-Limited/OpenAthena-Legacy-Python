@@ -269,6 +269,8 @@ def resolveTarget(y, x, z, azimuth, theta, elevationData, xParams, yParams):
     #     below us:
     if math.isclose((math.pi / 2), theta):
         terrainAlt = parseGeoTIFF.getAltFromLatLon(y, x, xParams, yParams, elevationData)
+        if terrainAlt is None:
+            return None
         finalDist = z - terrainAlt
         if finalDist < 0:
             print(f'\n ERROR: bad calculation!\n')
@@ -329,14 +331,14 @@ def resolveTarget(y, x, z, azimuth, theta, elevationData, xParams, yParams):
     curZ = decimal.Decimal(z)
     groundAlt = parseGeoTIFF.getAltFromLatLon(curY, curX, xParams, yParams, elevationData)
     if groundAlt is None:
-        print(f'ERROR: resolveTarget ran out of bounds at {round(curY,4)}, {round(curX,4)}, {round(curZ,4)}m', file=sys.stderr)
+        print(f'ERROR: resolveTarget ran out of bounds at {round(curY,4)}, {round(curX,4)}, {round(curZ,1)}m', file=sys.stderr)
         print('ERROR: Please ensure target location is within GeoTIFF dataset bounds', file=sys.stderr)
         return None
     altDiff = curZ - groundAlt
     while altDiff > threshold:
         groundAlt = parseGeoTIFF.getAltFromLatLon(curY, curX, xParams, yParams, elevationData)
         if groundAlt is None:
-            print(f'ERROR: resolveTarget ran out of bounds at {round(curY,4)}, {round(curX,4)}, {round(curZ,4)}m', file=sys.stderr)
+            print(f'ERROR: resolveTarget ran out of bounds at {round(curY,4)}, {round(curX,4)}, {round(curZ,1)}m', file=sys.stderr)
             print('ERROR: Please ensure target location is within GeoTIFF dataset bounds', file=sys.stderr)
             return None
         altDiff = curZ - groundAlt
@@ -427,6 +429,9 @@ alt : float
     the approximate altitude, added to the radius of the great circle
 """
 def inverse_haversine(point, distance, azimuth, alt):
+    if distance < 0.0:
+        # reverse direction and make distance a positive number
+        return inverse_haversine(point, -distance, normalize(azimuth + math.pi), alt)
     lat, lon = point
     lat, lon = map(math.radians, (lat, lon))
     d = distance
@@ -481,6 +486,34 @@ def haversine(lon1, lat1, lon2, lat2, alt):
     r = 6371000 + alt # Radius of earth in meters. Use 3956 for miles. Determines return value units.
     r = decimal.Decimal(r)
     return c * r
+
+"""takes two lat/lon pairs (a start A and a destination B) and finds the heading of the shortest direction of travel from A to B
+Note: this function will work with Geodetic coords of any ellipsoid (as long as both pairs' ellipsoid are the same)
+
+adapted from https://stackoverflow.com/a/64747209
+
+Parameters
+----------
+lon1 : float
+    longitude of the first point
+lat1 : float
+    latitude of the first point
+lon2 : float
+    longitude of the second point
+lat2 : float
+    latitude of the second point
+
+"""
+def haversine_bearing(lon1, lat1, lon2, lat2):
+    dLon = (lon2 - lon1)
+    x = math.cos(math.radians(lat2)) * math.sin(math.radians(dLon))
+    y = math.cos(math.radians(lat1)) * math.sin(math.radians(lat2)) - math.sin(math.radians(lat1)) * math.cos(math.radians(lat2)) * math.cos(math.radians(dLon))
+    brng = math.atan2(x,y)
+    brng = normalize(brng)
+    brng = math.degrees(brng)
+
+    return brng
+
 
 """takes a decimal +/- Lat and Lon and returns a tuple of two strings containing Degrees Minutes Seconds each
 
