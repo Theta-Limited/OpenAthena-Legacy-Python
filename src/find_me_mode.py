@@ -149,6 +149,7 @@ def find_me_mode():
         warnStr +="\033[0;0m" #ANSI escape sequence, reset terminal to normal colors
         warnStr +="\n"
         print(warnStr)
+        time.sleep(2)
 
     if lat is None or lon is None:
         errstr = f'FATAL ERROR: no location specified, please use --lat YY.YYYY --lon XX.XXXX (WGS84)'
@@ -181,6 +182,7 @@ def find_me_mode():
         warnStr +="\033[0;0m" #ANSI escape sequence, reset terminal to normal colors
         warnStr +="\n"
         print(warnStr)
+        time.sleep(2)
 
     if directory is None:
         directory = os.getcwd()
