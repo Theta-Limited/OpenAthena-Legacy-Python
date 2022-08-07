@@ -52,7 +52,9 @@ A few seconds later, the following output will appear on the terminal interface:
 
 ### windage adjustment
 
-A windage adjustment can be applied to the target location to compensate for windage or other factors. Windage adjustment can be applied in increments of 4 meters (about one car's length) north, east, south, or west using each respective arrow key on the keyboard.
+Windage adjustments can be applied to the target location to compensate for windage or other factors. Windage adjustment can be applied in increments of 4 meters (about one car's length) north, east, south, or west using each respective arrow key on the keyboard.
+
+Windage adjustments do not affect the calculated altitude of a target.
 
 `Nadjust` represents the adjustment of the target location (in meters) north or south to compensate for windage or other factors.
 
