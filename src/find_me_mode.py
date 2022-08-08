@@ -24,8 +24,11 @@ from osgeo import gdal # en.wikipedia.org/wiki/GDAL
 # https://pypi.org/project/mgrs/
 import mgrs # Military Grid ref converter
 
+import tkinter
+
 from PIL import Image
 from PIL import ExifTags
+from PIL import ImageTk
 
 import parseImage
 from parseGeoTIFF import getAltFromLatLon, binarySearchNearest
@@ -196,6 +199,8 @@ def find_me_mode():
     Nadjust = decimal.Decimal(0.0)
     Eadjust = decimal.Decimal(0.0)
 
+    rootTk = tkinter.Tk()
+
     while True: # only break if list is empty after file walk
         files_queued = []
         for aTuple in targets_queued:
@@ -328,6 +333,7 @@ def find_me_mode():
             # Eadjust = decimal.Decimal(0.0)
 
             inkey = _Getch()
+            # render = None
 
             while not ' ' in ch:
                 clear()
@@ -356,7 +362,9 @@ def find_me_mode():
                 print("   S ")
                 print("")
                 print("Windage💨: use ←↓↑→ to adjust, RETURN (↩) to reset")
+                print("")
                 print("Press SPACEBAR (' ') switch to newest available target")
+                print("Press o ('o') to view copy of current image 🖼️")
 
                 if 'MAX' in imgName:
                     warnStr = '\033[1;31;m' #ANSI escape sequence, bold and red
@@ -365,6 +373,8 @@ def find_me_mode():
                     warnStr += '    PROCEED WITH CAUTION '
                     warnStr +="\033[0;0m" #ANSI escape sequence, reset terminal to normal colors
                     print(warnStr)
+
+
 
                 while(True):
                     ch = inkey()
@@ -381,9 +391,39 @@ def find_me_mode():
                     Eadjust += decimal.Decimal(4.0)
                 elif ch == '\x1b[D':
                     Eadjust -= decimal.Decimal(4.0)
-                elif '\r' in ch:
+                elif ch == '\r':
                     Nadjust = 0
                     Eadjust = 0
+                elif ch.lower() == 'o' or ch == 'о' or ch == 'ο': # latin o, cyrillic о, greek ο (omicron)
+                    # if render is not None:
+                    #     render.close()
+                    #     render = None
+                    # else:
+                    try:
+                        filepath = os.path.join(directory, imgName)
+                        render = Image.open(filepath)
+                        render.show(title=imgName)
+                    except:
+                        print("Error: failed to load image {imgName}")
+                        time.sleep(1)
+
+                    # rootTk.title(imgName)
+                    # filepath = os.path.join(directory, imgName)
+                    # render = ImageTk.PhotoImage(file=filepath)
+                    # Label(
+                    #     rootTK,
+                    #     image = render
+                    #     ).pack
+                    # rootTK.mainloop() # blocks main thread, use Toplevel instead: stackoverflow.com/a/52976584
+
+                    # label = tkinter.Label(rootTk)
+                    # filepath = os.path.join(directory, imgName)
+                    # img = Image.open(filepath)
+                    # label.img = ImageTk.PhotoImage(img)
+                    # label.pack()
+                    # rootTk.mainloop()
+
+
 
             files_prosecuted.append(this[1])
 
