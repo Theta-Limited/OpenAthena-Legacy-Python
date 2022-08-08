@@ -398,7 +398,7 @@ def find_me_mode():
                 elif ch == '\r':
                     Nadjust = 0
                     Eadjust = 0
-                elif ch.lower() == 'o' or ch == 'о' or ch == 'ο': # latin o, cyrillic о, greek ο (omicron)
+                elif ch.lower() in {'o','о','ο','օ','ȯ','ọ','ỏ','ơ','ó','ò','ö'}: # o or its Unicode homoglyphs
                     # if render is not None:
                     #     render.close()
                     #     render = None
