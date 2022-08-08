@@ -339,10 +339,14 @@ def find_me_mode():
                 clear()
                 print(f'Target🎯:{imgName}')
                 print(f'Date/Time🕰️ :{dateTime}')
-                print("")
 
                 tarY = inverse_haversine((literalY, literalX), Nadjust, 0.0, literalZ)[0]
                 tarX = inverse_haversine((literalY, literalX), Eadjust, math.pi / 2, literalZ)[1]
+
+                tarMGRS = m.toMGRS(tarY, tarX)
+                print("NATO MGRS🗺️ : " + tarMGRS)
+
+                print("")
 
                 brng = haversine_bearing(decimal.Decimal(lon), decimal.Decimal(lat), decimal.Decimal(tarX), decimal.Decimal(tarY))
                 print(f"{'Magnetic Bearing 🧭' if mag != 0.0 else 'Bearing'}: {round(brng + mag,2)}" + "°" + f" {'(' + ('+' if mag > 0 else '') + str(mag)+'°)' if mag != 0.0 else ''}")

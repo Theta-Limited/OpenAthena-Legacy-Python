@@ -42,6 +42,8 @@ A few seconds later, the following output will appear on the terminal interface:
 
 `Date/Time🕰️` displays the value of the EXIF `DateTime` flag of the target's image (usually in local time)
 
+`NATO MGRS🗺️ ` displays the target's [NATO Military Grid Reference System (MGRS)](https://en.wikipedia.org/wiki/Military_Grid_Reference_System) coordinates
+
 `Bearing` displays the true heading from the user towards the target (in degrees)
 
 `Magnetic Bearing 🧭` if the `--mag` flag is used, this will appear in place of `Bearing:`. This displays the magnetic heading from the user towards the target (in degrees)
