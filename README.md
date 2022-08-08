@@ -133,7 +133,7 @@ More info [**here**](drone_sensor_data_blurb.md)
 
 ### find_me_mode.py
 
-[`find_me_mode.py`](./src/find_me_mode.py) provides an alternate targeting mode where target match locations are provided in relative terms (bearing, distance, elevation change) from a fixed point for use by on the ground search and rescue teams, short-distance indirect fire teams (e.g. mortars) and the like
+[`find_me_mode.py`](./src/find_me_mode.py) provides an alternate targeting mode where target match locations are provided in relative terms (bearing, distance, elevation change) from a fixed point for use by on the ground search and rescue teams, short-distance indirect fire teams (e.g. [mortars](https://en.wikipedia.org/wiki/Mortar_(weapon))) and the like
 
 
 This mode is only intended for short range distances, otherwise will be inaccurate (curvature of the earth, etc.)
