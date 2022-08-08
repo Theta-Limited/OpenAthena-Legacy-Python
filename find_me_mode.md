@@ -77,7 +77,7 @@ Numerous in-accuracies have been observed in the sensor metadata of images taken
 
 [`parseImage.py`](./drone_sensor_data_blurb.md) allows for the extraction and use of metadata from drone images to pinpoint a precise location to which a drone's camera is aiming at (in the exact center of the image frame)
 
-![image showing terminal output from parseImage.py specifying a precise location resolution from the center of a drone image](.assets/parseImage_interactive_example3.png)
+![image showing terminal output from parseImage.py specifying a precise location resolution from the center of a drone image](./assets/parseImage_interactive_example3.png)
 
 ![zoomed image of thompson park drone photo, compared side by side with Google Maps of resolved location. The center point of the drone photo on the left is marked with a small red circle](./assets/pretty_good.jpg)
 
