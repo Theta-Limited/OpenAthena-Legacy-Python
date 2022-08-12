@@ -24,7 +24,7 @@ from osgeo import gdal # en.wikipedia.org/wiki/GDAL
 # https://pypi.org/project/mgrs/
 import mgrs # Military Grid ref converter
 
-import tkinter
+# import tkinter
 
 from PIL import Image
 from PIL import ExifTags
@@ -138,7 +138,8 @@ def find_me_mode():
             nrows, ncols = elevationData.shape
             x1 = x0 + dx * ncols
             y1 = y0 + dy * nrows
-            ensureValidGeotiff(dxdy, dydx)
+            # # had to remove this check switching from gdal -> geotiff libraries :(
+            # ensureValidGeotiff(dxdy, dydx)
             xParams = (x0, x1, dx, ncols)
             yParams = (y0, y1, dy, nrows)
 
@@ -199,7 +200,7 @@ def find_me_mode():
     Nadjust = decimal.Decimal(0.0)
     Eadjust = decimal.Decimal(0.0)
 
-    rootTk = tkinter.Tk()
+    # rootTk = tkinter.Tk()
 
     while True: # only break if list is empty after file walk
         files_queued = []
