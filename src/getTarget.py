@@ -15,6 +15,7 @@ from geotiff import GeoTiff # alternative to gdal for parsing GeoTiff .tif files
 import mgrs # Military Grid ref converter
 import math
 from math import sin, asin, cos, atan2, sqrt
+import numpy as np
 import decimal # more float precision with Decimal objects
 
 import parseGeoTIFF
@@ -136,6 +137,19 @@ def getGeoFileFromString(geofilename):
     # elevationData = band.ReadAsArray()
     elevationData = geoFile.read()
 
+    try:
+        # convert to numpy array for drastic in-memory perf increase
+        elevationData = np.array(elevationData)
+    except MemoryError:
+        # it is possible, though highly unlikely,
+        #     ...that a very large geotiff may exceed memory bounds
+        #        this should only happen on 32-bit Python runtime
+        #        or computers w/ very little RAM
+        #
+        # performance will be severely impacted
+        elevationData = None
+        elevationData = geodata.read()
+
     x0 = geoFile.tifTrans.get_x(0,0)
     dx = geoFile.tifTrans.get_x(1,0) - x0
     y0 = geoFile.tifTrans.get_y(0,0)
@@ -179,6 +193,20 @@ def getGeoFileFromUser():
     # elevationData = band.ReadAsArray()
 
     elevationData = geoFile.read()
+
+    try:
+        # convert to numpy array for drastic in-memory perf increase
+        elevationData = np.array(elevationData)
+    except MemoryError:
+        # it is possible, though highly unlikely,
+        #     ...that a very large geotiff may exceed memory bounds
+        #        this should only happen on 32-bit Python runtime
+        #        or computers w/ very little RAM
+        #
+        # performance will be severely impacted
+        elevationData = None
+        elevationData = geodata.read()
+
     x0 = geoFile.tifTrans.get_x(0,0)
     dx = geoFile.tifTrans.get_x(1,0) - x0
     y0 = geoFile.tifTrans.get_y(0,0)

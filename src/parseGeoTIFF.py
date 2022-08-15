@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 from geotiff import GeoTiff
 import math
 from math import sin, asin, cos, atan2, sqrt
+import numpy as np
 import decimal # more float precision with Decimal objects
 import getTarget
 # import numpy
@@ -40,6 +41,20 @@ def main():
     # band = geodata.GetRasterBand(1)
 
     elevation = geodata.read()
+
+    try:
+        # convert to numpy array for drastic in-memory perf increase
+        elevation = np.array(elevation)
+    except MemoryError:
+        # it is possible, though highly unlikely,
+        #     ...that a very large geotiff may exceed memory bounds
+        #        this should only happen on 32-bit Python runtime
+        #        or computers w/ very little RAM
+        #
+        # performance will be severely impacted
+        elevation = None
+        elevation = geodata.read()
+
 
     print("The shape of the elevation data is: ", elevation.shape)
     time.sleep(1)

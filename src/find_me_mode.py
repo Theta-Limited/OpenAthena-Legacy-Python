@@ -15,8 +15,8 @@ import os
 import time
 import datetime
 import math
-import numpy
 from math import sin, asin, cos, atan2, sqrt
+import numpy as np
 import decimal # more float precision with Decimal objects
 
 from osgeo import gdal # en.wikipedia.org/wiki/GDAL
