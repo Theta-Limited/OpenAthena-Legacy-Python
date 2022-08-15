@@ -10,10 +10,12 @@ This file will focus on the core math of resolving the location
 
 import time
 import matplotlib.pyplot as plt
-from osgeo import gdal # Lots of good GeoINT stuff
+# from osgeo import gdal # Lots of good GeoINT stuff
+from geotiff import GeoTiff # alternative to gdal for parsing GeoTiff .tif files
 import mgrs # Military Grid ref converter
 import math
 from math import sin, asin, cos, atan2, sqrt
+import numpy as np
 import decimal # more float precision with Decimal objects
 
 import parseGeoTIFF
@@ -41,7 +43,8 @@ def getTarget():
     x1 = x0 + dx * ncols
     y1 = y0 + dy * nrows
 
-    ensureValidGeotiff(dxdy, dydx)
+    # # had to remove this check switching from gdal -> geotiff libraries :(
+    # ensureValidGeotiff(dxdy, dydx)
 
     print(f'x0: {round(x0,4)} dx: {round(dx,9)} ncols: {round(ncols,4)} x1: {round(x1,4)}')
     print(f'y0: {round(y0,4)} dy: {round(dy,9)} nrows: {round(nrows,4)} y1: {round(y1,4)}\n\n')
@@ -124,14 +127,40 @@ def getTarget():
 """
 def getGeoFileFromString(geofilename):
     geofilename.strip()
-    geoFile = gdal.Open(geofilename)
+    # geoFile = gdal.Open(geofilename)
+    geoFile = GeoTiff(geofilename)
     if geoFile is None:
         outstr = f'FATAL ERROR: can\'t find file with name \'{geofilename}\''
         sys.exit(outstr)
 
-    band = geoFile.GetRasterBand(1)
-    elevationData = band.ReadAsArray()
-    return elevationData, geoFile.GetGeoTransform()
+    # band = geoFile.GetRasterBand(1)
+    # elevationData = band.ReadAsArray()
+    elevationData = geoFile.read()
+
+    try:
+        # convert to numpy array for drastic in-memory perf increase
+        elevationData = np.array(elevationData)
+    except MemoryError:
+        # it is possible, though highly unlikely,
+        #     ...that a very large geotiff may exceed memory bounds
+        #        this should only happen on 32-bit Python runtime
+        #        or computers w/ very little RAM
+        #
+        # performance will be severely impacted
+        elevationData = None
+        elevationData = geodata.read()
+
+    x0 = geoFile.tifTrans.get_x(0,0)
+    dx = geoFile.tifTrans.get_x(1,0) - x0
+    y0 = geoFile.tifTrans.get_y(0,0)
+    dy = geoFile.tifTrans.get_y(0,1) - y0
+    # dxdy, dydx will be != 0 if image is rotated or skewed
+    #     unfortunately, I can't figure out how to check this after switching from
+    #     ...library 'gdal' to 'geotiff'
+    dxdy = dydx = 0
+    geoTransform = (x0, dx, dxdy, y0, dydx, dy)
+
+    return elevationData, geoTransform
 
 """prompt the user for the entry of a GeoTIFF filename
     if filename is invalid, will re-prompt
@@ -151,7 +180,8 @@ def getGeoFileFromUser():
             continue
         else:
             try:
-                geoFile = gdal.Open(geofilename)
+                # geoFile = gdal.Open(geofilename) # old 'gdal' invocation
+                geoFile = GeoTiff(geofilename) # new 'geotiff' invocation
             except:
                 print(f'ERROR: can\'t find file with name \'{geofilename}\'')
                 geoFile = None
@@ -159,32 +189,57 @@ def getGeoFileFromUser():
                 continue
     #
 
-    band = geoFile.GetRasterBand(1)
-    elevationData = band.ReadAsArray()
-    return elevationData, geoFile.GetGeoTransform()
+    # band = geoFile.GetRasterBand(1)
+    # elevationData = band.ReadAsArray()
 
-"""check if a geoTiff is invalid, i.e. rotated or skewed
+    elevationData = geoFile.read()
 
-Parameters
-----------
-dxdy : float
-    might be the rate of x change per unit y
-    if this is not 0, we have a problem!
-dydx : float
-    might be the rate of y change per unit x
-    if this is not 0, we have a problem!
-"""
-def ensureValidGeotiff(dxdy, dydx):
-    # I'm making the assumption that the image isn't rotated/skewed/etc.
-    # This is not the correct method in general, but let's ignore that for now
-    # If dxdy or dydx aren't 0, then this will be incorrect
-    # we cannot deal with rotated or skewed images in current version
-    if dxdy != 0 or dydx != 0:
-        outstr = "FATAL ERROR: GeoTIFF is rotated or skewed!"
-        outstr += "\ncannot proceed with file: "
-        outstr += geofilename
-        print(outstr, file=sys.stderr)
-        sys.exit(outstr)
+    try:
+        # convert to numpy array for drastic in-memory perf increase
+        elevationData = np.array(elevationData)
+    except MemoryError:
+        # it is possible, though highly unlikely,
+        #     ...that a very large geotiff may exceed memory bounds
+        #        this should only happen on 32-bit Python runtime
+        #        or computers w/ very little RAM
+        #
+        # performance will be severely impacted
+        elevationData = None
+        elevationData = geodata.read()
+
+    x0 = geoFile.tifTrans.get_x(0,0)
+    dx = geoFile.tifTrans.get_x(1,0) - x0
+    y0 = geoFile.tifTrans.get_y(0,0)
+    dy = geoFile.tifTrans.get_y(0,1) - y0
+    # dxdy, dydx will be != 0 if image is rotated or skewed
+    #     unfortunately, I can't figure out how to check this after switching from
+    #     ...library 'gdal' to 'geotiff'
+    dxdy = dydx = 0
+    geoTransform = (x0, dx, dxdy, y0, dydx, dy)
+
+    return elevationData, geoTransform
+
+# """check if a geoTiff is invalid, i.e. rotated or skewed
+# Parameters
+# ----------
+# dxdy : float
+#     might be the rate of x change per unit y
+#     if this is not 0, we have a problem!
+# dydx : float
+#     might be the rate of y change per unit x
+#     if this is not 0, we have a problem!
+# """
+# def ensureValidGeotiff(dxdy, dydx):
+#     # I'm making the assumption that the image isn't rotated/skewed/etc.
+#     # This is not the correct method in general, but let's ignore that for now
+#     # If dxdy or dydx aren't 0, then this will be incorrect
+#     # we cannot deal with rotated or skewed images in current version
+#     if dxdy != 0 or dydx != 0:
+#         outstr = "FATAL ERROR: GeoTIFF is rotated or skewed!"
+#         outstr += "\ncannot proceed with file: "
+#         outstr += geofilename
+#         print(outstr, file=sys.stderr)
+#         sys.exit(outstr)
 
 """handle user input of data, using message for prompt
     guaranteed to return a float in range

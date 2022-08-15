@@ -1,8 +1,10 @@
 import time
 import matplotlib.pyplot as plt
-from osgeo import gdal
+# from osgeo import gdal
+from geotiff import GeoTiff
 import math
 from math import sin, asin, cos, atan2, sqrt
+import numpy as np
 import decimal # more float precision with Decimal objects
 import getTarget
 # import numpy
@@ -33,10 +35,26 @@ def main():
     # based on:
     # stackoverflow.com/a/24957068
 
-    geodata = gdal.Open(geofile)
+    # geodata = gdal.Open(geofile)
+    geodata = GeoTiff(geofile)
 
-    band = geodata.GetRasterBand(1)
-    elevation = band.ReadAsArray()
+    # band = geodata.GetRasterBand(1)
+
+    elevation = geodata.read()
+
+    try:
+        # convert to numpy array for drastic in-memory perf increase
+        elevation = np.array(elevation)
+    except MemoryError:
+        # it is possible, though highly unlikely,
+        #     ...that a very large geotiff may exceed memory bounds
+        #        this should only happen on 32-bit Python runtime
+        #        or computers w/ very little RAM
+        #
+        # performance will be severely impacted
+        elevation = None
+        elevation = geodata.read()
+
 
     print("The shape of the elevation data is: ", elevation.shape)
     time.sleep(1)
@@ -59,17 +77,17 @@ def main():
     # I'm making the assumption that the image isn't rotated/skewed/etc.
     # This is not the correct method in general, but let's ignore that for now
     # If dxdy or dydx aren't 0, then this will be incorrect
-    x0, dx, dxdy, y0, dydx, dy = geodata.GetGeoTransform()
+    # x0, dx, dxdy, y0, dydx, dy = geodata.GetGeoTransform()
+    x0 = geodata.tifTrans.get_x(0,0)
+    dx = geodata.tifTrans.get_x(1,0) - x0
+    y0 = geodata.tifTrans.get_y(0,0)
+    dy = geodata.tifTrans.get_y(0,1) - y0
+    dxdy = dydx = 0
 
     # This should help with type conversion
     # mx+b ?
     x1 = x0 + dx * ncols
     y1 = y0 + dy * nrows
-
-    # # Dumb identity scalar for debugging
-    # # Doesn't work, don't use this
-    # x1 = 1
-    # y1 = 1
 
     print(f'x0: {round(x0,4)} dx: {round(dx,9)} ncols: {round(ncols,4)} x1: {round(x1,4)}')
     print(f'y0: {round(y0,4)} dy: {round(dy,9)} nrows: {round(nrows,4)} y1: {round(y1,4)}')
@@ -137,8 +155,6 @@ def getAltFromLatLon(lat, lon, xParams, yParams, elevation):
     # for now we will just use the elevation of the nearest datapoint
     e1, e2, e3, e4 = elevation[yT][xL], elevation[yB][xL], elevation[yT][xR], elevation[yB][xR]
     meanE = (e1 + e2 + e3 + e4) / 4
-    # # Slightly less accurate, but still okay
-    # return meanE
 
     # note here that xL, xR, yT, and yB are all index positions of
     # elevation and not yet in degrees lat/lon

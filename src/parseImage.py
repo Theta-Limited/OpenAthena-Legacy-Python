@@ -33,7 +33,8 @@ import math
 from math import sin, asin, cos, atan2, sqrt
 import decimal # more float precision with Decimal objects
 
-from osgeo import gdal # en.wikipedia.org/wiki/GDAL
+# from osgeo import gdal # en.wikipedia.org/wiki/GDAL
+from geotiff import GeoTiff
 # https://pypi.org/project/mgrs/
 import mgrs # Military Grid ref converter
 # # # https://pypi.org/project/pyproj/
@@ -97,8 +98,8 @@ def parseImage():
         print(f'x0: {round(x0,4)} dx: {round(dx,9)} ncols: {round(ncols,4)} x1: {round(x1,4)}')
         print(f'y0: {round(y0,4)} dy: {round(dy,9)} nrows: {round(nrows,4)} y1: {round(y1,4)}\n\n')
 
-
-    ensureValidGeotiff(dxdy, dydx)
+    # # had to remove this check switching from gdal -> geotiff libraries :(
+    # ensureValidGeotiff(dxdy, dydx)
 
     xParams = (x0, x1, dx, ncols)
     yParams = (y0, y1, dy, nrows)

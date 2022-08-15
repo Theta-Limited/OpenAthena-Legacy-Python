@@ -103,22 +103,28 @@ Ensure your version of `pip` is up to date:
 python3 -m pip install --upgrade pip
 ```
 
-Install the GDAL package with your package manager (i.e. apt, yum, brew, pacman, etc.):
-
-Example (MacOS):
+Then, download this repository to your computer (requires [git](https://github.com/git-guides/install-git)):
 ```bash
-brew install gdal
-```
-
-Then, all you need to do is run `pip3 install matplotlib mgrs pillow`, then run `src/parseGeoTIFF.py` with python3:
-```bash
-pip3 install matplotlib mgrs pillow
 git clone https://github.com/mkrupczak3/OpenAthena.git
-cd OpenAthena/src
-python3 parseGeoTIFF.py
+cd OpenAthena
 ```
 
-"pip3" and "python3" may just be called "pip" and "python" depending on the configuration of your system
+Once inside the OpenAthena directory, install all pre-requisistes with `pip`:
+```bash
+python3 -m pip install -r requirements.txt
+```
+
+then run `src/parseGeoTIFF.py` with python3 to test your installation:
+```bash
+cd src
+python3 parseGeoTIFF.py Rome-30m-DEM.tif
+```
+
+You should see output [like this](https://github.com/mkrupczak3/OpenAthena#parsegeotiffpy)
+
+If you encounter an error, please submit an issue to the OpenAthena GitHub page
+
+Note: "python3" may just be called "python" depending on the configuration of your system
 
 # Usage:
 
