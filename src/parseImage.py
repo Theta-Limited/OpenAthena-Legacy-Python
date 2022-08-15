@@ -33,7 +33,8 @@ import math
 from math import sin, asin, cos, atan2, sqrt
 import decimal # more float precision with Decimal objects
 
-from osgeo import gdal # en.wikipedia.org/wiki/GDAL
+# from osgeo import gdal # en.wikipedia.org/wiki/GDAL
+from geotiff import GeoTiff
 # https://pypi.org/project/mgrs/
 import mgrs # Military Grid ref converter
 # # # https://pypi.org/project/pyproj/
