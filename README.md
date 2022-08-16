@@ -152,7 +152,7 @@ More info [**here**](find_me_mode.md)
 
 ### parseGeoTIFF.py
 
-Run python parseGeoTIFF.py (while in the src directory) for a demonstration of [GeoTIFF](https://en.wikipedia.org/wiki/GeoTIFF) [DEM](https://en.wikipedia.org/wiki/Digital_elevation_model) parsing. The file `Rome-30m-DEM.tif` is provided in the `src` directory as an example. A DEM covering a customized area can be [easily obtained](./EIO_fetch_geotiff_example.md) using the python `elevation` API
+Run `python3 parseGeoTIFF.py` (while in the src directory) for a demonstration of [GeoTIFF](https://en.wikipedia.org/wiki/GeoTIFF) [DEM](https://en.wikipedia.org/wiki/Digital_elevation_model) parsing. The file `Rome-30m-DEM.tif` is provided in the `src` directory as an example. A DEM covering a customized area can be [easily obtained](./EIO_fetch_geotiff_example.md) using the python `elevation` API
 
 
 (counterintuitively, the x and y axis are backwards in the standard notation of a position via [latitude , longitude])
@@ -162,7 +162,7 @@ Run python parseGeoTIFF.py (while in the src directory) for a demonstration of [
 
 ```
 user@mypc:~/projects/OpenAthena/src$
-python parseGeoTIFF.py
+python3 parseGeoTIFF.py
 ```
 ![render of terrain around Rome](./assets/render_cli_screenshot.png)
 

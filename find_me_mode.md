@@ -72,7 +72,7 @@ find_me_mode allows the user to view the image of the current target. The user m
 
 ### adjust fixed location
 
-find_me_mode allows the fixed reference location to be updated during software operation if the user has moved to a new location. The user may press the BACKSPACE ('🔙', '←', or 'delete') key to initiate input for a new location. Next, the user may provide a NATO MGRS, or immediately press the RETURN key ('↩') to input a latitude and longitude pair. The user may next provide the altitude of their new location, or immediately press the RETURN key ('↩') to use the terrain Altitude value of their new lat/lon
+find_me_mode allows the fixed reference location to be updated during software operation if the user has moved to a new location. The user may press the BACKSPACE ('🔙', '←', or 'delete') key to initiate input for a new location. Next, the user may provide a NATO MGRS, or immediately press the RETURN key ('↩') to input a latitude and longitude pair. The user may next provide the altitude of their new location, or immediately press the RETURN key ('↩') to automatically use the terrain Altitude value of their new lat/lon
 
 ### Autel sensor data warning
 Numerous in-accuracies have been observed in the sensor metadata of images taken by drones made by Autel Robotics. In many cases, this may result in in-accurate target resolutions. To inform the user of possible incorrect target resolutions, a prominent warning will appear in the output if the image filename contains `MAX`, as is the case by default for images taken by the Autel Evo II. At present only the filename is used to make this check and not the EXIF Make tag value
