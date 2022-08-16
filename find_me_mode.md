@@ -42,7 +42,7 @@ A few seconds later, the following output will appear on the terminal interface:
 
 `Date/Time🕰️` displays the value of the EXIF `DateTime` flag of the target's image (usually in local time)
 
-`NATO MGRS🗺️ ` displays the target's [NATO Military Grid Reference System (MGRS)](https://en.wikipedia.org/wiki/Military_Grid_Reference_System) coordinates
+`NATO MGRS🗺️ ` displays the target's [NATO Military Grid Reference System (MGRS)](https://en.wikipedia.org/wiki/Military_Grid_Reference_System) coordinates, `Alt: ` displays its altitude
 
 `Bearing` displays the true heading from the user towards the target (in degrees)
 
@@ -64,11 +64,15 @@ Windage adjustments do not affect the calculated altitude of a target.
 
 ### prosecuting multiple targets
 
-find_me_mode will find the newest available image to use as a target after each target is prosecuted. The user may press the SPACEBAR (' ') key to mark the current target as prosecuted and switch to the newest available target. By default, windage adjustments will persist to the display of the next target. The RETURN key (↩) may be used to reset `Nadjust` and `Eadjust` windage adjustments to 0m each.
+find_me_mode will find the newest available image to use as a target after each target is prosecuted. The user may press the SPACEBAR (' ') key to mark the current target as prosecuted and switch to the newest available target. By default, windage adjustments will persist to the display of the next target. The RETURN key ('↩') may be used to reset `Nadjust` and `Eadjust` windage adjustments to 0m each.
 
 ### view current target
 
 find_me_mode allows the user to view the image of the current target. The user may press the o ('o') key to open a temporary copy of the target's image. The resulting image view window may be closed by the user at the time of their choosing
+
+### adjust fixed location
+
+find_me_mode allows the fixed reference location to be updated during software operation if the user has moved to a new location. The user may press the BACKSPACE ('🔙', '←', or 'delete') key to initiate input for a new location. Next, the user may provide a NATO MGRS, or immediately press the RETURN key ('↩') to input a latitude and longitude pair. The user may next provide the altitude of their new location, or immediately press the RETURN key ('↩') to use the terrain Altitude value of their new lat/lon
 
 ### Autel sensor data warning
 Numerous in-accuracies have been observed in the sensor metadata of images taken by drones made by Autel Robotics. In many cases, this may result in in-accurate target resolutions. To inform the user of possible incorrect target resolutions, a prominent warning will appear in the output if the image filename contains `MAX`, as is the case by default for images taken by the Autel Evo II. At present only the filename is used to make this check and not the EXIF Make tag value
