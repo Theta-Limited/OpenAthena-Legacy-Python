@@ -19,7 +19,8 @@ from math import sin, asin, cos, atan2, sqrt
 import numpy as np
 import decimal # more float precision with Decimal objects
 
-from osgeo import gdal # en.wikipedia.org/wiki/GDAL
+# from osgeo import gdal # en.wikipedia.org/wiki/GDAL
+from geotiff import GeoTiff
 
 # https://pypi.org/project/mgrs/
 import mgrs # Military Grid ref converter
@@ -345,11 +346,14 @@ def find_me_mode():
                 tarX = inverse_haversine((literalY, literalX), Eadjust, math.pi / 2, literalZ)[1]
 
                 tarMGRS = m.toMGRS(tarY, tarX)
-                print("NATO MGRS🗺️ : " + tarMGRS)
+                print("NATO MGRS🗺️ : " + tarMGRS + " Alt: " + str(int(round(literalZ))) + "m")
 
                 print("")
 
-                brng = haversine_bearing(decimal.Decimal(lon), decimal.Decimal(lat), decimal.Decimal(tarX), decimal.Decimal(tarY))
+                lat, lon  = decimal.Decimal(lat), decimal.Decimal(lon)
+                tarX, tarY = decimal.Decimal(tarX), decimal.Decimal(tarY)
+
+                brng = haversine_bearing(lon, lat, tarX, tarY)
                 print(f"{'Magnetic Bearing 🧭' if mag != 0.0 else 'Bearing'}: {round(brng + mag,2)}" + "°" + f" {'(' + ('+' if mag > 0 else '') + str(mag)+'°)' if mag != 0.0 else ''}")
 
                 rangeToTarget = haversine(lon, lat, tarX, tarY, alt)
@@ -366,9 +370,11 @@ def find_me_mode():
                 print("W ←↓→ E")
                 print("   S ")
                 print("")
-                print("Windage💨: use ←↓↑→ to adjust, RETURN (↩) to reset")
+                print("Windage💨: use ←↓↑→ to adjust, RETURN ('↩') to reset")
                 print("")
-                print("Press SPACEBAR (' ') switch to newest available target")
+                print("Press SPACEBAR (' ') switch to newest available target 🎯")
+                print("")
+                print("Press BACKSPACE ('🔙', '←', or 'delete') to change reference location 📍")
                 print("Press o ('o') to view copy of current image 🖼️")
 
                 if 'MAX' in imgName:
@@ -399,6 +405,57 @@ def find_me_mode():
                 elif ch == '\r':
                     Nadjust = 0
                     Eadjust = 0
+                elif ch == '\x7f': # backspace key
+                    while True:
+                        dataIn = input("Enter your NATO MGRS or press RETURN ('↩') to enter lat/lon: ")
+                        dataIn = dataIn.strip()
+                        if dataIn != '':
+                            try:
+                                lat, lon = m.toLatLon(dataIn)
+                            except:
+                                print(f"ERROR: MGRS {dataIn} is not valid!")
+                                continue
+                        else:
+                            lat = input("Please enter your latitude (WGS84): ")
+                            lon = input("Please enter your longitude (WGS84): ")
+                            try:
+                                lat = float(lat)
+                                lon = float(lon)
+                            except ValueError:
+                                print(f"ERROR: {lat} or {lon} is not valid input!")
+                                continue
+
+
+                        if lat > y0 or lat < y1 or lon < x0 or lon > x1:
+                            errstr = f"ERROR: {round(lat,6)}, {round(lon,6)} is outside of GeoTIFF coverage area\n"
+                            errstr += f"    Please ensure you are using the correct file\n"
+                            errstr += f"    Your Location: {round(lat,4)}, {round(lon,4)}\n"
+                            errstr += f"    {geofilename}:\n"
+                            errstr += f"        {round(y1,6)} < lat < {round(y0,6)}\n"
+                            errstr += f"        {round(x0,6)} < lon < {round(x1,6)}\n"
+                            print(errstr)
+                            continue
+
+                        dataIn = input("Please enter your altitude (WGS84, meters), or press RETURN ('↩') to use terrain altitude: ")
+                        dataIn = dataIn.strip()
+                        if dataIn != '':
+                            try:
+                                dataIn = float(dataIn)
+                            except ValueError:
+                                print(f"ERROR: {dataIn} is not valid input!")
+                                continue
+                            else:
+                                alt = decimal.Decimal(dataIn)
+                        else:
+                            alt = getAltFromLatLon(lat, lon, xParams, yParams, elevationData)
+                            if alt is None:
+                                errstr = "ERROR: could not determine your altitude!"
+                                continue
+                            else:
+                                alt = decimal.Decimal(float(alt))
+                        deltaZ = literalZ - alt # update deltaZ since it does not normally change
+                        break # exit the loop if no errors occured
+                    # end while loop
                 elif ch.lower() in {'o','о','ο','օ','ȯ','ọ','ỏ','ơ','ó','ò','ö'}: # o or its Unicode homoglyphs
                     # if render is not None:
                     #     render.close()
