@@ -50,7 +50,7 @@ from PIL import ExifTags
 # except ImportError:
 #     import xml.etree.ElementTree as ET
 
-from parseGeoTIFF import getAltFromLatLon, binarySearchNearest
+from parseGeoTIFF import getAltFromLatLon, binarySearchNearest, getGeoFileFromUser, getGeoFileFromString
 from getTarget import *
 
 from WGS84_SK42_Translator import Translator as converter # rafasaurus' SK42 coord translator

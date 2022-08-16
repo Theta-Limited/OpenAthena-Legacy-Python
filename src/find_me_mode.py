@@ -32,7 +32,7 @@ from PIL import ExifTags
 from PIL import ImageTk
 
 import parseImage
-from parseGeoTIFF import getAltFromLatLon, binarySearchNearest
+from parseGeoTIFF import getAltFromLatLon, binarySearchNearest, getGeoFileFromUser, getGeoFileFromString
 from getTarget import *
 
 def find_me_mode():

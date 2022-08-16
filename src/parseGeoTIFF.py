@@ -106,6 +106,129 @@ def main():
 
 # end main func
 
+"""get and open a geoFile named by a string
+    e.g. from a command line argument
+
+    if the name is invalid, exit with error
+
+"""
+def getGeoFileFromString(geofilename):
+    geofilename.strip()
+    # geoFile = gdal.Open(geofilename)
+    geoFile = GeoTiff(geofilename)
+    if geoFile is None:
+        outstr = f'FATAL ERROR: can\'t find file with name \'{geofilename}\''
+        sys.exit(outstr)
+
+    # band = geoFile.GetRasterBand(1)
+    # elevationData = band.ReadAsArray()
+    elevationData = geoFile.read()
+
+    try:
+        # convert to numpy array for drastic in-memory perf increase
+        elevationData = np.array(elevationData)
+    except MemoryError:
+        # it is possible, though highly unlikely,
+        #     ...that a very large geotiff may exceed memory bounds
+        #        this should only happen on 32-bit Python runtime
+        #        or computers w/ very little RAM
+        #
+        # performance will be severely impacted
+        elevationData = None
+        elevationData = geodata.read()
+
+    x0 = geoFile.tifTrans.get_x(0,0)
+    dx = geoFile.tifTrans.get_x(1,0) - x0
+    y0 = geoFile.tifTrans.get_y(0,0)
+    dy = geoFile.tifTrans.get_y(0,1) - y0
+    # dxdy, dydx will be != 0 if image is rotated or skewed
+    #     unfortunately, I can't figure out how to check this after switching from
+    #     ...library 'gdal' to 'geotiff'
+    dxdy = dydx = 0
+    geoTransform = (x0, dx, dxdy, y0, dydx, dy)
+
+    return elevationData, geoTransform
+
+"""prompt the user for the entry of a GeoTIFF filename
+    if filename is invalid, will re-prompt
+    until a valid file name is entered
+
+    returns 2D array elevationData and x and y parameters
+"""
+def getGeoFileFromUser():
+    print("Which GeoTiff file would you like to read?")
+    geoFile = None
+    while geoFile is None:
+        geofilename = str(input("Enter the GeoTIFF filename: "))
+        geofilename.strip()
+        if geofilename.isdecimal() or geofilename.isnumeric():
+            print(f'ERROR: filename {geofilename} does not contain at least 1 non-digit character')
+            print('Please try again')
+            continue
+        else:
+            try:
+                # geoFile = gdal.Open(geofilename) # old 'gdal' invocation
+                geoFile = GeoTiff(geofilename) # new 'geotiff' invocation
+            except:
+                print(f'ERROR: can\'t find file with name \'{geofilename}\'')
+                geoFile = None
+                print('Please try again')
+                continue
+    #
+
+    # band = geoFile.GetRasterBand(1)
+    # elevationData = band.ReadAsArray()
+
+    elevationData = geoFile.read()
+
+    try:
+        # convert to numpy array for drastic in-memory perf increase
+        elevationData = np.array(elevationData)
+    except MemoryError:
+        # it is possible, though highly unlikely,
+        #     ...that a very large geotiff may exceed memory bounds
+        #        this should only happen on 32-bit Python runtime
+        #        or computers w/ very little RAM
+        #
+        # performance will be severely impacted
+        elevationData = None
+        elevationData = geodata.read()
+
+    x0 = geoFile.tifTrans.get_x(0,0)
+    dx = geoFile.tifTrans.get_x(1,0) - x0
+    y0 = geoFile.tifTrans.get_y(0,0)
+    dy = geoFile.tifTrans.get_y(0,1) - y0
+    # dxdy, dydx will be != 0 if image is rotated or skewed
+    #     unfortunately, I can't figure out how to check this after switching from
+    #     ...library 'gdal' to 'geotiff'
+    dxdy = dydx = 0
+    geoTransform = (x0, dx, dxdy, y0, dydx, dy)
+
+    return elevationData, geoTransform
+
+# """check if a geoTiff is invalid, i.e. rotated or skewed
+# Parameters
+# ----------
+# dxdy : float
+#     might be the rate of x change per unit y
+#     if this is not 0, we have a problem!
+# dydx : float
+#     might be the rate of y change per unit x
+#     if this is not 0, we have a problem!
+# """
+# def ensureValidGeotiff(dxdy, dydx):
+#     # I'm making the assumption that the image isn't rotated/skewed/etc.
+#     # This is not the correct method in general, but let's ignore that for now
+#     # If dxdy or dydx aren't 0, then this will be incorrect
+#     # we cannot deal with rotated or skewed images in current version
+#     if dxdy != 0 or dydx != 0:
+#         outstr = "FATAL ERROR: GeoTIFF is rotated or skewed!"
+#         outstr += "\ncannot proceed with file: "
+#         outstr += geofilename
+#         print(outstr, file=sys.stderr)
+#         sys.exit(outstr)
+
+
 """given a latitude and longitude, obtain the altitude (elevation)
    from the nearest point
 
