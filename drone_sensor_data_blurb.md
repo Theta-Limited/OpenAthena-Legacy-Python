@@ -5,7 +5,7 @@ The consumer models of some drones do not display their position, altitude, came
 It is _**strongly suggested**_ that the user should calibrate the drone's magnetometer (compass) before each flight. The image metadata from an un-calibrated drone can be a few degrees off from the correct heading. This can result in dramatic Target-resolution inaccuracies. _**Always**_ verify a target match location from OpenAthena before use
 
 E.x.:
-![screenshot comparing an image of a warehouse taken by a DJI drone with the location calculated by OpenAthena. The calculated location is far from the correct location due to a bad magnetometer reading](./assets/magnetometer_fail.png)
+<img width="565" alt="screenshot comparing an image of a warehouse taken by a DJI drone with the location calculated by OpenAthena. The calculated location is far from the correct location due to a bad magnetometer reading" src="./assets/magnetometer_fail.png">
 
 ### parseImage.py
 
@@ -18,7 +18,7 @@ parseImage.py can be run in an **interactive** mode, or **headless** mode based 
 Before using parseImage.py, make sure you have a valid geoTiff file that covers at least the location of the drone and the possible location of its subject. One way to do this is to get the drone's location from an [image's metadata](drone_sensor_data_blurb.md#manual-extraction), then [clip a geoTiff file of the surrounding area](./EIO_fetch_geotiff_example.md)
 
 Next, choose an image for which to resolve the location of its subject. For example `DJI_0419.JPG`:
-![image of Thompson Park, GA with small shed and concrete area centered](./assets/DJI_0419_L.jpeg)
+<img width="565" alt="image of Thompson Park, GA with small shed and concrete area centered" src="./assets/DJI_0419_L.jpeg">
 
 Finally, run `parseImage.py`. To save time, the geoTiff file can be provided as the first argument after `python parseImage.py` (or `python3 parseImage.py` on Macs for example):
 ```bash
@@ -26,24 +26,24 @@ python parseImage.py cobb.tif
 ```
 (Note: the file must end in `.tif`. If you do not provide a geoTiff file, you will be prompted for input of a filename)
 
- ![image of command line on MacOS, command python3 parseImage.py cobb.tif](./assets/parseImage_interactive_example.png)
+<img width="565" alt="image of command line on MacOS, command python3 parseImage.py cobb.tif" src="./assets/parseImage_interactive_example.png">
 
 **RETURN**
 
-![image of command line on MacOS, command python3 parseImage.py cobb.tif, output and prompting user for drone image filename and DJI_0419.JPG entered](./assets/parseImage_interactive_example2.png)
+<img width="565" alt="image of command line on MacOS, command python3 parseImage.py cobb.tif, output and prompting user for drone image filename and DJI_0419.JPG entered" src="./assets/parseImage_interactive_example2.png">
 
 Enter the full file path of the drone image if it is not in the `src` directory. Otherwise, just input the image filename and press **RETURN**
 
 Multiple images can be processed at once in **interactive** mode. When you're finished inputing images, type **`done`** to begin processing
 
-![image of the processed location in text in Thompson Park, GA](./assets/parseImage_interactive_example3.png)
+<img width="565" alt="image of the processed location in text in Thompson Park, GA" src=""./assets/parseImage_interactive_example3.png">
 
 Let's copy that `NATO MGRS` into Google Maps:
 
 
 
 
-![zoomed image of thompson park drone photo, compared side by side with Google Maps of resolved location. The center point of the drone photo on the left is marked with a small red circle](./assets/pretty_good.jpg)
+<img width="565" alt="zoomed image of thompson park drone photo, compared side by side with Google Maps of resolved location. The center point of the drone photo on the left is marked with a small red circle" src="./assets/pretty_good.jpg">
 
 Pretty good!
 
