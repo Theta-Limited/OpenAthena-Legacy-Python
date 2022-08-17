@@ -2,6 +2,11 @@
 
 The consumer models of some drones do not display their position, altitude, camera heading, and camera declanation during flight, but do store this data in the [EXIF](https://en.wikipedia.org/wiki/Exif) and [XMP](https://en.wikipedia.org/wiki/Extensible_Metadata_Platform) metadata of their still image captures
 
+It is _**strongly suggested**_ that the user should calibrate the drone's magnetometer (compass) before each flight. The image metadata from an un-calibrated drone can be a few degrees off from the correct heading. This can result in dramatic Target-resolution inaccuracies. _**Always**_ verify a target match location from OpenAthena before use
+
+E.x.:
+![screenshot comparing an image of a warehouse taken by a DJI drone with the location calculated by OpenAthena. The calculated location is far from the correct location due to a bad magnetometer reading](./assets/magnetometer_fail.png)
+
 ### parseImage.py
 
 [parseImage.py](./src/parseImage.py) has an experimental feature for automatic extraction and use of EXIF/XMP sensor information from drone photos
