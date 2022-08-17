@@ -337,7 +337,7 @@ def find_me_mode():
             inkey = _Getch()
             # render = None
 
-            while not ' ' in ch:
+            while not " " in ch:
                 clear()
                 print(f'Target🎯:{imgName}')
                 print(f'Date/Time🕰️ :{dateTime}')
