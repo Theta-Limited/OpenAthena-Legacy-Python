@@ -28,6 +28,7 @@ en.wikipedia.org/wiki/EXIF
 """
 
 import sys
+import os
 import time
 import math
 from math import sin, asin, cos, atan2, sqrt
@@ -316,7 +317,10 @@ def parseImage():
                 gzdEndIndex = 2
                 while(targetMGRS[gzdEndIndex].isalpha()):
                     gzdEndIndex += 1
-                print(f'NATO MGRS: {targetMGRS[0:gzdEndIndex]}\033[4m{targetMGRS[gzdEndIndex:]}\033[0;0m Alt: \033[4m{math.ceil(tarZ)}\033[0;0m')
+                if os.name != 'nt':
+                    print(f'NATO MGRS: {targetMGRS[0:gzdEndIndex]}\033[4m{targetMGRS[gzdEndIndex:]}\033[0;0m Alt: \033[4m{math.ceil(tarZ)}\033[0;0m')
+                else:
+                    print(f'NATO MGRS: {targetMGRS} Alt: {math.ceil(tarZ)}')
                 print(f'MGRS 10m: {targetMGRS10m}')
                 print(f'MGRS 100m: {targetMGRS100m}\n')
 
@@ -357,7 +361,10 @@ def parseImage():
                 targetSK42_N_GK, targetSK42_E_GK = int(round(targetSK42_N_GK)), int(round(targetSK42_E_GK))
                 SK42_N_GK_10k_Grid, SK42_E_GK_10k_Grid = (targetSK42_N_GK % 100000), (targetSK42_E_GK % 100000)
                 # ANSI escape sequences \033[ for underlining: stackabuse.com/how-to-print-colored-text-in-python
-                print(f'    Gauss-Krüger (meters): ZONE: {GK_zone} X: {int((targetSK42_N_GK - SK42_N_GK_10k_Grid)/100000)} \033[4m{SK42_N_GK_10k_Grid}\033[0;0m Y: {int((targetSK42_E_GK - SK42_E_GK_10k_Grid)/100000)} \033[4m{SK42_E_GK_10k_Grid}\033[0;0m Alt: \033[4m{targetSK42Alt}\033[0;0m')
+                if os.name != 'nt':
+                    print(f'    Gauss-Krüger (meters): ZONE: {GK_zone} X: {int((targetSK42_N_GK - SK42_N_GK_10k_Grid)/100000)} \033[4m{SK42_N_GK_10k_Grid}\033[0;0m Y: {int((targetSK42_E_GK - SK42_E_GK_10k_Grid)/100000)} \033[4m{SK42_E_GK_10k_Grid}\033[0;0m Alt: \033[4m{targetSK42Alt}\033[0;0m')
+                else:
+                    print(f'    Gauss-Krüger (meters): ZONE: {GK_zone} X: {int((targetSK42_N_GK - SK42_N_GK_10k_Grid)/100000)} {SK42_N_GK_10k_Grid} Y: {int((targetSK42_E_GK - SK42_E_GK_10k_Grid)/100000)} {SK42_E_GK_10k_Grid} Alt: {targetSK42Alt}')
                 # print(f'Gauss-Krüger (meters): ZONE: {GK_zone} X: {targetSK42_N_GK} Y: {targetSK42_E_GK}')
 
 
