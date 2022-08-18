@@ -36,7 +36,7 @@ Enter the full file path of the drone image if it is not in the `src` directory.
 
 Multiple images can be processed at once in **interactive** mode. When you're finished inputing images, type **`done`** to begin processing
 
-<img width="565" alt="image of the processed location in text in Thompson Park, GA" src=""./assets/parseImage_interactive_example3.png">
+<img width="565" alt="image of the processed location in text in Thompson Park, GA" src="./assets/parseImage_interactive_example3.png">
 
 Let's copy that `NATO MGRS` into Google Maps:
 
