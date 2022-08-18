@@ -401,7 +401,12 @@ def handleDJI( xmp_str, elements=None):
     # print( xmp_str )
     # print([e for e in elements if "GpsLongitude" in e][0])
 
-    y = float(dict[[e for e in elements if "GpsLatitude" in e][0]])
+    try:
+        y = float(dict[[e for e in elements if "GpsLatitude" in e][0]])
+    except ValueError:
+        return None
+    except TypeError:
+        return None
 
     # Autel drones have a typo, "GpsLongtitude" instead of "GpsLongitude"
     #     we must be able to handle either case, with or w/o typo
@@ -493,6 +498,11 @@ def handleSKYDIO( xmp_str ):
         errstr += f"with values theta: {theta} azimuth: {azimuth}"
         print(errstr, file=sys.stderr)
         return None
+    except TypeError:
+        errstr = f"ERROR: parsing isNewFormat: {isNewFormat} Skydio image failed"
+        errstr += f"with values theta: {theta} azimuth: {azimuth}"
+        print(errstr, file=sys.stderr)
+        return None
 
     theta = abs(theta)
 
@@ -533,6 +543,11 @@ def handleSKYDIO( xmp_str ):
         x = float(x)
         z = float(z)
     except ValueError:
+        errstr = f"ERROR: parsing isNewFormat: {isNewFormat} Skydio image failed"
+        errstr += f" with values y: {y} x: {x} z: {z}"
+        print(errstr, file=sys.stderr)
+        return None
+    except TypeError:
         errstr = f"ERROR: parsing isNewFormat: {isNewFormat} Skydio image failed"
         errstr += f" with values y: {y} x: {x} z: {z}"
         print(errstr, file=sys.stderr)
@@ -641,6 +656,11 @@ def handleAUTEL(xmp_str, exifData):
             errstr += f"with values theta: {theta} azimuth: {azimuth}"
             print(errstr, file=sys.stderr)
             return None
+        except TypeError:
+            errstr = f"ERROR: parsing Autel image "
+            errstr += f"with values theta: {theta} azimuth: {azimuth}"
+            print(errstr, file=sys.stderr)
+            return None
 
         if theta < 0:
             return None
@@ -671,6 +691,12 @@ def handleAUTEL(xmp_str, exifData):
             errstr += f"with values theta: {theta} azimuth: {azimuth}"
             print(errstr, file=sys.stderr)
             return None
+        except TypeError:
+            errstr = f"ERROR: parsing Autel image "
+            errstr += f"with values theta: {theta} azimuth: {azimuth}"
+            print(errstr, file=sys.stderr)
+            return None
+
         if theta < 0:
             return None
 
@@ -730,6 +756,11 @@ def handlePARROT(xmp_str, exifData):
         theta = float(theta)
         azimuth = float(azimuth)
     except ValueError:
+        errstr = f"ERROR: parsing Parrot image "
+        errstr += f"with values theta: {theta} azimuth: {azimuth}"
+        print(errstr, file=sys.stderr)
+        return None
+    except TypeError:
         errstr = f"ERROR: parsing Parrot image "
         errstr += f"with values theta: {theta} azimuth: {azimuth}"
         print(errstr, file=sys.stderr)
@@ -816,6 +847,9 @@ def exifGetYXZ(exifData):
         x = float(x)
         z = float(z)
     except ValueError:
+        print("ERROR: failed to extract GPS data from EXIF values", file=sys.stderr)
+        return None
+    except TypeError:
         print("ERROR: failed to extract GPS data from EXIF values", file=sys.stderr)
         return None
 

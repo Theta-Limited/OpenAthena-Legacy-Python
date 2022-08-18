@@ -326,7 +326,7 @@ def find_me_mode():
 
             deltaZ = literalZ - alt
 
-            ch = ''
+            ch = ""
             # user-provided adjustment, i.e. for windage
             #     increments of 4.0m (about one car-length)
 
@@ -523,7 +523,7 @@ screen."""
         except ImportError:
             self.impl = _GetchUnix()
 
-    def __call__(self): return self.impl()
+    def __call__(self): return str(self.impl())
 
 
 class _GetchUnix:
