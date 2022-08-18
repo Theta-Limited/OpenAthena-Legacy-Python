@@ -337,7 +337,7 @@ def find_me_mode():
             inkey = _Getch()
             # render = None
 
-            while not " " in ch:
+            while not " " in str(ch):
                 clear()
                 print(f'Target🎯:{imgName}')
                 print(f'Date/Time🕰️ :{dateTime}')
@@ -392,20 +392,22 @@ def find_me_mode():
                     if ch == '\x1b': # char \x1b
                         ch += inkey() # char [
                         ch += inkey() # char in {A, B, C, D}
+                    elif ch == b'\xe0':
+                        ch += inkey() # only once on Windows
                     if ch != '': break
                 print(str(ch))
-                if ch == '\x1b[A':
+                if ch == '\x1b[A' or ch == b'\xe0H':
                     Nadjust += decimal.Decimal(4.0)
-                elif ch == '\x1b[B':
+                elif ch == '\x1b[B' or ch == b'\xe0P':
                     Nadjust -= decimal.Decimal(4.0)
-                elif ch == '\x1b[C':
+                elif ch == '\x1b[C' or ch == b'\xe0M':
                     Eadjust += decimal.Decimal(4.0)
-                elif ch == '\x1b[D':
+                elif ch == '\x1b[D' or ch == b'\xe0K':
                     Eadjust -= decimal.Decimal(4.0)
-                elif ch == '\r':
+                elif ch == '\r' or ch == b'\r':
                     Nadjust = 0
                     Eadjust = 0
-                elif ch == '\x7f': # backspace key
+                elif ch == '\x7f' or ch == b'\x08': # backspace key
                     while True:
                         dataIn = input("Enter your NATO MGRS or press RETURN ('↩') to enter lat/lon: ")
                         dataIn = dataIn.strip()
@@ -456,7 +458,7 @@ def find_me_mode():
                         deltaZ = literalZ - alt # update deltaZ since it does not normally change
                         break # exit the loop if no errors occured
                     # end while loop
-                elif ch.lower() in {'o','о','ο','օ','ȯ','ọ','ỏ','ơ','ó','ò','ö'}: # o or its Unicode homoglyphs
+                elif ch.lower() in {'o','о','ο','օ','ȯ','ọ','ỏ','ơ','ó','ò','ö'} or ch == b'o' or ch == b'O': # o or its Unicode homoglyphs
                     # if render is not None:
                     #     render.close()
                     #     render = None
@@ -523,7 +525,7 @@ screen."""
         except ImportError:
             self.impl = _GetchUnix()
 
-    def __call__(self): return str(self.impl())
+    def __call__(self): return self.impl()
 
 
 class _GetchUnix:
