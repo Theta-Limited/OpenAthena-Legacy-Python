@@ -148,10 +148,13 @@ def find_me_mode():
 
     mag = -1 * mag # instead of magnetic -> true heading, we go true -> magnetic (so we must invert)
     if mag != 0.0:
-        warnStr = '\033[1;31;m' #ANSI escape sequence, bold and red
+        warnStr = ""
+        if os.name != 'nt':
+            warnStr += '\033[1;31;m' #ANSI escape sequence, bold and red
         warnStr += f"WARNING: adjusting target headings by {'+' if mag > 0 else ''}{mag}° for use with analog compass\n"
         warnStr += "    please ensure this direction is correct and your compass decl. is set to 0°"
-        warnStr +="\033[0;0m" #ANSI escape sequence, reset terminal to normal colors
+        if os.name != 'nt':
+            warnStr +="\033[0;0m" #ANSI escape sequence, reset terminal to normal colors
         warnStr +="\n"
         print(warnStr)
         time.sleep(2)
@@ -179,11 +182,14 @@ def find_me_mode():
             errstr = "FATAL ERROR: could not determine your altitude!"
             sys.exit(errstr)
 
-        warnStr = '\033[1;31;m' #ANSI escape sequence, bold and red
+        warnStr = ""
+        if os.name != 'nt':
+            warnStr += '\033[1;31;m' #ANSI escape sequence, bold and red
         warnStr += "WARNING: you did not input your current altitude\n"
         warnStr += f"    using value {alt}m according to nearest GeoTIFF DEM datapoint\n"
         warnStr += "    your GPS reading may be more accurate than this value"
-        warnStr +="\033[0;0m" #ANSI escape sequence, reset terminal to normal colors
+        if os.name != 'nt':
+            warnStr +="\033[0;0m" #ANSI escape sequence, reset terminal to normal colors
         warnStr +="\n"
         print(warnStr)
         time.sleep(4)
