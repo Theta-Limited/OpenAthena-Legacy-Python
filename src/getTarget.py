@@ -119,11 +119,14 @@ def getTarget():
         GK_zone, targetSK42_N_GK, targetSK42_E_GK = Projector.SK42_Gauss_Kruger(targetSK42Lat, targetSK42Lon)
         targetSK42_N_GK, targetSK42_E_GK = int(round(targetSK42_N_GK)), int(round(targetSK42_E_GK))
         SK42_N_GK_10k_Grid, SK42_E_GK_10k_Grid = (targetSK42_N_GK % 100000), (targetSK42_E_GK % 100000)
+
+        # SK42_N_GK_10k_Grid = str(SK42_N_GK_10k_Grid).zfill(5)
+        # SK42_E_GK_10k_Grid = str(SK42_E_GK_10k_Grid).zfill(5)
         # ANSI escape sequences \033[ for underlining: stackabuse.com/how-to-print-colored-text-in-python
         if os.name != 'nt':
-            print(f'    Gauss-Krüger (meters): ZONE: {GK_zone} X: {int((targetSK42_N_GK - SK42_N_GK_10k_Grid)/100000)} \033[4m{SK42_N_GK_10k_Grid}\033[0;0m Y: {int((targetSK42_E_GK - SK42_E_GK_10k_Grid)/100000)} \033[4m{SK42_E_GK_10k_Grid}\033[0;0m Alt: \033[4m{targetSK42Alt}\033[0;0m')
+            print(f'    Gauss-Krüger (meters): ZONE: {GK_zone} X: {int((targetSK42_N_GK - SK42_N_GK_10k_Grid)/100000)} \033[4m{str(SK42_N_GK_10k_Grid).zfill(5)}\033[0;0m Y: {int((targetSK42_E_GK - SK42_E_GK_10k_Grid)/100000)} \033[4m{str(SK42_E_GK_10k_Grid).zfill(5)}\033[0;0m Alt: \033[4m{targetSK42Alt}\033[0;0m')
         else:
-            print(f'    Gauss-Krüger (meters): ZONE: {GK_zone} X: {int((targetSK42_N_GK - SK42_N_GK_10k_Grid)/100000)} {SK42_N_GK_10k_Grid} Y: {int((targetSK42_E_GK - SK42_E_GK_10k_Grid)/100000)} {SK42_E_GK_10k_Grid} Alt: {targetSK42Alt}')
+            print(f'    Gauss-Krüger (meters): ZONE: {GK_zone} X: {int((targetSK42_N_GK - SK42_N_GK_10k_Grid)/100000)} {str(SK42_N_GK_10k_Grid).zfill(5)} Y: {int((targetSK42_E_GK - SK42_E_GK_10k_Grid)/100000)} {str(SK42_E_GK_10k_Grid).zfill(5)} Alt: {targetSK42Alt}')
 
 """handle user input of data, using message for prompt
     guaranteed to return a float in range
