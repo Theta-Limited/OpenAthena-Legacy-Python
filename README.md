@@ -91,7 +91,7 @@ Importantly, such drones usually have a camera with a movable gimbal system.
 
 The camera starts level with the horizon during normal operation, and the operator can pitch it downwards towards the ground for taking pictures. These pictures store GPS coordinates, altitude, and the azimuth and angle of depression downward (pitch) in their XMP and EXIF metadata (attached with the image)
 
-Given that the lat/lon and altitude of the rotary-wing aircraft is known, its azimuth is known, and it is possible to obtain accurate worldwide elevation data (within ~30m) from [this api](https://pypi.org/project/elevation/), Open Athena calculates the position and altitude of the terrain aimed at by the camera.
+Given that the lat/lon and altitude of the aircraft is known, its azimuth is known, and it is possible to obtain accurate worldwide elevation data (within ~30m) from [this api](https://pypi.org/project/elevation/), Open Athena calculates the position and altitude of the terrain aimed at by the camera.
 
 A constructed mathematical line (ray) is traced from the aircraft's camera towards the ground at its heading (azimuth) and angle of depression (theta) from the horizon. The point closest along this line yet reasonably near a geographic lat/lon/alt data point is usually the target which the camera is aiming at. This calculation provides the aircraft operator with a latitude, longitude, and elevation of the target to which the camera is aiming in an extremely short period of time.
 
