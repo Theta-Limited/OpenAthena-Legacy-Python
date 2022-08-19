@@ -349,6 +349,7 @@ def parseImage():
                 # Note: This altitude calculation assumes the SK42 and WGS84 ellipsoid have the exact same center
                 #     This is not totally correct, but in practice is close enough to the actual value
                 #     @TODO Could be refined at a later time with better math
+                #     See: https://gis.stackexchange.com/a/88499
                 targetSK42Alt = float(tarZ) - converter.SK42_WGS84_Alt(targetSK42Lat, targetSK42Lon, 0.0)
                 targetSK42Alt = int(round(targetSK42Alt))
                 print('SK42 (истема координат 1942 года):')
@@ -358,20 +359,8 @@ def parseImage():
                 print('      '+targetSK42LatDMS)
                 print('      '+targetSK42LonDMS)
                 GK_zone, targetSK42_N_GK, targetSK42_E_GK = Projector.SK42_Gauss_Kruger(targetSK42Lat, targetSK42Lon)
-                targetSK42_N_GK, targetSK42_E_GK = int(round(targetSK42_N_GK)), int(round(targetSK42_E_GK))
-                SK42_N_GK_10k_Grid, SK42_E_GK_10k_Grid = (targetSK42_N_GK % 100000), (targetSK42_E_GK % 100000)
-                # SK42_N_GK_10k_Grid = str(SK42_N_GK_10k_Grid).zfill(5)
-                # SK42_E_GK_10k_Grid = str(SK42_E_GK_10k_Grid).zfill(5)
-                # ANSI escape sequences \033[ for underlining: stackabuse.com/how-to-print-colored-text-in-python
-                if os.name != 'nt':
-                    print(f'    Gauss-Krüger (meters): ZONE: {GK_zone} X: {int((targetSK42_N_GK - SK42_N_GK_10k_Grid)/100000)} \033[4m{str(SK42_N_GK_10k_Grid).zfill(5)}\033[0;0m Y: {int((targetSK42_E_GK - SK42_E_GK_10k_Grid)/100000)} \033[4m{str(SK42_E_GK_10k_Grid).zfill(5)}\033[0;0m Alt: \033[4m{targetSK42Alt}\033[0;0m')
-                else:
-                    print(f'    Gauss-Krüger (meters): ZONE: {GK_zone} X: {int((targetSK42_N_GK - SK42_N_GK_10k_Grid)/100000)} {str(SK42_N_GK_10k_Grid).zfill(5)} Y: {int((targetSK42_E_GK - SK42_E_GK_10k_Grid)/100000)} {str(SK42_E_GK_10k_Grid).zfill(5)} Alt: {targetSK42Alt}')
-                # print(f'Gauss-Krüger (meters): ZONE: {GK_zone} X: {targetSK42_N_GK} Y: {targetSK42_E_GK}')
-
-
-
-
+                outstr = strFormatSK42GK(GK_zone, targetSK42_N_GK, targetSK42_E_GK, targetSK42Alt)
+                print(outstr)
     #
 
 """takes a xmp metadata string from a drone image of type "DJI Meta Data",
@@ -588,11 +577,14 @@ exifData: Dict
     expressed as key:value pairs
 """
 def handleAUTEL(xmp_str, exifData):
-    warnStr = '\033[1;31;m' #ANSI escape sequence, bold and red
+    warnStr = ""
+    if os.name != 'nt':
+        warnStr += '\033[1;31;m' #ANSI escape sequence, bold and red
     warnStr += 'USER WARNING: in-accuracies have been observed from Autels\'\n'
     warnStr += '    reported altitude, azimuth, and theta. This may result in bad target res.\n\n'
     warnStr += '    PROCEED WITH CAUTION '
-    warnStr +="\033[0;0m" #ANSI escape sequence, reset terminal to normal colors
+    if os.name != 'nt':
+        warnStr +="\033[0;0m" #ANSI escape sequence, reset terminal to normal colors
     print(warnStr)
 
 
@@ -916,7 +908,6 @@ def decimalToDegreeMinuteSecond(Lat, Lon):
     lonDMS = str(abs(degrees_x)) + "° " + str(minutes_x) + "' " + str(seconds_x) + "\" " + EorW
 
     return (latDMS, lonDMS)
-
 
 if __name__ == "__main__":
     parseImage()

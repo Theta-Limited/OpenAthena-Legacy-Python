@@ -384,11 +384,14 @@ def find_me_mode():
                 print("Press o ('o') to view copy of current image 🖼️")
 
                 if 'MAX' in imgName:
-                    warnStr = '\033[1;31;m' #ANSI escape sequence, bold and red
+                    warnStr = ""
+                    if os.name != 'nt':
+                        warnStr += '\033[1;31;m' #ANSI escape sequence, bold and red
                     warnStr += 'USER WARNING: in-accuracies have been observed from Autels\'\n'
                     warnStr += '    reported altitude, azimuth, and theta. This may result in bad target res.\n\n'
                     warnStr += '    PROCEED WITH CAUTION '
-                    warnStr +="\033[0;0m" #ANSI escape sequence, reset terminal to normal colors
+                    if os.name != 'nt':
+                        warnStr +="\033[0;0m" #ANSI escape sequence, reset terminal to normal colors
                     print(warnStr)
 
 
@@ -464,7 +467,7 @@ def find_me_mode():
                         deltaZ = literalZ - alt # update deltaZ since it does not normally change
                         break # exit the loop if no errors occured
                     # end while loop
-                elif ch.lower() in {'o','о','ο','օ','ȯ','ọ','ỏ','ơ','ó','ò','ö'} or ch == b'o' or ch == b'O': # o or its Unicode homoglyphs
+                elif ch.lower() in {'o','о','ο','օ','ȯ','ọ','ỏ','ơ','ó','ò','ö', '0'} or ch == b'o' or ch == b'O' or ch == '0': # o or its Unicode homoglyphs
                     # if render is not None:
                     #     render.close()
                     #     render = None
@@ -492,8 +495,6 @@ def find_me_mode():
                     # label.img = ImageTk.PhotoImage(img)
                     # label.pack()
                     # rootTk.mainloop()
-
-
 
             files_prosecuted.append(this[1])
 

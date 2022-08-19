@@ -7,7 +7,8 @@ This file will focus on the core math of resolving the location
     of a target in the UAS camera's direct center line-of-sight
 
 """
-
+import sys
+import os
 import time
 import matplotlib.pyplot as plt
 # from osgeo import gdal # Lots of good GeoINT stuff
@@ -32,7 +33,15 @@ import sys
 def getTarget():
     print("Hello World!")
     print("I'm getTarget.py")
-    elevationData, (x0, dx, dxdy, y0, dydx, dy) = parseGeoTIFF.getGeoFileFromUser()
+    if 1 < len(sys.argv) and len(sys.argv) < 3:
+        if sys.argv[1].split('.')[-1].lower() != "tif":
+            outstr = f'FATAL ERROR: got argument: {sys.argv[1]}, expected GeoTIFF DEM!'
+            sys.exit(outstr)
+        else:
+            filename = sys.argv[1].strip()
+            elevationData, (x0, dx, dxdy, y0, dydx, dy) = parseGeoTIFF.getGeoFileFromString(filename)
+    else:
+        elevationData, (x0, dx, dxdy, y0, dydx, dy) = parseGeoTIFF.getGeoFileFromUser()
 
     print("The shape of the elevation data is: ", elevationData.shape)
     print("The raw Elevation data is: ")
@@ -117,16 +126,9 @@ def getTarget():
         print('      '+targetSK42LatDMS)
         print('      '+targetSK42LonDMS)
         GK_zone, targetSK42_N_GK, targetSK42_E_GK = Projector.SK42_Gauss_Kruger(targetSK42Lat, targetSK42Lon)
-        targetSK42_N_GK, targetSK42_E_GK = int(round(targetSK42_N_GK)), int(round(targetSK42_E_GK))
-        SK42_N_GK_10k_Grid, SK42_E_GK_10k_Grid = (targetSK42_N_GK % 100000), (targetSK42_E_GK % 100000)
 
-        # SK42_N_GK_10k_Grid = str(SK42_N_GK_10k_Grid).zfill(5)
-        # SK42_E_GK_10k_Grid = str(SK42_E_GK_10k_Grid).zfill(5)
-        # ANSI escape sequences \033[ for underlining: stackabuse.com/how-to-print-colored-text-in-python
-        if os.name != 'nt':
-            print(f'    Gauss-Krüger (meters): ZONE: {GK_zone} X: {int((targetSK42_N_GK - SK42_N_GK_10k_Grid)/100000)} \033[4m{str(SK42_N_GK_10k_Grid).zfill(5)}\033[0;0m Y: {int((targetSK42_E_GK - SK42_E_GK_10k_Grid)/100000)} \033[4m{str(SK42_E_GK_10k_Grid).zfill(5)}\033[0;0m Alt: \033[4m{targetSK42Alt}\033[0;0m')
-        else:
-            print(f'    Gauss-Krüger (meters): ZONE: {GK_zone} X: {int((targetSK42_N_GK - SK42_N_GK_10k_Grid)/100000)} {str(SK42_N_GK_10k_Grid).zfill(5)} Y: {int((targetSK42_E_GK - SK42_E_GK_10k_Grid)/100000)} {str(SK42_E_GK_10k_Grid).zfill(5)} Alt: {targetSK42Alt}')
+        outstr = strFormatSK42GK(GK_zone, targetSK42_N_GK, targetSK42_E_GK, targetSK42Alt)
+        print(outstr)
 
 """handle user input of data, using message for prompt
     guaranteed to return a float in range
@@ -509,6 +511,62 @@ def decimalToDegreeMinuteSecond(Lat, Lon):
     lonDMS = str(abs(degrees_x)) + "° " + str(minutes_x) + "' " + str(seconds_x) + "\" " + EorW
 
     return (latDMS, lonDMS)
+
+"""takes a Gauss Krüger zone, northing, and easting; returns a str formatted for printout
+
+Parameters
+----------
+GK_zone: int
+    an integer number between 1 and 60 (inclusive) representing the 6° longitudinal 'slice'
+northing: int
+    an integer number < 10,000,000 in meters offset (longitude) from the GK zone origin
+    defines a vertical northing line
+easting : int
+    an integer number < 10,000,000 in meters offset (latitude) from the GK zone origin
+    defines a horizontal easting line
+SK42Alt : int
+    an integer number representing the 𝚫altitude (in meters) from the surface of the 1942 Krassowsky ellipsoid
+"""
+def strFormatSK42GK(GK_zone, northing, easting, SK42Alt) :
+    northing, easting = round(northing), round(easting)
+    SK42_N_GK_10k_Grid  = (northing % 100000)
+    SK42_E_GK_10k_Grid = (easting % 100000)
+
+    if os.name != 'nt':
+        ANSI_start_underline = "\033[4m"
+        ANSI_end_underline = "\033[0;0m"
+    else:
+        ANSI_start_underline = "" # ANSI codes don't work on Windows, do nothing
+        ANSI_end_underline = ""
+
+    outstr = ""
+    outstr += "    "
+    outstr += "Gauss-Krüger (meters): ZONE: "
+    outstr += f'{GK_zone} '
+
+    outstr += "X: "
+    NgreaterThan10k = int((northing - SK42_N_GK_10k_Grid)/100000)
+    outstr += f'{NgreaterThan10k} '
+
+    outstr += ANSI_start_underline
+    SK42_N_GK_10k_str = str(SK42_N_GK_10k_Grid).zfill(5)
+    outstr += f'{SK42_N_GK_10k_str}'
+    outstr += ANSI_end_underline + " "
+
+    outstr += "Y: "
+    EgreaterThan10k = int((easting - SK42_E_GK_10k_Grid)/100000)
+    outstr += f'{EgreaterThan10k} '
+
+    outstr += ANSI_start_underline
+    SK42_E_GK_10k_str = str(SK42_E_GK_10k_Grid).zfill(5)
+    outstr += f'{SK42_E_GK_10k_str}'
+    outstr += ANSI_end_underline + " "
+
+    outstr += "Alt: "
+    outstr += ANSI_start_underline
+    outstr += f'{SK42Alt}'
+    outstr += ANSI_end_underline
+    return outstr
 
 if __name__ == "__main__":
     getTarget()
