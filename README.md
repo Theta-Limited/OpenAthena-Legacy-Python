@@ -1,11 +1,11 @@
 # Open Athena
 ![Carole Raddato - Statue of Athena wearing a Corinthian helmet - CC Share Alike license](./assets/athena_thumb.jpg)
 
-Open Athena is a project to enable precision indirect fires that disrupt conventional combined arms warfare. This is accomplished by combining consumer rotary-wing aircraft (drones) [sensor data embedded in still images](./drone_sensor_data_blurb.md) with [an offline-ready Digital Elevation Model](./EIO_fetch_geotiff_example.md) to provide the instant location of targets
+Open Athena is a project which allows consumer and professional drones to spot precise locations through their images. This is accomplished by combining their [sensor data embedded in still images](./drone_sensor_data_blurb.md) with [an offline-ready Digital Elevation Model](./EIO_fetch_geotiff_example.md) to provide the instant ground location of what it is observing
 
 🖼️👨‍💻 + 🧮⛰️ = 🎯📍
 
-This technique may greatly reduce the incidence of errors during the process of [forward artillery observation](https://en.wikipedia.org/wiki/Artillery_observer), with a profound impact towards reducing harm to civilian lives and property in warfare. OpenAthena may also prove especially useful for life-saving civilian search and rescue (SAR) and other applications
+OpenAthena may prove especially useful for life-saving civilian search and rescue (SAR) and other commercial applications. For military use, this technique may greatly reduce the incidence of errors during the process of [forward artillery observation](https://en.wikipedia.org/wiki/Artillery_observer). This may profoundly reduce harm to civilian lives and property in warfare.
 
 This software is in pre-alpha. Use appropriate caution when using data generated from this program
 
@@ -22,57 +22,60 @@ This software is in pre-alpha. Use appropriate caution when using data generated
 ---
 
 # Limitations of Indirect Fire in existing combined arms doctrine
-While the [importance of indirect fire](causative_agents_blurb.md) (e.g. mortars, artillery, rockets) is well known to military historians, present-day soldiers, and others studied in methods of warfare, it remains an imprecise, blunt, and destructive tool relegated merely to a support role in current combined arms doctrine.
+While the [importance of indirect fire](causative_agents_blurb.md) (e.g. mortars, artillery, rockets) is well known to military historians, present-day soldiers, and others studied in methods of warfare, it remains a highly imprecise, blunt, and destructive tool. As such, it is used merely in a supporting role in today's [combined arms doctrine](https://en.wikipedia.org/wiki/Combined_arms).
 
-Mastery of combined arms through maneuver warfare and air superiority remain the determinate factors of supremacy in current doctrine, preventing the effective application of indirect fire. This is in large part due to the lack of precision and immediacy that are critical for its usage against a highly-mobile adversary.
+Mastery of combined arms through maneuver warfare and air superiority remain the determinate factors of supremacy in current doctrine, preventing the effective application of indirect fire
 
 As U.S. Army Chief of Staff Gen. Mark A. Milley wrote in the forward to U.S. Army Training and Doctrine Command Pamphlet 525-3-1, [The U.S. Army in Multi-Domain Operations 2028](https://adminpubs.tradoc.army.mil/pamphlets/TP525-3-1.pdf): “emerging technologies” are “driving a fundamental change in the character of war.” They have “the potential to revolutionize battlefields unlike anything since the integration of machine guns, tanks, and aviation which began the era of combined arms warfare.”
 
 # A new introduction to combined arms doctrine
 
-Retired French army general and theory-crafter Guy Hubin writes in [_Perspectives tactiques_](https://warontherocks.com/2021/02/kill-the-homothetic-army-gen-guy-hubins-vision-of-the-future-battlefield/) that the possibility of precision indirect fires is one such fundamental change in the character of war driven by emerging technologies.
+Retired French army general Guy Hubin writes in [_Perspectives tactiques_](https://warontherocks.com/2021/02/kill-the-homothetic-army-gen-guy-hubins-vision-of-the-future-battlefield/) that the possibility of precision indirect fires is one such fundamental change in the character of war.
 
-With recent advancements in consumer technology and publicly-available terrain datasets, the possibility arises of using inexpensive, low-altitude, un-manned fixed or rotary-wing aircraft to augment the capability of indirect fire. They can achieve this by improving indirect fire's accuracy in usage and providing precise, immediate information on targets to operators of a broad range of existing indirect fire weaponry.
+With recent advancements in consumer drone technology and publicly-available terrain datasets, a new possibility arises for doctrine. Inexpensive UAS aircraft may significantly enhance the capability of indirect fire. They can achieve this by improving indirect fire's accuracy and providing precise, immediate information on targets to operators of a broad range of existing weaponry.
 
 # Proof of concept
-Aerial forward artillery observation with small consumer aircraft, even if not employed specifically in this technique, has proven to be very effective in application during the 2022 war in Ukraine.
+Aerial forward artillery observation with small UAS's has proven to be very effective during the 2022 war in Ukraine
 
 Examples:
 
 In first-hand accounts (via reporter [@Jack_Watling](https://twitter.com/Jack_Watling)):
 [shashj/status/1519041368672415747](https://twitter.com/shashj/status/1519041368672415747)
 
-In reporting (via reporter [@HoansSolo](http://www.w3.org/1999/02/22-rdf-syntax-ns)): [HoansSolo/status/1523955057187860480](https://twitter.com/HoansSolo/status/1523955057187860480)
+In the news (via reporter [@HoansSolo](http://www.w3.org/1999/02/22-rdf-syntax-ns)): [HoansSolo/status/1523955057187860480](https://twitter.com/HoansSolo/status/1523955057187860480)
 
-forward artillery observation for destruction of concentrated armored units:
+Against Armor:
 [Blue_Sauron/status/1524742847664173057](https://twitter.com/Blue_Sauron/status/1524742847664173057)
 [kms_d4k/status/1524506214650028032](https://twitter.com/kms_d4k/status/1524506214650028032)
 
-forward artillery observation for counter-battery fire: [Osinttechnical/status/1511867981596434434](https://twitter.com/Osinttechnical/status/1511867981596434434)
-[alt video link](counter-battery-example.mp4)
+For [counter-battery](https://en.wikipedia.org/wiki/Counter-battery_fire) fire: [Osinttechnical/status/1511867981596434434](https://twitter.com/Osinttechnical/status/1511867981596434434)
+<!--[alt video link](counter-battery-example.mp4)-->
 
-forward artillery observation for indirect-fire adjustment: [Osinttechnical/status/1516473926150463494](https://twitter.com/Osinttechnical/status/1516473926150463494) [alt video link](fire-adjustment-example.mp4)
+For adjusting fall of shot: [Osinttechnical/status/1516473926150463494](https://twitter.com/Osinttechnical/status/1516473926150463494)
+<!-- [alt video link](fire-adjustment-example.mp4) -->
 
-forward artillery observation for combined arms disruption: [UAWeapons/status/1509247556164935691](https://twitter.com/UAWeapons/status/1509247556164935691)
-[alt video link](anti-combined-arms-example.mp4)
+For disrupting combined arms offensives: [UAWeapons/status/1509247556164935691](https://twitter.com/UAWeapons/status/1509247556164935691)
+<!-- [alt video link](anti-combined-arms-example.mp4) -->
 
-forward artillery observation for logistics disruption:
+For disrupting logistics:
 [Osinttechnical/status/1511683706511052808](https://twitter.com/Osinttechnical/status/1511683706511052808)
-[alt video link](anti-logistics-example.mp4)
+<!-- [alt video link](anti-logistics-example.mp4) -->
 
 # An upset in combined arms doctrine
 
-This project portends the possibility of one such upset to existing combined arms doctrine. Low cost remote-controlled consumer-grade aircraft are the instrument of such a change in the character of warfare. Such aircraft are easy to operate by infantry units and inexpensive to replace. Meanwhile, when used to guide indirect fire, such aircraft may provide an effective counter to concentrated infantry and armored units of an adversary accustomed to fighting under current combined arms doctrine.
+This project anticipates that UAS's may enable a dramatic upset to established combined arms doctrine. Low cost unmaned aircraft are the instrument of such a change in the character of warfare. Such aircraft are easy to operate by infantry units and inexpensive to replace. Meanwhile, when used to guide indirect fire, such aircraft may provide an effective counter to concentrated infantry and armored units of an adversary fighting under current combined arms doctrine.
 
-Due to the low altitude operation and inexpensive nature of such aircraft, they can counter concentrated combined arms forces even when higher-altitude air supremacy is not held or may not be achieved against an adversary. In such a fashion, low altitude consumer-grade aircraft upset the role of high-altitude military aircraft as the only effective foil to ground-based combined arms.
+Due to the low altitude operation and inexpensive nature of such aircraft, they can counter concentrated combined arms forces even when higher-altitude air supremacy is not held or may not be achieved. In such a fashion, low altitude unmaned aircraft upset the role of high-altitude military aircraft as the only effective foil to ground-based combined arms.
 
-Additionally, the combination of existing combined arms with new precision indirect fire capabilities may allow a unit to move more rapidly and gain ground at frightening speeds using classic fire-and-movement tactics. The advantage provided by precision indirect fire is that it can suppress a target from beyond line of sight, reducing the burden of infantry units to suppress a target while a friendly unit is in motion. Well executed maneuvers under such conditions may out-pace a conventional force's ability to react, resupply, and reposition its own defenses.
+Additionally, the combination of existing combined arms with new precision fire capabilities may allow a unit to move more rapidly and gain ground at frightening speeds using classic [fire-and-movement](https://en.wikipedia.org/wiki/Fire_and_movement) tactics.
+![A diagram displaying a topographic map. A supporting element supresses an enemy target with fire while a friendly unit is in motion](https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Fire_and_movement.svg/1024px-Fire_and_movement.svg.png)
+Precision indirect fire may suppress a target from beyond line of sight, reducing the burden of infantry to suppress a target while a friendly unit is in motion. Well-executed maneuvers under such conditions may out-pace a conventional force's ability to react, resupply, and reposition its own defenses.
 
 # Adapting to an upset
 
 Low altitude air supremacy must be considered equally as essential as that of high altitude in existing combined arms doctrine.
 
-Infantry and mechanized units must guard against artillery-observing aircraft. Specialized low-altitude anti-air or electronic countermeasures (ECM) must be developed. Such platforms should be able to deter such aircraft just as easily as they can be deployed
+Infantry and armored units must guard against artillery-observing aircraft. Specialized low-altitude electronic countermeasures (ECM) must be developed. Such platforms should be able to deter such aircraft just as easily as they can be deployed
 
 Effort should be made into producing inexpensive 'bird of prey' aircraft that can enforce low-altitude air supremacy and deny an adversary's aerial artillery observation
 
@@ -80,17 +83,19 @@ Effort should be made into producing inexpensive 'bird of prey' aircraft that ca
 
 ![concept whiteboard diagram](./assets/concept_whiteboard_diagram.jpg)
 
-Multi-copter rotary-wing aircraft (e.g. quadrotors, drones, etc.) typically have an on-board 3D A-GPS sensor for position/alt., a magnetometer for compass heading/azimuth,  and a sensitive barometer (atmospheric pressure sensor) for accurate absolute altitude relative to sea level.
+Consumer drones typically have an on-board 3D GPS sensor for position, a magnetometer (compass) for heading/azimuth, and a sensitive barometer (atmospheric pressure sensor) to enhance altitude accuracy.
 
-They also typically have an "accelerometer" which allows it to stay level with the ground while in flight, and a camera.
+They also typically have an "accelerometer" which allows it to stay level with the ground while in flight.
 
-The camera starts level with the horizon during normal operation, and the operator can pitch it downwards towards the ground for live camera feed and taking pictures. These pictures store GPS coordinates, altitude, and the azimuth and angle of declination downward (pitch) in their XMP and EXIF metadata (attached with the image)
+Importantly, such drones usually have a camera with a movable gimbal system.
 
-Given that the lat/long and altitude of the rotary-wing aircraft is known, its azimuth is known, and it is possible to obtain accurate worldwide elevation data (within ~30m) from [this api](https://pypi.org/project/elevation/), Open Athena calculates the position and altitude of the object aimed at by the camera.
+The camera starts level with the horizon during normal operation, and the operator can pitch it downwards towards the ground for taking pictures. These pictures store GPS coordinates, altitude, and the azimuth and angle of depression downward (pitch) in their XMP and EXIF metadata (attached with the image)
 
-An invisible, imaginary mathematical line is traced from the aircraft's camera towards the ground at its heading (azimuth) and angle of declination downwards (theta) from the horizon. The point closest along this line to the aircraft yet reasonably near any geographic lat/long/alt data point is usually the target which the camera is aiming at. This provides the aircraft operator with a latitude, longitude, and elevation of the target to which the camera is aiming in an extremely short period of time.
+Given that the lat/lon and altitude of the rotary-wing aircraft is known, its azimuth is known, and it is possible to obtain accurate worldwide elevation data (within ~30m) from [this api](https://pypi.org/project/elevation/), Open Athena calculates the position and altitude of the terrain aimed at by the camera.
 
-Such a rapid positional resolution may prove ideal for use by precision indirect fire teams
+A constructed mathematical line (ray) is traced from the aircraft's camera towards the ground at its heading (azimuth) and angle of depression (theta) from the horizon. The point closest along this line yet reasonably near a geographic lat/lon/alt data point is usually the target which the camera is aiming at. This calculation provides the aircraft operator with a latitude, longitude, and elevation of the target to which the camera is aiming in an extremely short period of time.
+
+Such a rapid positional resolution may prove ideal for many applications
 
 # Install
 
@@ -102,6 +107,8 @@ Ensure your version of `pip` is up to date:
 ```bash
 python3 -m pip install --upgrade pip
 ```
+
+_Note: "python3" may just be called "python" depending on the configuration of your system_
 
 Then, download this repository to your computer (requires [git](https://github.com/git-guides/install-git)):
 ```bash
@@ -124,31 +131,29 @@ You should see output [like this](https://github.com/mkrupczak3/OpenAthena#parse
 
 If you encounter an error, please submit an issue to the OpenAthena GitHub page
 
-Note: "python3" may just be called "python" depending on the configuration of your system
 
 # Usage:
 
 ### parseImage.py
 
-[parseImage.py](./src/parseImage.py) can perform automatic extraction and use of EXIF/XMP sensor information from drone photos. This allows for the automatic extraction and use of data including the aircraft camera's lat/lon, altitude, azimuth, and angle of declination (theta). OpenAthena (if provided [terrain elevation data](./EIO_fetch_geotiff_example.md)) will extract and use these values automaticaly to find the location on the ground in the exact center of the image
+[parseImage.py](./src/parseImage.py) can perform automatic extraction and use of EXIF/XMP sensor metadata from drone photos. This allows for the automatic extraction and use of metadata including the aircraft camera's position, altitude, azimuth, and angle of depression (theta). OpenAthena (if provided [terrain elevation data](./EIO_fetch_geotiff_example.md)) will extract and use these values automaticaly to find the location on the ground in the exact center of the image
+
+More info [**here**](drone_sensor_data_blurb.md)
 
 [![image of command line on MacOS, showing a target location calculated by OpenAthena parseImage.py](./assets/parseImage_interactive_example3.png)](drone_sensor_data_blurb.md)
 
 
-More info [**here**](drone_sensor_data_blurb.md)
-
 ### find_me_mode.py
 
-[`find_me_mode.py`](./src/find_me_mode.py) provides an alternate targeting mode where target match locations are provided in relative terms (bearing, distance, elevation change) from a fixed point for use by on the ground search and rescue teams, short-distance indirect fire teams (e.g. [mortars](https://en.wikipedia.org/wiki/Mortar_(weapon))) and the like
+[`find_me_mode.py`](./src/find_me_mode.py) provides an alternate targeting mode where target match locations are provided in relative terms (bearing, distance, elevation change) from a fixed point. This may be useful for operators on the ground, including search and rescue teams, short-distance indirect fire teams (e.g. [mortars](https://en.wikipedia.org/wiki/Mortar_(weapon))) and the like
 
 
-This mode is only intended for short range distances, otherwise will be inaccurate (curvature of the earth, etc.)
+This mode is only intended for short range distances, otherwise it will be inaccurate (due to the curvature of the earth)
 
+More info [**here**](find_me_mode.md)
 
 <a href="find_me_mode.md"><img width="565" alt="output from find_me_mode.py in the terminal" src="./assets/find_me_mode_interactive_example3.png"></a>
 
-
-More info [**here**](find_me_mode.md)
 
 ### parseGeoTIFF.py
 
@@ -166,14 +171,16 @@ python3 parseGeoTIFF.py
 ```
 ![render of terrain around Rome](./assets/render_cli_screenshot.png)
 
-Then, exit the picture window that appears. You will now be prompted in the command line interface for a latitude and longitude, enter lat/long coordinates and the program will give you the approximate elevation using the nearest elevation data point
+Then, exit the picture window that appears. You will now be prompted in the command line interface for a latitude and longitude. You may halt the program with Ctrl+C, otherwise you may enter lat/lon coordinates and the program will give you the position's terrain elevation using the previously displayed Digital Elevation Model.
 
 
 ### getTarget.py
 
 
-getTarget.py searches along the constructed line (emitted from the camera center) for a terrain match
+getTarget.py performs the calculation for a terrain match from a constructed line
 
+
+It has limited use for most users of this software, however it has an interactive mode available for demonstration
 
 To start, `cd` into the `src` directory, then run getTarget.py:
 
@@ -235,10 +242,7 @@ Please enter camera azimuth (0 is north) in decimal form (degrees):
 ```
 
 
-Next, enter the heading of the aircraft (in degrees, 0 is north and increasing clock-wise) and the angle of declination \[theta\] of the camera (in degrees, 0 is straight forward and increasing up to a maximum of 90 which is straight downwards)
-
-
-The accuracy of the positional resolution is better at steep angles (high theta) when the camera is not close to parallel with the ground near the target
+Next, enter the heading of the aircraft (in degrees, 0 is north and increasing clock-wise) and the angle of depression \[theta\] of the camera (in degrees, 0 is straight forward and increasing up to a maximum of 90 which is straight downwards)
 
 
 ```bash
@@ -310,9 +314,10 @@ The program `getTarget.py` will then exit
 
 
 # Military Uses
-Especially when employed with precision smart munitions (e.g. [artillery](https://asc.army.mil/web/portfolio-item/ammo-excalibur-xm982-m982-and-m982a1-precision-guided-extended-range-projectile/), aerial, etc.) this project will greatly aid the safety and processes of the [forward artillery observer](https://en.wikipedia.org/wiki/Artillery_observer) using soley inexpensive consumer electronics, all while reducing the risk of operator error (mismeasurement, miscalculation, etc.) and subsequent risk of friendly-fire incidents and risk to civilian lives.
+Especially when employed with precision smart munitions (e.g. [artillery](https://asc.army.mil/web/portfolio-item/ammo-excalibur-xm982-m982-and-m982a1-precision-guided-extended-range-projectile/), aerial, etc.) this project will greatly aid the safety and processes of the [forward artillery observer](https://en.wikipedia.org/wiki/Artillery_observer) while reducing collateral damage. This technique attempts to minimize the risk of operator error (mismeasurement, miscalculation, etc.) and subsequent risk of friendly-fire and loss of civilian life.
 
-In addition: unlike a laser rangefinder/designator,  a passive optical-based approach to target identification does not emit any signature which may forewarn a target or a group of targets (including armored vehicles). This may be highly beneficial depending on the usage environment.
+In addition: a passive optical-based approach to target identification does not emit any signature which may forewarn a target or a group of targets (including armored vehicles). This may be highly beneficial depending on the usage environment.
+
 
 # Civilian Uses
 
