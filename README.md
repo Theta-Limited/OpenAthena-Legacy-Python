@@ -1,13 +1,13 @@
 # Open Athena
 ![Carole Raddato - Statue of Athena wearing a Corinthian helmet - CC Share Alike license](./assets/athena_thumb.jpg)
 
-Open Athena is a project which allows consumer and professional drones to spot precise locations through their images. This is accomplished by combining their [sensor data embedded in still images](./drone_sensor_data_blurb.md) with [an offline-ready Digital Elevation Model](./EIO_fetch_geotiff_example.md) to provide the instant ground location of what it is observing
+Open Athena is a project which allows consumer and professional drones to spot precise locations through their images. This is accomplished by combining their [sensor metadata](./drone_sensor_data_blurb.md) with [an offline-ready Digital Elevation Model](./EIO_fetch_geotiff_example.md) to provide the instant location of what it is observing
 
 🖼️👨‍💻 + 🧮⛰️ = 🎯📍
 
 OpenAthena may prove especially useful for life-saving civilian search and rescue (SAR) and other commercial applications. For military use, this technique may greatly reduce the incidence of errors during the process of [forward artillery observation](https://en.wikipedia.org/wiki/Artillery_observer). This may profoundly reduce harm to civilian lives and property in warfare.
 
-This software is in pre-alpha. Use appropriate caution when using data generated from this program
+This software is in pre-alpha. Use appropriate caution when using data generated from this program.
 
 # [**Premise**](https://github.com/mkrupczak3/OpenAthena#premise-1)
 [![pretty_good_skydio](./assets/pretty_good_skydio.jpg)](https://github.com/mkrupczak3/OpenAthena#premise-1)
@@ -138,6 +138,8 @@ If you encounter an error, please submit an issue to the OpenAthena GitHub page
 
 [parseImage.py](./src/parseImage.py) can perform automatic extraction and use of EXIF/XMP sensor metadata from drone photos. This allows for the automatic extraction and use of metadata including the aircraft camera's position, altitude, azimuth, and angle of depression (theta). OpenAthena (if provided [terrain elevation data](./EIO_fetch_geotiff_example.md)) will extract and use these values automaticaly to find the location on the ground in the exact center of the image
 
+CAUTION: it is _**highly recommended**_ that the aircraft's compass sensor is calibrated before each flight
+
 More info [**here**](drone_sensor_data_blurb.md)
 
 [![image of command line on MacOS, showing a target location calculated by OpenAthena parseImage.py](./assets/parseImage_interactive_example3.png)](drone_sensor_data_blurb.md)
@@ -149,6 +151,8 @@ More info [**here**](drone_sensor_data_blurb.md)
 
 
 This mode is only intended for short range distances, otherwise it will be inaccurate (due to the curvature of the earth)
+
+CAUTION: it is _**highly recommended**_ that the aircraft's compass sensor is calibrated before each flight
 
 More info [**here**](find_me_mode.md)
 
