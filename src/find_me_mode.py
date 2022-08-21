@@ -467,7 +467,7 @@ def find_me_mode():
                         deltaZ = literalZ - alt # update deltaZ since it does not normally change
                         break # exit the loop if no errors occured
                     # end while loop
-                elif ch.lower() in {'o','о','ο','օ','ȯ','ọ','ỏ','ơ','ó','ò','ö', '0'} or ch == b'o' or ch == b'O' or ch == '0': # o or its Unicode homoglyphs
+                elif ch.lower() in {'o','о','ο','օ','ȯ','ọ','ỏ','ơ','ó','ò','ö', '0'} or ch == b'o' or ch == b'O' or ch == '0': # o or its homoglyphs
                     # if render is not None:
                     #     render.close()
                     #     render = None
