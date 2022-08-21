@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """
 parseImage.py
 
@@ -69,6 +70,17 @@ def parseImage():
     headless = False
     if len(sys.argv) > 2:
         headless = True
+
+    if ("--version" in sys.argv or "-v" in sys.argv or "-V" in sys.argv or
+        "V" in sys.argv or "version" in sys.argv):
+        #
+        sys.exit(config.version)
+    elif ("--help" in sys.argv or "-h" in sys.argv or
+        "-H" in sys.argv or "H" in sys.argv or "help" in sys.argv):
+        #
+        outstr = "usage: parseImage.py [dem.tif] [Drone-Image.JPG] [Drone-Image2.JPG] [...]\n\nparseImage.py may take a GeoTIFF DEM (.tif) as input.\n\nIf provided one or more drone image filenames after,\nparseImage.py will run in headless mode and write a file of the convention:\n[Drone-Image.JPG.ATHENA]\n\nOtherwise, The user will be prompted for one or more image filenames. \nWhen finished, target match output will be displayed for each image\n"
+        sys.exit(outstr)
+
     # If provided arguments in command line,
     #     the first argument must be a geoTiff filename
     #     and every other argument after is a drone image filename

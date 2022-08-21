@@ -1,3 +1,12 @@
+#!/usr/bin/env python3
+"""
+parseGeoTIFF.py
+
+This file is responsible for obtaining elevation data from a given GeoTIFF Digital Elevation Model '.tif' file
+
+May be run in user-interactive mode for displaying a color render of a GeoTIFF DEM
+"""
+import sys
 import time
 import matplotlib.pyplot as plt
 # from osgeo import gdal
@@ -6,18 +15,27 @@ import math
 from math import sin, asin, cos, atan2, sqrt
 import numpy as np
 import decimal # more float precision with Decimal objects
-import getTarget
-# import numpy
-import sys
 
-# parseGeoTIFF
+import config # OpenAthena global variables
+
+import getTarget
 
 def main():
 
     print("Hello World!")
     print("I'm parseGeoTIFF.py")
-    print("Which File would you like to read?")
+    if ("--version" in sys.argv or "-v" in sys.argv or "-V" in sys.argv or
+        "V" in sys.argv or "version" in sys.argv):
+        #
+        sys.exit(config.version)
 
+    if len(sys.argv) == 1 or ("--help" in sys.argv or "-h" in sys.argv or
+        "-H" in sys.argv or "H" in sys.argv or "help" in sys.argv):
+        #
+        outstr = "usage: parseGeoTIFF.py Rome-30m-DEM.tif\n\nparseGeoTIFF.py may display a render of a GeoTIFF Digital Elevation Model.\nA GUI window will appear with an image render,\nmouse-over the image to view a tooltip where:\nx=longitude y=latitude [altitude from sea level]\n\nIf you exit the GUI, you will then be prompted for a latitude and longitude.\nYou may exit the program with CTRL+C, otherwise input a latitude and longitude\nto recieve the altitude of the nearest DEM datapoint"
+        sys.exit(outstr)
+
+    print("Which File would you like to read?")
 
     if 1 < len(sys.argv) and len(sys.argv) < 3:
         if sys.argv[1].split('.')[-1].lower() != "tif":
@@ -26,6 +44,9 @@ def main():
         else:
             geofile = sys.argv[1].strip()
     else:
+        print("Hello World!")
+        print("I'm parseGeoTIFF.py")
+        print("Which File would you like to read?")
         geofile = input("Enter the GeoTIF filename: ").strip()
     # geofile = 'Rome-30m-DEM.tif'
 

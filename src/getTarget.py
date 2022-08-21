@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """
 getTarget.py
 
@@ -19,12 +20,11 @@ from math import sin, asin, cos, atan2, sqrt
 import numpy as np
 import decimal # more float precision with Decimal objects
 
+import config # OpenAthena global variables
+
 import parseGeoTIFF
 from WGS84_SK42_Translator import Translator as converter # rafasaurus' SK42 coord translator
 from SK42_Gauss_Kruger import Projector as Projector      # Matt's Gauss Kruger projector for SK42 (adapted from Nickname Nick)
-
-
-import sys
 
 """get the pos of current subject of UAS camera
        data entry is done manually
@@ -33,7 +33,17 @@ import sys
 def getTarget():
     print("Hello World!")
     print("I'm getTarget.py")
-    if 1 < len(sys.argv) and len(sys.argv) < 3:
+
+    if ("--version" in sys.argv or "-v" in sys.argv or "-V" in sys.argv or
+        "V" in sys.argv or "version" in sys.argv):
+        #
+        sys.exit(config.version)
+    elif ("--help" in sys.argv or "-h" in sys.argv or
+        "-H" in sys.argv or "H" in sys.argv or "help" in sys.argv):
+        #
+        outstr = "usage: getTarget.py [Rome-30m-DEM.tif]\n\ngetTarget.py may take a GeoTIFF DEM (.tif) and manual sensor metadata as input,\nprovides a target match location as output (if possible)"
+        sys.exit(outstr)
+    elif 1 < len(sys.argv) and len(sys.argv) < 3:
         if sys.argv[1].split('.')[-1].lower() != "tif":
             outstr = f'FATAL ERROR: got argument: {sys.argv[1]}, expected GeoTIFF DEM!'
             sys.exit(outstr)
@@ -266,7 +276,7 @@ def resolveTarget(y, x, z, azimuth, theta, elevationData, xParams, yParams):
     threshold = abs(dx) / 4.0
 
     #meters of increment for each stepwise check (along constructed line)
-    increment = decimal.Decimal(1.0)
+    increment = decimal.Decimal(config.increment)
 
     # start at the aircraft's position
 

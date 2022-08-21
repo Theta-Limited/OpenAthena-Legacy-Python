@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """
 find_me_mode.py
 
@@ -31,6 +32,8 @@ from PIL import Image
 from PIL import ExifTags
 from PIL import ImageTk
 
+import config # OpenAthena global variables
+
 import parseImage
 from parseGeoTIFF import getAltFromLatLon, binarySearchNearest, getGeoFileFromUser, getGeoFileFromString
 from getTarget import *
@@ -57,13 +60,24 @@ def find_me_mode():
     # jpl.nasa.gov/edu/news/2016/3/16/how-many-decimals-of-pi-do-we-really-need
     decimal.getcontext().prec = 30
 
-    if len(sys.argv) <= 1:
-        errstr = f'FATAL ERROR: no location specified, please use --lat YY.YYYY --lon XX.XXXX (WGS84)'
-        sys.exit(errstr)
-
+    defaultstr = "usage: find_me_mode.py [dem.tif] [--lat latitude] [--lon longitude] [--mgrs MGRS] \n\t[--alt altitude] [--mag degrees] [--dir directory] [--version]\n\n"
+    if len(sys.argv) == 1:
+        sys.exit(defaultstr + "Try 'find_me_mode.py --help' for more information")
     for i in range(len(sys.argv)):
         segment = sys.argv[i]
-        if segment.lower() == "--lat":
+        if segment.lower() in {"--version", "-v", "version"}:
+            sys.exit(config.version)
+        elif segment.lower() in {"--help", "-h", "help"}:
+            print(defaultstr)
+            helpstr = ""
+            helpstr += "find_me_mode.py provides an alternate targeting mode where target match locations are provided in relative terms (bearing, distance, elevation change) from a fixed point\n\n"
+            helpstr += "A single fixed location may be specified either using a conventional WGS84 Latitude/Longitude pair or a NATO MGRS (with altitude recommended but optional).\n\n"
+            helpstr += "If desired, Magnetic Declination can be optionally specified (using the --mag flag) so that the target bearing will be output in magnetic heading (instead of true heading), e.g. for use with a handheld analog compass. This is not necessary for most digital compasses (e.g. a smartphone)\n\n"
+            helpstr += "This mode is only intended for short range distances, otherwise will be inaccurate (curvature of the earth, etc.)\n\n"
+            helpstr += "On startup, find_me_mode.py will scan the specified directory (current working directory by default) for compatible drone images. It will present the newest created photo first, and perform this scan again and provide the most recent, un-viewed image each time the SPACEBAR key is pressed"
+            sys.exit(helpstr)
+
+        elif segment.lower() == "--lat":
             if i + 1 >= len(sys.argv):
                 sys.exit("FATAL ERROR: expected value after '--lat'")
             else:
