@@ -81,7 +81,7 @@ Effort should be made into producing inexpensive 'bird of prey' aircraft that ca
 
 # Premise
 
-![concept whiteboard diagram](./assets/concept_whiteboard_diagram.jpg)
+![concept illustrated diagram](./assets/OpenAthena_Concept_Diagram.png)
 
 Consumer drones typically have an on-board 3D GPS sensor for position, a magnetometer (compass) for heading/azimuth, and a sensitive barometer (atmospheric pressure sensor) to enhance altitude accuracy.
 
