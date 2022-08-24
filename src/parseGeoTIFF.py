@@ -32,7 +32,7 @@ def main():
     if len(sys.argv) == 1 or ("--help" in sys.argv or "-h" in sys.argv or
         "-H" in sys.argv or "H" in sys.argv or "help" in sys.argv):
         #
-        outstr = "usage: parseGeoTIFF.py Rome-30m-DEM.tif\n\nparseGeoTIFF.py may display a render of a GeoTIFF Digital Elevation Model.\nA GUI window will appear with an image render,\nmouse-over the image to view a tooltip where:\nx=longitude y=latitude [altitude from sea level]\n\nIf you exit the GUI, you will then be prompted for a latitude and longitude.\nYou may exit the program with CTRL+C, otherwise input a latitude and longitude\nto recieve the altitude of the nearest DEM datapoint"
+        outstr = "usage: parseGeoTIFF.py [Rome-30m-DEM.tif]\n\nparseGeoTIFF.py may display a render of a GeoTIFF Digital Elevation Model.\nA GUI window will appear with an image render,\nmouse-over the image to view a tooltip where:\nx=longitude y=latitude [altitude from sea level]\n\nIf you exit the GUI, you will then be prompted for a latitude and longitude.\nYou may exit the program with CTRL+C, otherwise input a latitude and longitude\nto recieve the altitude of the nearest DEM datapoint"
         sys.exit(outstr)
 
     print("Which File would you like to read?")

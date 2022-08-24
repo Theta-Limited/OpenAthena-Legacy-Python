@@ -60,7 +60,7 @@ def find_me_mode():
     # jpl.nasa.gov/edu/news/2016/3/16/how-many-decimals-of-pi-do-we-really-need
     decimal.getcontext().prec = 30
 
-    defaultstr = "usage: find_me_mode.py [dem.tif] [--lat latitude] [--lon longitude] [--mgrs MGRS] \n\t[--alt altitude] [--mag degrees] [--dir directory] [--version]\n\n"
+    defaultstr = "usage: find_me_mode.py <dem.tif> [--lat latitude] [--lon longitude] [--mgrs MGRS] \n\t[--alt altitude] [--mag degrees] [--dir directory] [--version]\n\n"
     if len(sys.argv) == 1:
         sys.exit(defaultstr + "Try 'find_me_mode.py --help' for more information")
     for i in range(len(sys.argv)):
