@@ -430,7 +430,7 @@ def find_me_mode():
                 elif ch == '\r' or ch == b'\r':
                     Nadjust = 0
                     Eadjust = 0
-                elif ch == '\x7f' or ch == b'\x08': # backspace key
+                elif ch == '\x7f' or ch == b'\x08' or ch == b'\xe0S': # backspace or delete key
                     while True:
                         dataIn = input("Enter your NATO MGRS or press RETURN ('↩') to enter lat/lon: ")
                         dataIn = dataIn.strip()
