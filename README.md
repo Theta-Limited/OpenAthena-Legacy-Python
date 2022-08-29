@@ -82,8 +82,7 @@ Effort should be made into producing inexpensive 'bird of prey' aircraft that ca
 
 # Premise
 
-![concept illustrated diagram](./assets/OpenAthena_Concept_Diagram.png)
-<a href="./assets/OpenAthena-Concept-Illustration.jpeg"><img width="565" alt="comissioned graphic by fiver user frosthawk. Creative Commons share-alike license. A drone observes a target using the OpenAthena technique" src="./assets/OpenAthena-Concept-Illustration.jpeg"></a>
+<a href="./assets/OpenAthena-Concept-Illustration.jpeg"><img width="800" alt="comissioned graphic by fiver user frosthawk. Creative Commons share-alike license. A drone observes a target using the OpenAthena technique" src="./assets/OpenAthena-Concept-Illustration.jpeg"></a>
 
 
 Consumer drones typically have an on-board 3D GPS sensor for position, a magnetometer (compass) for heading/azimuth, and a sensitive barometer (atmospheric pressure sensor) to enhance altitude accuracy.
