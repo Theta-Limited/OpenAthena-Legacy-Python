@@ -11,7 +11,7 @@ This software is in pre-alpha. Use appropriate caution when using data generated
 
 # [**Premise**](https://github.com/mkrupczak3/OpenAthena#premise-1)
 [![pretty_good_skydio](./assets/pretty_good_skydio.jpg)](https://github.com/mkrupczak3/OpenAthena#premise-1)
-[![proof_of_concept](./assets/proof_of_concept.jpg)](https://github.com/mkrupczak3/OpenAthena#premise-1)
+[![concept illustrated diagram](./assets/OpenAthena_Concept_Diagram.png)](https://github.com/mkrupczak3/OpenAthena#premise-1)
 
 
 # [**Installation**](https://github.com/mkrupczak3/OpenAthena#install)
@@ -68,7 +68,8 @@ This project anticipates that UAS's may enable a dramatic upset to established c
 Due to the low altitude operation and inexpensive nature of such aircraft, they can counter concentrated combined arms forces even when higher-altitude air supremacy is not held or may not be achieved. In such a fashion, low altitude unmaned aircraft upset the role of high-altitude military aircraft as the only effective foil to ground-based combined arms.
 
 Additionally, the combination of existing combined arms with new precision fire capabilities may allow a unit to move more rapidly and gain ground at frightening speeds using classic [fire-and-movement](https://en.wikipedia.org/wiki/Fire_and_movement) tactics.
-![A diagram displaying a topographic map. A supporting element supresses an enemy target with fire while a friendly unit is in motion](https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Fire_and_movement.svg/1024px-Fire_and_movement.svg.png)
+<a href="https://en.wikipedia.org/wiki/Fire_and_movement"><img width="565" alt="A diagram displaying a topographic map. A supporting element supresses an enemy target with fire while a friendly unit is in motion" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Fire_and_movement.svg/1024px-Fire_and_movement.svg.png"></a>
+
 Precision indirect fire may suppress a target from beyond line of sight, reducing the burden of infantry to suppress a target while a friendly unit is in motion. Well-executed maneuvers under such conditions may out-pace a conventional force's ability to react, resupply, and reposition its own defenses.
 
 # Adapting to an upset
@@ -82,6 +83,8 @@ Effort should be made into producing inexpensive 'bird of prey' aircraft that ca
 # Premise
 
 ![concept illustrated diagram](./assets/OpenAthena_Concept_Diagram.png)
+<a href="./assets/OpenAthena-Concept-Illustration.jpeg"><img width="565" alt="comissioned graphic by fiver user frosthawk. Creative Commons share-alike license. A drone observes a target using the OpenAthena technique" src="./assets/OpenAthena-Concept-Illustration.jpeg"></a>
+
 
 Consumer drones typically have an on-board 3D GPS sensor for position, a magnetometer (compass) for heading/azimuth, and a sensitive barometer (atmospheric pressure sensor) to enhance altitude accuracy.
 
