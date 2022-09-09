@@ -277,7 +277,7 @@ SK42:
 
 ```
 
-The distance of each iterative step, in meters, is defined by the `increment` variable in `getTarget.py`
+The distance of each iterative step, in meters, is defined by the `increment` variable in `/src/config.py`
 
 
 The information in the following output lines represents the final positional resolution obtained by the approximate intersection of the constructed line emitted from the aircraft's camera and the ground as represented by the terrain data
