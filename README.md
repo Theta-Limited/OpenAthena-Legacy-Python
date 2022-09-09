@@ -144,7 +144,7 @@ CAUTION: it is _**highly recommended**_ that the aircraft's compass sensor is ca
 
 More info [**here**](drone_sensor_data_blurb.md)
 
-<a href="drone_sensor_data_blurb.md"><img width="565" alt="image of command line on MacOS, showing a target location calculated by OpenAthena parseImage.py" src="./assets/parseImage_interactive_example3.png"</a>
+<a href="drone_sensor_data_blurb.md"><img width="565" alt="image of command line on MacOS, showing a target location calculated by OpenAthena parseImage.py" src="./assets/parseImage_interactive_example3.png"></a>
 
 ### find_me_mode.py
 
