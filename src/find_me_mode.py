@@ -30,7 +30,7 @@ import mgrs # Military Grid ref converter
 
 from PIL import Image
 from PIL import ExifTags
-from PIL import ImageTk
+# from PIL import ImageTk
 
 import config # OpenAthena global variables
 
