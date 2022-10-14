@@ -360,6 +360,28 @@ def normalize(direction):
 
     return direction
 
+"""Radius At Lat Lon
+Given a latitude and longitude, return the radius of the WGS84 Ellipsoid at that reference
+
+return type is a Decimal object, measured in meters
+
+Parameters
+----------
+lat : (float)
+    geodetic latitude. assumed to be WGS84
+lon : (float)
+    geodetic longitude. assumed to be WGS84
+
+"""
+def radius_at_lat_lon(lat, lon):
+    A = decimal.Decimal(6378137.0) # equatorial radius of WGS ellipsoid, in meters
+    B = decimal.Decimal(6356752.3) # polar radius of WGS ellipsoid, in meters
+    r = (A * A * decimal.Decimal(cos(lat))) ** 2 + (B * B * decimal.Decimal(sin(lat))) ** 2 # numerator
+    r /= (A * decimal.Decimal(cos(lat))) ** 2 + (B * decimal.Decimal(sin(lat))) ** 2 # denominator
+    r = r ** (decimal.Decimal(0.5))  # square root
+    return r
+
+
 """Inverse Haversine formula
 via github.com/jdeniau
 given a point, distance, and heading, return the new point (lat lon)
@@ -388,8 +410,16 @@ def inverse_haversine(point, distance, azimuth, alt):
         return inverse_haversine(point, -distance, normalize(azimuth + math.pi), alt)
     lat, lon = point
     lat, lon = map(math.radians, (lat, lon))
-    d = distance
-    r = 6371000 + alt # average radius of earth + altitude
+
+
+    d = decimal.Decimal(distance)
+    # r = 6371000 + alt # average radius of earth + altitude # Old, bad
+    # calculate WGS84 radius at lat/lon
+    #     based on: gis.stackexchange.com/a/20250
+    #     R(f)^2 = ( (a^2 cos(f))^2 + (b^2 sin(f))^2 ) / ( (a cos(f))^2 + (b sin(f))^2 )
+
+    r = radius_at_lat_lon(lat, lon)
+    r = r + alt # actual height above or below idealized ellipsoid
 
     brng = azimuth
 
@@ -437,8 +467,8 @@ def haversine(lon1, lat1, lon2, lat2, alt):
     c = 2 * asin(sqrt(a))
     c = decimal.Decimal(c)
     # en.wikipedia.org/wiki/Earth_radius
-    r = 6371000 + alt # Radius of earth in meters. Use 3956 for miles. Determines return value units.
-    r = decimal.Decimal(r)
+    r = radius_at_lat_lon((lat1+lat2)/2, (lon1+lon2)/2)
+    r = r + decimal.Decimal(alt) # actual height above or below idealized ellipsoid
     return c * r
 
 """takes two lat/lon pairs (a start A and a destination B) and finds the heading of the shortest direction of travel from A to B
