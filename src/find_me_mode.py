@@ -359,6 +359,8 @@ def find_me_mode():
 
             while not " " in str(ch):
                 clear()
+                if os.name == 'nt':
+                    os.system('mode con: cols=100 lines=30')
                 print(f'Target🎯:{imgName}')
                 print(f'Date/Time🕰️ :{dateTime}')
 
