@@ -492,7 +492,7 @@ def haversine_bearing(lon1, lat1, lon2, lat2):
     dLon = (lon2 - lon1)
     x = math.cos(math.radians(lat2)) * math.sin(math.radians(dLon))
     y = math.cos(math.radians(lat1)) * math.sin(math.radians(lat2)) - math.sin(math.radians(lat1)) * math.cos(math.radians(lat2)) * math.cos(math.radians(dLon))
-    brng = math.atan2(x,y)
+    brng = math.atan2(x,y) # arguments intentionally swapped out of order
     brng = normalize(brng)
     brng = math.degrees(brng)
 
