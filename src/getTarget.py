@@ -46,7 +46,7 @@ def getTarget():
     elif 1 < len(sys.argv) and len(sys.argv) < 3:
         ext = sys.argv[1].split('.')[-1].lower()
         if ext != "tif":
-            if ext in ["dt0", "dt1", "dt2"]:
+            if ext in ["dt0", "dt1", "dt2", "dt3", "dt4", "dt5"]:
                 print(f'FILE FORMAT ERROR: DTED format ".{ext}" not supported. Please use a GeoTIFF ".tif" file!')
             outstr = f'FATAL ERROR: got argument: {sys.argv[1]}, expected GeoTIFF ".tif" DEM!'
             sys.exit(outstr)

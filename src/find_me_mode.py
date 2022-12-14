@@ -147,9 +147,9 @@ def find_me_mode():
                 errstr = f"FATAL ERROR: path {directory} could not be processed"
                 sys.exit(errstr)
 
-        elif segment.split('.')[-1].lower() in ["tif", "dt0", "dt1", "dt2"]:
+        elif segment.split('.')[-1].lower() in ["tif", "dt0", "dt1", "dt2", "dt3", "dt4", "dt5"]:
             ext = segment.split('.')[-1].lower()
-            if ext in ["dt0", "dt1", "dt2"]:
+            if ext in ["dt0", "dt1", "dt2", "dt3", "dt4", "dt5"]:
                 print(f'FILE FORMAT ERROR: DTED format ".{ext}" not supported. Please use a GeoTIFF ".tif" file!')
                 outstr = f'FATAL ERROR: got argument: {segment}, expected GeoTIFF (".tif") DEM!'
                 sys.exit(outstr)
