@@ -22,8 +22,6 @@ import getTarget
 
 def main():
 
-    print("Hello World!")
-    print("I'm parseGeoTIFF.py")
     if ("--version" in sys.argv or "-v" in sys.argv or "-V" in sys.argv or
         "V" in sys.argv or "version" in sys.argv):
         #
@@ -33,9 +31,6 @@ def main():
         "-H" in sys.argv or "H" in sys.argv or "help" in sys.argv):
         #
         outstr = "usage: parseGeoTIFF.py [Rome-30m-DEM.tif]\n\nparseGeoTIFF.py may display a render of a GeoTIFF Digital Elevation Model.\nA GUI window will appear with an image render,\nmouse-over the image to view a tooltip where:\nx=longitude y=latitude [altitude from sea level]\n\nIf you exit the GUI, you will then be prompted for a latitude and longitude.\nYou may exit the program with CTRL+C, otherwise input a latitude and longitude\nto recieve the altitude of the nearest DEM datapoint"
-
-
-    print("Which File would you like to read?")
 
     if 1 < len(sys.argv) and len(sys.argv) < 3:
         if sys.argv[1].split('.')[-1].lower() != "tif":
