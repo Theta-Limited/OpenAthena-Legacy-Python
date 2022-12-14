@@ -44,8 +44,11 @@ def getTarget():
         outstr = "usage: getTarget.py [Rome-30m-DEM.tif]\n\ngetTarget.py may take a GeoTIFF DEM (.tif) and manual sensor metadata as input,\nprovides a target match location as output (if possible)"
         sys.exit(outstr)
     elif 1 < len(sys.argv) and len(sys.argv) < 3:
-        if sys.argv[1].split('.')[-1].lower() != "tif":
-            outstr = f'FATAL ERROR: got argument: {sys.argv[1]}, expected GeoTIFF DEM!'
+        ext = sys.argv[1].split('.')[-1].lower()
+        if ext != "tif":
+            if ext in ["dt0", "dt1", "dt2"]:
+                print(f'FILE FORMAT ERROR: DTED format ".{ext}" not supported. Please use a GeoTIFF ".tif" file!')
+            outstr = f'FATAL ERROR: got argument: {sys.argv[1]}, expected GeoTIFF ".tif" DEM!'
             sys.exit(outstr)
         else:
             filename = sys.argv[1].strip()

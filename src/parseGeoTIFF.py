@@ -33,8 +33,11 @@ def main():
         outstr = "usage: parseGeoTIFF.py [Rome-30m-DEM.tif]\n\nparseGeoTIFF.py may display a render of a GeoTIFF Digital Elevation Model.\nA GUI window will appear with an image render,\nmouse-over the image to view a tooltip where:\nx=longitude y=latitude [altitude from sea level]\n\nIf you exit the GUI, you will then be prompted for a latitude and longitude.\nYou may exit the program with CTRL+C, otherwise input a latitude and longitude\nto recieve the altitude of the nearest DEM datapoint"
 
     if 1 < len(sys.argv) and len(sys.argv) < 3:
-        if sys.argv[1].split('.')[-1].lower() != "tif":
-            outstr = f'FATAL ERROR: got argument: {sys.argv[1]}, expected GeoTIFF DEM!'
+        ext = sys.argv[1].split('.')[-1].lower()
+        if ext != "tif":
+            if ext in ["dt0", "dt1", "dt2"]:
+                print(f'FILE FORMAT ERROR: DTED format ".{ext}" not supported. Please use a GeoTIFF ".tif" file!')
+            outstr = f'FATAL ERROR: got argument: {sys.argv[1]}, expected GeoTIFF (".tif") DEM!'
             sys.exit(outstr)
         else:
             geofile = sys.argv[1].strip()
@@ -42,10 +45,10 @@ def main():
         print("Hello World!")
         print("I'm parseGeoTIFF.py")
         print("Which File would you like to read?")
-        geofile = input("Enter the GeoTIF filename: ").strip()
+        geofile = input("Enter the GeoTIFF filename: ").strip()
     # geofile = 'Rome-30m-DEM.tif'
 
-    print("Okay, grabbing the GeoTIF file named: ", geofile, "\n")
+    print("Okay, grabbing the GeoTIFF file named: ", geofile, "\n")
 
 
     # based on:
@@ -101,7 +104,7 @@ def main():
     dxdy = dydx = 0
 
     # This should help with type conversion
-    # mx+b ?
+    # mx+b
     x1 = x0 + dx * ncols
     y1 = y0 + dy * nrows
 
@@ -177,8 +180,11 @@ def getGeoFileFromUser():
     while geoFile is None:
         geofilename = str(input("Enter the GeoTIFF filename: "))
         geofilename.strip()
-        if geofilename.isdecimal() or geofilename.isnumeric():
-            print(f'ERROR: filename {geofilename} does not contain at least 1 non-digit character')
+        ext = sys.argv[1].split('.')[-1].lower()
+        if ext != "tif":
+            if ext in ["dt0", "dt1", "dt2"]:
+                print(f'FILE FORMAT ERROR: DTED format ".{ext}" not supported. Please use a GeoTIFF ".tif" file!')
+            print('ERROR: user input was: {sys.argv[1]}, but expected GeoTIFF ".tif" DEM!')
             print('Please try again')
             continue
         else:

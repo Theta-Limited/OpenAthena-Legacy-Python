@@ -14,3 +14,12 @@ skydio*.jpg
 Disco_*
 MAX_*
 parrot*.jpg
+*.dt0
+*.dt1
+*.dt2
+*.dir
+*.gaz
+*.hsh
+*.key
+dmed.*
+Read.me

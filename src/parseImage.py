@@ -85,8 +85,11 @@ def parseImage():
     #     the first argument must be a geoTiff filename
     #     and every other argument after is a drone image filename
     if len(sys.argv) > 1:
-        if sys.argv[1].split('.')[-1].lower() != "tif":
-            outstr = f'FATAL ERROR: got first argument: {sys.argv[1]}, expected GeoTIFF DEM!'
+        ext = sys.argv[1].split('.')[-1].lower()
+        if ext != "tif":
+            if ext in ["dt0", "dt1", "dt2"]:
+                print(f'FILE FORMAT ERROR: DTED format ".{ext}" not supported. Please use a GeoTIFF ".tif" file!')
+            outstr = f'FATAL ERROR: got first argument: {sys.argv[1]}, expected GeoTIFF ".tif" DEM!'
             sys.exit(outstr)
 
         elevationData, (x0, dx, dxdy, y0, dydx, dy) = getGeoFileFromString(sys.argv[1])

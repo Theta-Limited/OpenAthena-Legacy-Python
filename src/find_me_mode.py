@@ -147,16 +147,22 @@ def find_me_mode():
                 errstr = f"FATAL ERROR: path {directory} could not be processed"
                 sys.exit(errstr)
 
-        elif segment.split('.')[-1].lower() == "tif":
-            geofilename = segment
-            elevationData, (x0, dx, dxdy, y0, dydx, dy) = getGeoFileFromString(geofilename)
-            nrows, ncols = elevationData.shape
-            x1 = x0 + dx * ncols
-            y1 = y0 + dy * nrows
-            # # had to remove this check switching from gdal -> geotiff libraries :(
-            # ensureValidGeotiff(dxdy, dydx)
-            xParams = (x0, x1, dx, ncols)
-            yParams = (y0, y1, dy, nrows)
+        elif segment.split('.')[-1].lower() in ["tif", "dt0", "dt1", "dt2"]:
+            ext = segment.split('.')[-1].lower()
+            if ext in ["dt0", "dt1", "dt2"]:
+                print(f'FILE FORMAT ERROR: DTED format ".{ext}" not supported. Please use a GeoTIFF ".tif" file!')
+                outstr = f'FATAL ERROR: got argument: {segment}, expected GeoTIFF (".tif") DEM!'
+                sys.exit(outstr)
+            else:
+                geofilename = segment
+                elevationData, (x0, dx, dxdy, y0, dydx, dy) = getGeoFileFromString(geofilename)
+                nrows, ncols = elevationData.shape
+                x1 = x0 + dx * ncols
+                y1 = y0 + dy * nrows
+                # # had to remove this check switching from gdal -> geotiff libraries :(
+                # ensureValidGeotiff(dxdy, dydx)
+                xParams = (x0, x1, dx, ncols)
+                yParams = (y0, y1, dy, nrows)
 
     #end for loop
 
@@ -178,7 +184,7 @@ def find_me_mode():
         sys.exit(errstr)
 
     if elevationData is None:
-        errstr = "FATAL ERROR: no valid GeoTIFF (.tif) Digital Elevation Model provided!"
+        errstr = "FATAL ERROR: no valid GeoTIFF (\".tif\") Digital Elevation Model provided!"
         sys.exit(errstr)
 
     if (lat > y0 or lat < y1) or (lon < x0 or lon > x1):
