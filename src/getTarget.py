@@ -275,14 +275,15 @@ def resolveTarget(y, x, z, azimuth, theta, elevationData, xParams, yParams):
     y1 = yParams[1]
 
     dx = xParams[2]
-    #meters of acceptable distance between constructed line and datapoint
-    threshold = abs(dx) / 4.0
 
-    #meters of increment for each stepwise check (along constructed line)
+
+    post_spacing_meters = haversine(0, y, dx, y, z) # meters between datapoints, from degrees
+    threshold = abs(post_spacing_meters) / decimal.Decimal(8.0) # meters of acceptable distance between constructed line and datapoint. somewhat arbitrary
+
+    # meters of increment for each stepwise check (along constructed line)
     increment = decimal.Decimal(config.increment)
 
     # start at the aircraft's position
-
     curY = decimal.Decimal(y)
     curX = decimal.Decimal(x)
     curZ = decimal.Decimal(z)
