@@ -9,6 +9,12 @@ OpenAthena may prove especially useful for life-saving civilian search and rescu
 
 This software is in pre-alpha. Use appropriate caution when using data generated from this program.
 
+## OpenAthena for Android
+
+Looking for [OpenAthena for Android](https://github.com/mkrupczak3/OpenAthenaAndroid)? View that project [here](https://github.com/mkrupczak3/OpenAthenaAndroid)
+
+<a href="https://github.com/mkrupczak3/OpenAthenaAndroid"><img width="565" alt="A screenshot from OpenAthena for Android displaying a NATO MGRS target resolution" src="https://github.com/mkrupczak3/OpenAthenaAndroid/raw/master/assets/DJI_0419_Target_Res_Demo_landscape.png"></a>
+
 # [**Premise**](https://github.com/mkrupczak3/OpenAthena#premise-1)
 [![pretty_good_skydio](./assets/pretty_good_skydio.jpg)](https://github.com/mkrupczak3/OpenAthena#premise-1)
 [![concept illustrated diagram](./assets/OpenAthena_Concept_Diagram.png)](https://github.com/mkrupczak3/OpenAthena#premise-1)
