@@ -292,6 +292,9 @@ def resolveTarget(y, x, z, azimuth, theta, elevationData, xParams, yParams):
         print(f'ERROR: resolveTarget ran out of bounds at {round(curY,4)}, {round(curX,4)}, {round(curZ,1)}m', file=sys.stderr)
         print('ERROR: Please ensure target location is within GeoTIFF dataset bounds', file=sys.stderr)
         return None
+    elif (curZ < float(groundAlt)):
+        print(f'ERROR: resolveTarget failed, bad sensor or elevation data.\nInitial drone altitude: {round(curZ)}m, terrain altitude: {groundAlt}m\nThis image is unusable.', file=sys.stderr)
+        return None
     altDiff = curZ - groundAlt
     while altDiff > threshold:
         groundAlt = parseGeoTIFF.getAltFromLatLon(curY, curX, xParams, yParams, elevationData)
@@ -393,7 +396,6 @@ a certain distance along the great circle
 
 for short distances, this is close to the straight line distance
 
-this function assumes the earth is a sphere instead of a slight ellipsoid, which introduces a minor amount of error
 
 Parameters
 ----------
@@ -439,8 +441,6 @@ determines the great circle distance (meters) between
 two lattitude longitude pairs
 
 for short distances, this is close to the straight-line distance
-
-this function assumes the earth is a sphere instead of a slight ellipsoid, which introduces a minor amount of error
 
 Parameters
 ----------
