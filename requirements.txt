@@ -2,3 +2,4 @@ geotiff~=0.2.7
 matplotlib~=3.5.1
 mgrs~=1.4.5
 pillow~=9.0.1
+imagecodecs~=2021.11.20; platform_machine != 'arm64'
