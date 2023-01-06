@@ -1,11 +1,11 @@
-# Open Athena™
+# Open Athena
 ![Carole Raddato - Statue of Athena wearing a Corinthian helmet - CC Share Alike license](./assets/athena_thumb.jpg)
 
-Open Athena™ is a project which allows consumer and professional drones to spot precise locations through their images. This is accomplished by combining their [sensor metadata](./drone_sensor_data_blurb.md) with [an offline-ready Digital Elevation Model](./EIO_fetch_geotiff_example.md) to provide the instant location of what is being observed
+OpenAthena™ is a project which allows consumer and professional drones to spot precise locations through their images. This is accomplished by combining their [sensor metadata](./drone_sensor_data_blurb.md) with [an offline-ready Digital Elevation Model](./EIO_fetch_geotiff_example.md) to provide the instant location of what is being observed
 
 🖼️👨‍💻 + 🧮⛰️ = 🎯📍
 
-Open Athena™ may prove especially useful for life-saving civilian search and rescue (SAR) and other commercial applications. For military use, this technique may greatly reduce the incidence of errors during the process of [forward artillery observation](https://en.wikipedia.org/wiki/Artillery_observer). This may profoundly reduce harm to civilian lives and property in warfare.
+OpenAthena may prove especially useful for life-saving civilian search and rescue (SAR) and other commercial applications. For military use, this technique may greatly reduce the incidence of errors during the process of [forward artillery observation](https://en.wikipedia.org/wiki/Artillery_observer). This may profoundly reduce harm to civilian lives and property in warfare.
 
 This software is in pre-alpha. Use appropriate caution when using data generated from this program.
 
@@ -13,7 +13,7 @@ This software is in pre-alpha. Use appropriate caution when using data generated
 
 Looking for [OpenAthena for Android](https://github.com/mkrupczak3/OpenAthenaAndroid)? View that project [here](https://github.com/mkrupczak3/OpenAthenaAndroid)
 
-<a href="https://github.com/mkrupczak3/OpenAthenaAndroid"><img width="565" alt="A screenshot from Open Athena™ for Android displaying a NATO MGRS target resolution" src="https://github.com/mkrupczak3/OpenAthenaAndroid/raw/master/assets/DJI_0419_Target_Res_Demo_landscape.png"></a>
+<a href="https://github.com/mkrupczak3/OpenAthenaAndroid"><img width="565" alt="A screenshot from Open Athena for Android displaying a NATO MGRS target resolution" src="https://github.com/mkrupczak3/OpenAthenaAndroid/raw/master/assets/DJI_0419_Target_Res_Demo_landscape.png"></a>
 
 # [**Premise**](https://github.com/mkrupczak3/OpenAthena#premise-1)
 [![pretty_good_skydio](./assets/pretty_good_skydio.jpg)](https://github.com/mkrupczak3/OpenAthena#premise-1)
@@ -88,7 +88,7 @@ Effort should be made into producing inexpensive 'bird of prey' aircraft that ca
 
 # Premise
 
-<a href="./assets/OpenAthena-Concept-Illustration.jpeg"><img width="800" alt="comissioned graphic by fiver user frosthawk. Creative Commons share-alike license. A drone observes a target using the Open Athena™ technique" src="./assets/OpenAthena-Concept-Illustration.jpeg"></a>
+<a href="./assets/OpenAthena-Concept-Illustration.jpeg"><img width="800" alt="comissioned graphic by fiver user frosthawk. Creative Commons share-alike license. A drone observes a target using the OpenAthena™ technique" src="./assets/OpenAthena-Concept-Illustration.jpeg"></a>
 
 
 Consumer drones typically have an on-board 3D GPS sensor for position, a magnetometer (compass) for heading/azimuth, and a sensitive barometer (atmospheric pressure sensor) to enhance altitude accuracy.
@@ -99,7 +99,7 @@ Importantly, such drones usually have a camera with a movable gimbal system.
 
 The camera starts level with the horizon during normal operation, and the operator can pitch it downwards towards the ground for taking pictures. These pictures store GPS coordinates, altitude, and the azimuth and angle of depression downward (pitch) in their XMP and EXIF metadata (attached with the image)
 
-Given that the lat/lon and altitude of the aircraft is known, its azimuth is known, and it is possible to obtain accurate worldwide elevation data (within ~30m) from [this api](https://pypi.org/project/elevation/), Open Athena™ calculates the position and altitude of the terrain aimed at by the camera.
+Given that the lat/lon and altitude of the aircraft is known, its azimuth is known, and it is possible to obtain accurate worldwide elevation data (within ~30m) from [this api](https://pypi.org/project/elevation/), OpenAthena calculates the position and altitude of the terrain aimed at by the camera.
 
 A constructed mathematical line (ray) is traced from the aircraft's camera towards the ground at its heading (azimuth) and angle of depression (theta) from the horizon. The point closest along this line yet reasonably near a geographic lat/lon/alt data point is usually the target which the camera is aiming at. This calculation provides the aircraft operator with a latitude, longitude, and elevation of the target to which the camera is aiming in an extremely short period of time.
 
@@ -144,7 +144,7 @@ If you encounter an error, please submit an issue to the Open Athena™ GitHub p
 
 ### parseImage.py
 
-[parseImage.py](./src/parseImage.py) can perform automatic extraction and use of EXIF/XMP sensor metadata from drone photos. This allows for the automatic extraction and use of metadata including the aircraft camera's position, altitude, azimuth, and angle of depression (theta). Open Athena™ (if provided [terrain elevation data](./EIO_fetch_geotiff_example.md)) will extract and use these values automaticaly to find the location on the ground in the exact center of the image
+[parseImage.py](./src/parseImage.py) can perform automatic extraction and use of EXIF/XMP sensor metadata from drone photos. This allows for the automatic extraction and use of metadata including the aircraft camera's position, altitude, azimuth, and angle of depression (theta). OpenAthena (if provided [terrain elevation data](./EIO_fetch_geotiff_example.md)) will extract and use these values automaticaly to find the location on the ground in the exact center of the image
 
 CAUTION: it is _**highly recommended**_ that the aircraft's compass sensor is calibrated before each flight
 
