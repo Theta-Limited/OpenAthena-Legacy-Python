@@ -138,8 +138,8 @@ def parseImage():
 
         sensData = None, None, None, None, None
         target = None
-        # try:
-        if True:
+        try:
+        # if True:
             #from stackoverflow.com/a/14637315
             #    if XMP in image is spread in multiple pieces, this
             #    approach will fail to extract data in all
@@ -237,8 +237,8 @@ def parseImage():
                 print(f'ERROR with {thisImage}, xmp data not found!', file=sys.stderr)
                 print(f'skipping {thisImage}', file=sys.stderr)
                 continue
-        else:
-        # except:
+        # else:
+        except:
             print(f'ERROR with filename {thisImage}, skipping...', file=sys.stderr)
             continue
         #
