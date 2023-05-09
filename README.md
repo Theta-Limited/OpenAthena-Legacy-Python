@@ -74,7 +74,10 @@ This project anticipates that UAS's may enable a dramatic upset to established c
 Due to the low altitude operation and inexpensive nature of such aircraft, they can counter concentrated combined arms forces even when higher-altitude air supremacy is not held or may not be achieved. In such a fashion, low altitude unmaned aircraft upset the role of high-altitude military aircraft as the only effective foil to ground-based combined arms.
 
 Additionally, the combination of existing combined arms with new precision fire capabilities may allow a unit to move more rapidly and gain ground at frightening speeds using classic [fire-and-movement](https://en.wikipedia.org/wiki/Fire_and_movement) tactics.
+
+
 <a href="https://en.wikipedia.org/wiki/Fire_and_movement"><img width="565" alt="A diagram displaying a topographic map. A supporting element supresses an enemy target with fire while a friendly unit is in motion" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Fire_and_movement.svg/1024px-Fire_and_movement.svg.png"></a>
+
 
 Precision indirect fire may suppress a target from beyond line of sight, reducing the burden of infantry to suppress a target while a friendly unit is in motion. Well-executed maneuvers under such conditions may out-pace a conventional force's ability to react, resupply, and reposition its own defenses.
 
@@ -248,7 +251,7 @@ Next, enter the latitude, then longitude, then altitude of the aircraft (standar
 ```bash
 Please enter aircraft latitude in (+/-) decimal form: 41.801
 Please enter aircraft longitude in (+/-) decimal form: 12.6483
-Please enter altitude (meters from sea-level) in decimal form: 500
+Please enter altitude (meters above WGS84 ellipsoid) in decimal form: 500
 Please enter camera azimuth (0 is north) in decimal form (degrees):
 ```
 
@@ -258,27 +261,27 @@ Next, enter the heading of the aircraft (in degrees, 0 is north and increasing c
 
 ```bash
 Please enter camera azimuth (0 is north) in decimal form (degrees): 315
-Please enter angle of declination (degrees down from forward) in decimal form: 20
+Please enter angle of declanation (degrees down from forward) in decimal form: 20
 
-Approximate range to target: 1031
+Approximate range to target: 1026
 
-Approximate WGS84 alt (constructed): 148
-Approximate alt (terrain): 148
+Approximate WGS84 alt (constructed): 150
+Approximate alt (terrain): 147
 
 Target:
-WGS84 (lat, lon): 41.807161, 12.640036 Alt: 148
-Google Maps: https://maps.google.com/?q=41.807161,12.640036
+WGS84 (lat, lon): 41.807133, 12.640073 Alt: 150
+Google Maps: https://maps.google.com/?q=41.807133,12.640073
 
-NATO MGRS: 33TUG0395831058 Alt: 148
-MGRS 10m: 33TUG03953105
+NATO MGRS: 33TUG0396131054 Alt: 150
+MGRS 10m: 33TUG03963105
 MGRS 100m: 33TUG039310
 
-SK42:
-    Geodetic (°): 41.807634, 12.641757 Alt: 98
+SK42 (истема координат 1942 года):
+    Geodetic (°): 41.807606, 12.641794 Alt: 99
     Geodetic (° ' "):
-      41° 48' 27.48" N
-      12° 38' 30.33" E
-    Gauss-Krüger (meters): ZONE: 3 X: 46 33042 Y: 3 4021 Alt: 98
+      41° 48' 27.38" N
+      12° 38' 30.46" E
+    Gauss-Krüger (meters): ZONE: 3 X: 46 33039 Y: 3 04024 Alt: 99
 
 ```
 
@@ -294,10 +297,10 @@ The values should be tested for correctness
 `Approximate range to target:` represents the direct-line distance in meters from the aircraft to the target. This may be useful for an operator to determine if the target match is in the expected place. To obtain the horizontal distance, multiply this number times the cosine of theta
 
 
-`Approximate alt (constructed)` represents the aproximate altitude (in meters from sea level) of the target according to the altitude of the last iteration along the constructed line
+`Approximate alt (constructed)` represents the aproximate altitude (height above WGS84 reference ellipsoid, in meters) of the target according to the altitude of the last iteration along the constructed line
 
 
-`Approximate alt (terrain):` represents the aproximate altitude (in meters from sea level) of the target according to the terrain data point closest to the final lat./lon. pair
+`Approximate alt (terrain):` represents the aproximate altitude (height above WGS84 reference ellipsoid, in meters) of the target according to the terrain data points closest to the final lat./lon. pair
 
 
 `WGS84 (lat, lon):` represents the latitude and longitude of the target to which the camera is likely aiming at. These values, in degrees, are from the common [WGS84 coordinate system](https://en.wikipedia.org/wiki/World_Geodetic_System)

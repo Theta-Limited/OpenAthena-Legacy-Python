@@ -318,7 +318,7 @@ def parseImage():
                 else:
                     # edge case where drone camera is pointed straight down
                     tarZ = float(terrainAlt)
-                print(f'Approximate WGS84 alt (terrain): {terrainAlt}\n')
+                print(f'Approximate WGS84 alt (terrain): {round(terrainAlt)}\n')
 
                 print('Target:')
                 print(f'WGS84 (lat, lon): {round(tarY, 6)}, {round(tarX, 6)} Alt: {math.ceil(tarZ)}')
@@ -417,8 +417,11 @@ def handleDJI( xmp_str, elements=None):
     try:
         y = float(dict[[e for e in elements if "GpsLatitude" in e][0]])
     except ValueError:
+        print("Value Error")
         return None
     except TypeError:
+        print(str(dict[[e for e in elements if "GpsLatitude" in e][0]]))
+        print("Type Error")
         return None
 
     # Autel drones have a typo, "GpsLongtitude" instead of "GpsLongitude"
@@ -431,6 +434,7 @@ def handleDJI( xmp_str, elements=None):
     if len(typoAgnostic) == 1:
         typoAgnostic = typoAgnostic[0]
     else:
+        print("Typo Agnostic")
         return None
     x = float(dict[typoAgnostic])
 
@@ -439,6 +443,10 @@ def handleDJI( xmp_str, elements=None):
     azimuth = float(dict[[e for e in elements if "GimbalYawDegree" in e][0]])
 
     theta = abs(float(dict[[e for e in elements if "GimbalPitchDegree" in e][0]]))
+
+    if azimuth == 0.0 and theta == 0.0:
+        print(f'ERROR: camera orientation invalid. Your modle drone may be incompatible with this software')
+        return None
 
     if y is None or x is None or z is None or azimuth is None or theta is None:
         return None
@@ -856,7 +864,10 @@ def exifGetYXZ(exifData):
     if lonDir == "W":
         x = x * -1.0
 
+    altDir = GPSInfo[5] # GPSInfo.GPSAltitudeRef 0 if positive elevation, 1 if negative
     z = GPSInfo[6]
+    if altDir == 1:
+        z *= -1.0
 
     try:
         y = float(y)
