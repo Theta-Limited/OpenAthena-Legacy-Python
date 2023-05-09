@@ -30,7 +30,7 @@ def main():
     if len(sys.argv) == 1 or ("--help" in sys.argv or "-h" in sys.argv or
         "-H" in sys.argv or "H" in sys.argv or "help" in sys.argv):
         #
-        outstr = "usage: parseGeoTIFF.py [Rome-30m-DEM.tif]\n\nparseGeoTIFF.py may display a render of a GeoTIFF Digital Elevation Model.\nA GUI window will appear with an image render,\nmouse-over the image to view a tooltip where:\nx=longitude y=latitude [altitude from sea level]\n\nIf you exit the GUI, you will then be prompted for a latitude and longitude.\nYou may exit the program with CTRL+C, otherwise input a latitude and longitude\nto recieve the altitude of the nearest DEM datapoint"
+        outstr = "usage: parseGeoTIFF.py [Rome-30m-DEM.tif]\n\nparseGeoTIFF.py may display a render of a GeoTIFF Digital Elevation Model.\nA GUI window will appear with an image render,\nmouse-over the image to view a tooltip where:\nx=longitude y=latitude [height above WGS84 reference ellipsoid]\n\nIf you exit the GUI, you will then be prompted for a latitude and longitude.\nYou may exit the program with CTRL+C, otherwise input a latitude and longitude\nto recieve the altitude of the nearest DEM datapoint"
 
     if 1 < len(sys.argv) and len(sys.argv) < 3:
         ext = sys.argv[1].split('.')[-1].lower()
@@ -180,7 +180,7 @@ def getGeoFileFromUser():
     while geoFile is None:
         geofilename = str(input("Enter the GeoTIFF filename: "))
         geofilename.strip()
-        ext = sys.argv[1].split('.')[-1].lower()
+        ext = geofilename.split('.')[-1].lower()
         if ext != "tif":
             if ext in ["dt0", "dt1", "dt2", "dt3", "dt4", "dt5"]:
                 print(f'FILE FORMAT ERROR: DTED format ".{ext}" not supported. Please use a GeoTIFF ".tif" file!')
@@ -252,7 +252,7 @@ def getGeoFileFromUser():
 
 
 """given a latitude and longitude, obtain the altitude (elevation)
-   from the nearest point
+   estimated from the nearest samples
 
 Parameters
 ----------
@@ -300,21 +300,47 @@ def getAltFromLatLon(lat, lon, xParams, yParams, elevation):
 
     lat, lon = decimal.Decimal(lat), decimal.Decimal(lon)
 
-    xIndex = None
-    if ( abs(lon - (x0 + xL * dx)) < abs(lon - (x0 + xR * dx))):
-        xIndex = xL
-    else:
-        xIndex = xR
+    L1 = (y0 + yT * dy, x0 + xR * dx, decimal.Decimal(int(elevation[yT][xR])))
+    L2 = (y0 + yT * dy, x0 + xL * dx, decimal.Decimal(int(elevation[yT][xL])))
+    L3 = (y0 + yB * dy, x0 + xL * dx, decimal.Decimal(int(elevation[yB][xL])))
+    L4 = (y0 + yB * dy, x0 + xR * dx, decimal.Decimal(int(elevation[yB][xR])))
+    samples = [L1, L2, L3, L4]
+    target = (lat, lon)
 
-    yIndex = None
-    if (abs(lat - (y0 + yT * dy)) < abs(lat - (y0 + yB * dy))):
-        yIndex = yT
-    else:
-        yIndex = yB
+    power = decimal.Decimal(2.0)
+    return idwInterpolation(target, samples, power)
 
-    outElevation = elevation[yIndex][xIndex]
-    # return the elevation of the nearest of 4 bounding datapoints
-    return outElevation
+    # xIndex = None
+    # if ( abs(lon - (x0 + xL * dx)) < abs(lon - (x0 + xR * dx))):
+    #     xIndex = xL
+    # else:
+    #     xIndex = xR
+
+    # yIndex = None
+    # if (abs(lat - (y0 + yT * dy)) < abs(lat - (y0 + yB * dy))):
+    #     yIndex = yT
+    # else:
+    #     yIndex = yB
+
+    # outElevation = elevation[yIndex][xIndex]
+    # # return the elevation of the nearest of 4 bounding datapoints
+    # return outElevation
+
+
+def idwInterpolation(target, samples, power):
+    sumWeights = decimal.Decimal(0.0)
+    sumWeightedElevations = decimal.Decimal(0.0)
+
+    for neighbor in samples:
+        distance = getTarget.haversine(target[1], target[0], neighbor[1], neighbor[0], neighbor[2])
+        if (abs(distance) <= 0.5):
+            return neighbor[2]
+
+        weight = decimal.Decimal(1.0) / (distance ** power)
+        sumWeights += weight
+        sumWeightedElevations += weight * neighbor[2]
+
+    return sumWeightedElevations / sumWeights
 
 
 """given a list and value, return a tuple of the two indexes in list whose value is closest to value

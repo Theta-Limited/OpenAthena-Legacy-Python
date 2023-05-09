@@ -78,7 +78,7 @@ def getTarget():
     #     i.e. (y,x)
     y = inputNumber("Please enter aircraft latitude in (+/-) decimal form: ", y1, y0)
     x = inputNumber("Please enter aircraft longitude in (+/-) decimal form: ", x0, x1)
-    z = inputNumber("Please enter altitude (meters from sea-level) in decimal form: ", -423, 8848)
+    z = inputNumber("Please enter altitude (meters above WGS84 ellipsoid) in decimal form: ", -423, 8848)
     azimuth = inputNumber("Please enter camera azimuth (0 is north) in decimal form (degrees): ", -180, 360)
     if (azimuth < 0):
 
@@ -102,7 +102,7 @@ def getTarget():
         else:
             # edge case where drone camera is pointed straight down
             tarZ = float(terrainAlt)
-        print(f'Approximate alt (terrain): {terrainAlt}\n')
+        print(f'Approximate alt (terrain): {round(terrainAlt)}\n')
 
         print('Target:')
         print(f'WGS84 (lat, lon): {round(tarY, 6)}, {round(tarX, 6)} Alt: {math.ceil(tarZ)}')
@@ -180,7 +180,7 @@ y : float
 x : float
     longitude of aircraft
 z : float
-    altitude of aircraft, meters from sea level
+    elevation of aircraft, meters above WGS84 reference ellipsoid
     accuracy is greatly improved on most aircraft with
     barometric sensor, sometimes ultrasonic sensors too
 azimuth : float
