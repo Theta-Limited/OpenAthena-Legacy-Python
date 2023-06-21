@@ -4,11 +4,13 @@ Use of OpenAthena requires loading a GeoTIFF Digital Elevation Model (DEM) file,
 
 GeoTIFF files store terrain elevation (height) for an area of the Earth. OpenAthena performs a ray-cast from a drone camera's position and orientation towards terrain (as represented by the DEM). This may be used to precisely locate the subject which appears in the exact center of a given picture.
 
+**OpenAthena for iOS only supports GeoTIFF file generated with Method 1**
+
 There are **two methods** supported for obtaining DEM GeoTIFF files. **Method 1** is recommended for users on Windows computers, **Method 2** is recommended for users on Mac or Linux.
 
 # Method 1 (Windows)
 
-The website [OpenTopography.org](https://opentopography.org) (which is not affiliated with OpenAthena) has a free browser-based tool for downloading a customized portion of the SRTM 30m Global terrain elevation dataset. 
+The website [OpenTopography.org](https://opentopography.org) (which is not affiliated with OpenAthena) has a free browser-based tool for downloading a customized portion of the SRTM 30m Global terrain elevation dataset.
 
 Open the tool here:
 
@@ -18,7 +20,7 @@ Ensure that you are using the correct dataset. The title of the page should appe
 <a href="https://portal.opentopography.org/raster?opentopoID=OTSRTM.082015.4326.1
 "><img width="565" alt="Screenshot of the SRTM GL1 Global 30m download page on opentopography.com" src="./assets/opentopography_dot_org_DEM_del_demo.png"></a>
 
-Next, zoom into the area for which you wish to download a Digital Elevation Model for use with OpenAthena. 
+Next, zoom into the area for which you wish to download a Digital Elevation Model for use with OpenAthena.
 
 
 When you're ready, click the blue square button which reads "SELECT A REGION". Click and drag your mouse cursor until the desired area is covered by a rectangle, as demonstrated in the image below:
@@ -41,7 +43,7 @@ Once your job is completed, a link will become available to download your GeoTIF
 
 Click on the link to download the `.tar.gz` tarball file (which contains your desired GeoTIFF DEM).
 
-Once it is downloaded, you must extract your desired DEM from the compressed file. Open up a PowerShell window (a program included with Windows 10). If you are using a system older than Windows 10 or PowerShell is not available to you, you may use the program [7-zip](https://www.7-zip.org/) instead for this step. 
+Once it is downloaded, you must extract your desired DEM from the compressed file. Open up a PowerShell window (a program included with Windows 10). If you are using a system older than Windows 10 or PowerShell is not available to you, you may use the program [7-zip](https://www.7-zip.org/) instead for this step.
 
 By default, you may type in the command:
 ```
@@ -57,10 +59,10 @@ dir
 
 to obtain a list of files in the current directory. Observe that your downloaded tarball file should appear in this list. When ready, type the following but do not yet press the "RETURN" key:
 ```
-tar -xzvf 
+tar -xzvf
 ```
 
-type in a space charachter ` `, then type `rasters` and press the `TAB` key, located on your keyboard above `CAPS LOCK`. PowerShell will automatically complete the rest of the filename for your downloaded tarball file. 
+type in a space charachter ` `, then type `rasters` and press the `TAB` key, located on your keyboard above `CAPS LOCK`. PowerShell will automatically complete the rest of the filename for your downloaded tarball file.
 
 If the filename appears correctly, press the "RETURN" key to run the command in PowerShell:
 
