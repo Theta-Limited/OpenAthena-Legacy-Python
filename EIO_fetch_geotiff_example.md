@@ -2,7 +2,7 @@
 
 Use of OpenAthena requires loading a GeoTIFF Digital Elevation Model (DEM) file, stored as a GeoTIFF `.tif` file.
 
-GeoTIFF files store terrain elevation (height) for an area of the Earth. OpenAthena performs a ray-cast from a drone camera's position and orientation towards terrain (as represented by the DEM). This may be used to precisely locate the subject which appears in the exact center of a given picture.
+GeoTIFF files store terrain elevation (height) for an area of the Earth. OpenAthena performs a ray-cast from a drone camera's position and orientation towards terrain (as represented by the DEM). This may be used to precisely locate any selected point within a given picture.
 
 **OpenAthena for iOS only supports GeoTIFF file generated with Method 1**
 
