@@ -251,7 +251,7 @@ Next, enter the latitude, then longitude, then altitude of the aircraft (standar
 ```bash
 Please enter aircraft latitude in (+/-) decimal form: 41.801
 Please enter aircraft longitude in (+/-) decimal form: 12.6483
-Please enter altitude (meters above WGS84 ellipsoid) in decimal form: 500
+Please enter altitude (meters above mean sea level) in decimal form: 500
 Please enter camera azimuth (0 is north) in decimal form (degrees):
 ```
 
@@ -297,10 +297,10 @@ The values should be tested for correctness
 `Approximate range to target:` represents the direct-line distance in meters from the aircraft to the target. This may be useful for an operator to determine if the target match is in the expected place. To obtain the horizontal distance, multiply this number times the cosine of theta
 
 
-`Approximate alt (constructed)` represents the aproximate altitude (height above WGS84 reference ellipsoid, in meters) of the target according to the altitude of the last iteration along the constructed line
+`Approximate alt (constructed)` represents the aproximate altitude (meters above mean sea level) of the target according to the altitude of the last iteration along the constructed line
 
 
-`Approximate alt (terrain):` represents the aproximate altitude (height above WGS84 reference ellipsoid, in meters) of the target according to the terrain data points closest to the final lat./lon. pair
+`Approximate alt (terrain):` represents the aproximate altitude (meters above mean sea level) of the target according to the terrain data points closest to the final lat./lon. pair
 
 
 `WGS84 (lat, lon):` represents the latitude and longitude of the target to which the camera is likely aiming at. These values, in degrees, are from the common [WGS84 coordinate system](https://en.wikipedia.org/wiki/World_Geodetic_System)
