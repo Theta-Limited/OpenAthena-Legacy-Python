@@ -157,7 +157,9 @@ More info [**here**](drone_sensor_data_blurb.md)
 
 ### example_script.py
 
-[example_script.py](./src/example_script.py) contains an example script showing how you may use OpenAthena in your own code. Make sure to follow the [**installation**](https://github.com/mkrupczak3/OpenAthena#install) instructions shown previously. The only required files for this scripts usage are a DEM file (such as the default Rome-30m-DEM.tif), and the Python code files [parseGeoTIFF.py](./src/parseGeoTIFF.py), and [getTarget.py](./src/getTarget.py)
+[example_script.py](./src/example_script.py) contains an example script showing how you may use OpenAthena in your own code. Make sure to follow the [**installation**](https://github.com/mkrupczak3/OpenAthena#install) instructions shown previously. The only required files for this scripts usage are a DEM file (such as the default Rome-30m-DEM.tif), and the Python code files [parseGeoTIFF.py](./src/parseGeoTIFF.py), [getTarget.py](./src/getTarget.py), and [config.py](.src/config.py)
+
+To run the script
 
 ### find_me_mode.py
 
