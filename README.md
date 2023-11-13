@@ -163,7 +163,7 @@ To run the script, use the following command while in the `src` directory:
 
 ```bash
 python3 example_script.py
-``
+```
 
 You will see output that looks like this:
 ```bash
