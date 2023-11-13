@@ -5,9 +5,9 @@ OpenAthena™ is a project which allows consumer and professional drones to spot
 
 🖼️👨‍💻 + 🧮⛰️ = 🎯📍
 
-OpenAthena may prove especially useful for life-saving civilian search and rescue (SAR) and other commercial applications. For military use, this technique may greatly reduce the incidence of errors during the process of [forward artillery observation](https://en.wikipedia.org/wiki/Artillery_observer). This may profoundly reduce harm to civilian lives and property in warfare.
+OpenAthena may prove especially useful for life-saving civilian search and rescue (SAR) and other applications.
 
-This software is in pre-alpha. Use appropriate caution when using data generated from this program.
+This Python version of OpenAthena is a legacy product which will have limited support in the future. [OpenAthena™ for Android](https://github.com/mkrupczak3/bOpenAthenaAndroid) is a superior implementation of this project. Please follow updates from [Theta Informatics LLC](https://theta.limited) regarding a replacement OpenAthena-Core library which will be written in Java. Take note of the open GitHub issues and use appropriate caution when using data generated from this program.
 
 ## OpenAthena™ for Android
 
@@ -154,6 +154,10 @@ CAUTION: it is _**highly recommended**_ that the aircraft's compass sensor is ca
 More info [**here**](drone_sensor_data_blurb.md)
 
 <a href="drone_sensor_data_blurb.md"><img width="565" alt="image of command line on MacOS, showing a target location calculated by OpenAthena parseImage.py" src="./assets/parseImage_interactive_example3.png"></a>
+
+### example_script.py
+
+[example_script.py](./src/example_script.py) contains an example script showing how you may use OpenAthena in your own code. Make sure to follow the [**installation**](https://github.com/mkrupczak3/OpenAthena#install) instructions shown previously. The only required files for this scripts usage are a DEM file (such as the default Rome-30m-DEM.tif), and the Python code files [parseGeoTIFF.py](./src/parseGeoTIFF.py), and [getTarget.py](./src/getTarget.py)
 
 ### find_me_mode.py
 
@@ -325,17 +329,10 @@ The values should be tested for correctness
 The program `getTarget.py` will then exit
 
 
-
-
-# Military Uses
-Especially when employed with precision smart munitions (e.g. [artillery](https://asc.army.mil/web/portfolio-item/ammo-excalibur-xm982-m982-and-m982a1-precision-guided-extended-range-projectile/), aerial, etc.) this project will greatly aid the safety and processes of the [forward artillery observer](https://en.wikipedia.org/wiki/Artillery_observer) while reducing collateral damage. This technique attempts to minimize the risk of operator error (mismeasurement, miscalculation, etc.) and subsequent risk of friendly-fire and loss of civilian life.
-
-In addition: a passive optical-based approach to target identification does not emit any signature which may forewarn a target or a group of targets (including armored vehicles). This may be highly beneficial depending on the usage environment.
-
-
 # Civilian Uses
 
 This technology can be used for search and rescue operations, wildfire detection and management, measuring and surveying for civic engineering, and many other commercial purposes.
+
 
 # US Arms export control notice
 This software falls under the [Dual Use Technology](https://en.wikipedia.org/wiki/Dual-use_technology#United_States) category under applicable U.S. arms export control laws. If you are using this software in a country that is under restriction from the United States under the Arms Export Control Act, you may only use this for civilian purposes and may not use this software in conflict. This author is not responsible for unauthorized usage of this open source project
