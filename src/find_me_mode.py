@@ -242,6 +242,8 @@ def find_me_mode():
                 elif aFile in files_prosecuted or aFile in files_queued:
                     continue
                 else:
+                    if not os.path.exists(aFile):
+                        continue
                     #from stackoverflow.com/a/14637315
                     #    if XMP in image is spread in multiple pieces, this
                     #    approach will fail to extract data in all

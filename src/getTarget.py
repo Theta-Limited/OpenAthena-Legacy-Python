@@ -23,8 +23,8 @@ import decimal # more float precision with Decimal objects
 import config # OpenAthena global variables
 
 import parseGeoTIFF
-from WGS84_SK42_Translator import Translator as converter # rafasaurus' SK42 coord translator
-from SK42_Gauss_Kruger import Projector as Projector      # Matt's Gauss Kruger projector for SK42 (adapted from Nickname Nick)
+# from WGS84_SK42_Translator import Translator as converter # rafasaurus' SK42 coord translator
+# from SK42_Gauss_Kruger import Projector as Projector      # Matt's Gauss Kruger projector for SK42 (adapted from Nickname Nick)
 
 """get the pos of current subject of UAS camera
        data entry is done manually
@@ -124,24 +124,24 @@ def getTarget():
         print(f'MGRS 10m: {targetMGRS10m}')
         print(f'MGRS 100m: {targetMGRS100m}\n')
 
-        targetSK42Lat = converter.WGS84_SK42_Lat(float(tarY), float(tarX), float(tarZ))
-        targetSK42Lon = converter.WGS84_SK42_Long(float(tarY), float(tarX), float(tarZ))
-        # Note: This altitude calculation assumes the SK42 and WGS84 ellipsoid have the exact same center
-        #     This is not totally correct, but in practice is close enough to the actual value
-        #     @TODO Could be refined at a later time with better math
-        #     See: https://gis.stackexchange.com/a/88499
-        targetSK42Alt = float(tarZ) - converter.SK42_WGS84_Alt(targetSK42Lat, targetSK42Lon, 0.0)
-        targetSK42Alt = int(round(targetSK42Alt))
-        print('SK42 (истема координат 1942 года):')
-        print(f'    Geodetic (°): {round(targetSK42Lat, 6)}, {round(targetSK42Lon, 6)} Alt: {targetSK42Alt}')
-        targetSK42LatDMS, targetSK42LonDMS = decimalToDegreeMinuteSecond(targetSK42Lat, targetSK42Lon)
-        print('    Geodetic (° \' "):')
-        print('      '+targetSK42LatDMS)
-        print('      '+targetSK42LonDMS)
-        GK_zone, targetSK42_N_GK, targetSK42_E_GK = Projector.SK42_Gauss_Kruger(targetSK42Lat, targetSK42Lon)
+        # targetSK42Lat = converter.WGS84_SK42_Lat(float(tarY), float(tarX), float(tarZ))
+        # targetSK42Lon = converter.WGS84_SK42_Long(float(tarY), float(tarX), float(tarZ))
+        # # Note: This altitude calculation assumes the SK42 and WGS84 ellipsoid have the exact same center
+        # #     This is not totally correct, but in practice is close enough to the actual value
+        # #     @TODO Could be refined at a later time with better math
+        # #     See: https://gis.stackexchange.com/a/88499
+        # targetSK42Alt = float(tarZ) - converter.SK42_WGS84_Alt(targetSK42Lat, targetSK42Lon, 0.0)
+        # targetSK42Alt = int(round(targetSK42Alt))
+        # print('SK42 (истема координат 1942 года):')
+        # print(f'    Geodetic (°): {round(targetSK42Lat, 6)}, {round(targetSK42Lon, 6)} Alt: {targetSK42Alt}')
+        # targetSK42LatDMS, targetSK42LonDMS = decimalToDegreeMinuteSecond(targetSK42Lat, targetSK42Lon)
+        # print('    Geodetic (° \' "):')
+        # print('      '+targetSK42LatDMS)
+        # print('      '+targetSK42LonDMS)
+        # GK_zone, targetSK42_N_GK, targetSK42_E_GK = Projector.SK42_Gauss_Kruger(targetSK42Lat, targetSK42Lon)
 
-        outstr = strFormatSK42GK(GK_zone, targetSK42_N_GK, targetSK42_E_GK, targetSK42Alt)
-        print(outstr)
+        # outstr = strFormatSK42GK(GK_zone, targetSK42_N_GK, targetSK42_E_GK, targetSK42Alt)
+        # print(outstr)
 
 """handle user input of data, using message for prompt
     guaranteed to return a float in range
