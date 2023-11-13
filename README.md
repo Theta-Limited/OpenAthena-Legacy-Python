@@ -159,7 +159,19 @@ More info [**here**](drone_sensor_data_blurb.md)
 
 [example_script.py](./src/example_script.py) contains an example script showing how you may use OpenAthena in your own code. Make sure to follow the [**installation**](https://github.com/mkrupczak3/OpenAthena#install) instructions shown previously. The only required files for this scripts usage are a DEM file (such as the default Rome-30m-DEM.tif), and the Python code files [parseGeoTIFF.py](./src/parseGeoTIFF.py), [getTarget.py](./src/getTarget.py), and [config.py](.src/config.py)
 
-To run the script
+To run the script, use the following command while in the `src` directory:
+
+```bash
+python3 example_script.py
+``
+
+You will see output that looks like this:
+```bash
+you@yourcomputer testOAalone % python3 example_script.py
+Calculated Target (lat,lon): 41.807133, 12.640073 Alt: 149.087333 meters AMSL
+estimated terrainAlt was: 146.626879
+Slant Range to Target was: 1026.024958 meters
+```
 
 ### find_me_mode.py
 
