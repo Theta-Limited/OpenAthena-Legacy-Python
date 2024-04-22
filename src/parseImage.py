@@ -314,14 +314,14 @@ def parseImage():
                 print(f'\nApproximate range to target: {int(round(finalDist))}\n')
 
                 if tarZ is not None:
-                    print(f'Approximate WGS84 alt (constructed): {math.ceil(tarZ)}')
+                    print(f'Approximate EGM96 alt (constructed): {math.ceil(tarZ)}')
                 else:
                     # edge case where drone camera is pointed straight down
                     tarZ = float(terrainAlt)
-                print(f'Approximate WGS84 alt (terrain): {round(terrainAlt)}\n')
+                print(f'Approximate EGM96 alt (terrain): {round(terrainAlt)}\n')
 
                 print('Target:')
-                print(f'WGS84 (lat, lon): {round(tarY, 6)}, {round(tarX, 6)} Alt: {math.ceil(tarZ)}')
+                print(f'WGS84 (lat, lon): {round(tarY, 6)}, {round(tarX, 6)} EGM96 Alt: {math.ceil(tarZ)}')
                 print(f'Google Maps: https://maps.google.com/?q={round(tarY,6)},{round(tarX,6)}\n')
                 # en.wikipedia.org/wiki/Military_Grid_Reference_System
                 # via github.com/hobuinc/mgrs
@@ -333,9 +333,9 @@ def parseImage():
                 while(targetMGRS[gzdEndIndex].isalpha()):
                     gzdEndIndex += 1
                 if os.name != 'nt':
-                    print(f'NATO MGRS: {targetMGRS[0:gzdEndIndex]}\033[4m{targetMGRS[gzdEndIndex:]}\033[0;0m Alt: \033[4m{math.ceil(tarZ)}\033[0;0m')
+                    print(f'NATO MGRS: {targetMGRS[0:gzdEndIndex]}\033[4m{targetMGRS[gzdEndIndex:]}\033[0;0m EGM96 Alt: \033[4m{math.ceil(tarZ)}\033[0;0m')
                 else:
-                    print(f'NATO MGRS: {targetMGRS} Alt: {math.ceil(tarZ)}')
+                    print(f'NATO MGRS: {targetMGRS} EGM96 Alt: {math.ceil(tarZ)}')
                 print(f'MGRS 10m: {targetMGRS10m}')
                 print(f'MGRS 100m: {targetMGRS100m}\n')
 
@@ -359,6 +359,7 @@ def parseImage():
                 # targetSK42Lat = round(targetSK42Lat,6)
                 # print(f'SK42 (TESTING ONLY): {targetSK42Lat}, {targetSK42Lon}, Alt: {targetSK42Lat}')
 
+                # @TODO: Convert altitude from EGM96 to WGS84 vertical datum before converting to SK42!
                 targetSK42Lat = converter.WGS84_SK42_Lat(float(tarY), float(tarX), float(tarZ))
                 targetSK42Lon = converter.WGS84_SK42_Long(float(tarY), float(tarX), float(tarZ))
                 # Note: This altitude calculation assumes the SK42 and WGS84 ellipsoid have the exact same center

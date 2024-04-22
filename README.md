@@ -263,7 +263,7 @@ Please enter aircraft latitude in (+/-) decimal form:
 The preceding numbers are provided for the user as debug information, but are not necessary during normal operation
 
 
-Next, enter the latitude, then longitude, then altitude of the aircraft (standard WGS84):
+Next, enter the latitude, then longitude, then altitude of the aircraft:
 
 
 ```bash
@@ -283,14 +283,14 @@ Please enter angle of declanation (degrees down from forward) in decimal form: 2
 
 Approximate range to target: 1026
 
-Approximate WGS84 alt (constructed): 150
-Approximate alt (terrain): 147
+Approximate EGM96 alt (constructed): 150
+Approximate EGM96 alt (terrain): 147
 
 Target:
-WGS84 (lat, lon): 41.807133, 12.640073 Alt: 150
+WGS84 (lat, lon): 41.807133, 12.640073 EGM96 Alt: 150
 Google Maps: https://maps.google.com/?q=41.807133,12.640073
 
-NATO MGRS: 33TUG0396131054 Alt: 150
+NATO MGRS: 33TUG0396131054 EGM96 Alt: 150
 MGRS 10m: 33TUG03963105
 MGRS 100m: 33TUG039310
 

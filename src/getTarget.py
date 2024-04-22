@@ -98,14 +98,14 @@ def getTarget():
         finalDist, tarY, tarX, tarZ, terrainAlt = target
         print(f'\nApproximate range to target: {int(round(finalDist))}\n')
         if tarZ is not None:
-            print(f'Approximate WGS84 alt (constructed): {math.ceil(tarZ)}')
+            print(f'Approximate EGM96 alt (constructed): {math.ceil(tarZ)}')
         else:
             # edge case where drone camera is pointed straight down
             tarZ = float(terrainAlt)
         print(f'Approximate alt (terrain): {round(terrainAlt)}\n')
 
         print('Target:')
-        print(f'WGS84 (lat, lon): {round(tarY, 6)}, {round(tarX, 6)} Alt: {math.ceil(tarZ)}')
+        print(f'WGS84 (lat, lon): {round(tarY, 6)}, {round(tarX, 6)} EGM96 Alt: {math.ceil(tarZ)}')
         print(f'Google Maps: https://maps.google.com/?q={round(tarY,6)},{round(tarX,6)}\n')
         # en.wikipedia.org/wiki/Military_Grid_Reference_System
         # via github.com/hobuinc/mgrs
@@ -118,9 +118,9 @@ def getTarget():
             gzdEndIndex += 1
         # ANSI escape sequences \033[ for underlining: stackabuse.com/how-to-print-colored-text-in-python
         if os.name != 'nt':
-            print(f'NATO MGRS: {targetMGRS[0:gzdEndIndex]}\033[4m{targetMGRS[gzdEndIndex:]}\033[0;0m Alt: \033[4m{math.ceil(tarZ)}\033[0;0m')
+            print(f'NATO MGRS: {targetMGRS[0:gzdEndIndex]}\033[4m{targetMGRS[gzdEndIndex:]}\033[0;0m EGM96 Alt: \033[4m{math.ceil(tarZ)}\033[0;0m')
         else:
-            print(f'NATO MGRS: {targetMGRS} Alt: {math.ceil(tarZ)}')
+            print(f'NATO MGRS: {targetMGRS} EGM96 Alt: {math.ceil(tarZ)}')
         print(f'MGRS 10m: {targetMGRS10m}')
         print(f'MGRS 100m: {targetMGRS100m}\n')
 
@@ -180,7 +180,7 @@ y : float
 x : float
     longitude of aircraft
 z : float
-    elevation of aircraft, meters above WGS84 reference ellipsoid
+    elevation of aircraft, EGM96 meters above mean sea level (AMSL)
     accuracy is greatly improved on most aircraft with
     barometric sensor, sometimes ultrasonic sensors too
 azimuth : float
