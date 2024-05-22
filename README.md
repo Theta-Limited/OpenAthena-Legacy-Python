@@ -7,7 +7,7 @@ OpenAthena™ is a project which allows consumer and professional drones to spot
 
 OpenAthena may prove especially useful for life-saving civilian search and rescue (SAR) and other applications.
 
-This Python version of OpenAthena is a legacy product which will have limited support in the future. [OpenAthena™ for Android](https://github.com/mkrupczak3/OpenAthenaAndroid) is a superior implementation of this project. Please follow updates from [Theta Informatics LLC](https://theta.limited) regarding a replacement OpenAthena-Core library which will be written in Java. Take note of the open GitHub issues and use appropriate caution when using data generated from this program.
+**This Python version of OpenAthena is a legacy product which will have limited support in the future. [OpenAthena™ for Android](https://github.com/mkrupczak3/OpenAthenaAndroid) is a superior implementation of this project. Please follow updates from [Theta Informatics LLC](https://theta.limited) regarding a replacement OpenAthena-Core library which will be written in Java. Take note of the open GitHub issues and use appropriate caution when using data generated from this program.**
 
 ## OpenAthena™ for Android
 
