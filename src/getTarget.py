@@ -26,6 +26,8 @@ import parseGeoTIFF
 # from WGS84_SK42_Translator import Translator as converter # rafasaurus' SK42 coord translator
 # from SK42_Gauss_Kruger import Projector as Projector      # Matt's Gauss Kruger projector for SK42 (adapted from Nickname Nick)
 
+from cursor_on_target import create_and_send_cot
+
 """get the pos of current subject of UAS camera
        data entry is done manually
        implementation in resolveTarget function
@@ -329,6 +331,9 @@ def resolveTarget(y, x, z, azimuth, theta, elevationData, xParams, yParams):
     # may be inaccurate for very very large horizontal distances
     finalDist = sqrt(finalHorizDist ** 2 + finalVertDist ** 2)
     terrainAlt = parseGeoTIFF.getAltFromLatLon(curY, curX, xParams, yParams, elevationData)
+
+    # send CoT message after resolving target location
+    create_and_send_cot(curX, curY, curZ, finalDist)
 
     return((finalDist, curY, curX, curZ, terrainAlt))
 
