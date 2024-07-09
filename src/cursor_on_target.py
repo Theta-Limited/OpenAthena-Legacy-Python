@@ -27,31 +27,82 @@ import xml.etree.ElementTree as ET
 import uuid
 import time
 import socket
-#import struct
-import socket
 import logging
+import math
+import hashlib
+import argparse
+import config
 
-"""
-    Generate a unique identifier for CoT messages.
+# NATO phonetic alphabet
+NATO_ALPHABET = [
+    "ALPHA", "BRAVO", "CHARLIE", "DELTA", "ECHO", "FOXTROT", "GOLF", "HOTEL", "INDIA",
+    "JULIET", "KILO", "LIMA", "MIKE", "NOVEMBER", "OSCAR", "PAPA", "QUEBEC", "ROMEO",
+    "SIERRA", "TANGO", "UNIFORM", "VICTOR", "WHISKEY", "XRAY", "YANKEE", "ZULU"
+]
 
+
+def get_mac_address():
+    """
+    Retrieve the MAC address of the device.
+    
     Returns:
-    str: A unique identifier string prefixed with 'OpenAthena-'.
+    str: The MAC address in the format "XX:XX:XX:XX:XX:XX"
+    """
+    return ':'.join(['{:02x}'.format((uuid.getnode() >> elements) & 0xff) for elements in range(0,8*6,8)][::-1])
 
-    Note:
-    This function uses UUID4 to ensure uniqueness across multiple instances
-    and executions of the software.
-"""
+
 def create_uid():
-    return f"OpenAthena-{uuid.uuid4()}"
+    """
+    Create a unique device identifier based on the MAC address.
+    
+    Returns:
+    str: A device UID in the format "[NATO_ALPHABET][00-99]"
+    """
+    mac = get_mac_address()
+    hash_value = hashlib.md5(mac.encode()).hexdigest()
+    index = int(hash_value[:4], 16) % 2600
+    letter_index = index // 100
+    number = index % 100
+    return f"{NATO_ALPHABET[letter_index]}{number:02d}"
 
-"""
+DEVICE_UID = create_device_uid()
+CALCULATION_SERIAL = 0
+
+
+def create_uid():
+    """
+    Create a unique identifier for each CoT message.
+    
+    Returns:
+    str: A unique identifier in the format "OpenAthena-[DEVICE_UID]-[SERIAL_NUMBER]"
+    """
+    global CALCULATION_SERIAL
+    CALCULATION_SERIAL += 1
+    return f"OpenAthena-{DEVICE_UID}-{CALCULATION_SERIAL}"
+
+
+def calculate_ce(theta, le=5.9):
+    """
+    Calculate the circular error (ce) based on the slant angle and linear error.
+    
+    Args:
+    theta (float): The slant angle in degrees.
+    le (float): The linear error in meters. Defaults to 5.9.
+    
+    Returns:
+    float: The calculated circular error in meters.
+    """
+    return abs(1.0 / math.tan(math.radians(theta)) * le)
+
+
+def build_cot_xml(lat, lon, alt, le = 5.9, theta, image_timestamp, stale_period):
+    """
     Construct a CoT XML message.
 
     Parameters:
     lat (float): Latitude of the target in decimal degrees.
     lon (float): Longitude of the target in decimal degrees.
     alt (float): Altitude of the target in meters above WGS84 ellipsoid.
-    ce (float): Circular error of the position estimate in meters.
     le (float): Linear error of the altitude estimate in meters.
 
     Returns:
@@ -60,22 +111,26 @@ def create_uid():
     Note:
     The function sets the CoT event type to 'a-p-G' (Assumed friend - Pending - Ground)
     and the 'how' attribute to 'h-c' (Human - Calculated).
-"""
-def build_cot_xml(lat, lon, alt, ce, le):
+    Circular error of the position is a function of linear error.
+    """
+    global DEVICE_UID
+
     root = ET.Element("event")
     root.set("version", "2.0")
     root.set("uid", create_uid())
     root.set("type", "a-p-G")
     root.set("how", "h-c")
-    root.set("time", time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()))
+    root.set("time", image_timestamp)
     root.set("start", time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()))
-    root.set("stale", time.strftime("%Y-%m-%dT%H:%M:%S", time.gmtime(time.time() + 180)))  # 3 minutes from now
+
+    stale_time = time.time() + stale_period
+    root.set("stale", time.strftime("%Y-%m-%dT%H:%M:%S", time.gmtime(stale_time)))
 
     point = ET.SubElement(root, "point")
     point.set("lat", str(lat))
     point.set("lon", str(lon))
     point.set("hae", str(alt))
-    point.set("ce", str(ce))
+    point.set("ce", str(calculate_ce(theta)))
     point.set("le", str(le))
 
     detail = ET.SubElement(root, "detail")
@@ -89,7 +144,8 @@ def build_cot_xml(lat, lon, alt, ce, le):
     return ET.tostring(root, encoding="utf-8")
 
 
-"""
+def setup_multicast_socket(multicast_group, port):
+    """
     Create and configure a UDP socket for multicast transmission.
 
     Parameters:
@@ -102,13 +158,13 @@ def build_cot_xml(lat, lon, alt, ce, le):
     Note:
     The socket is configured with a TTL of 32, which should be sufficient
     for most local network environments.
-"""
-def setup_multicast_socket(multicast_group, port):
+    """
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
     sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, 32)
     return sock
 
-"""
+def send_cot_message(sock, message, multicast_group, port, max_retries=3):
+    """
     Send a CoT message over a multicast UDP socket with error handling and retries.
 
     Parameters:
@@ -129,7 +185,6 @@ def setup_multicast_socket(multicast_group, port):
     network errors. It will attempt to send the message up to 'max_retries'
     times before giving up. All errors are logged for debugging purposes.
     """
-def send_cot_message(sock, message, multicast_group, port, max_retries=3):
     retries = 0
     while retries < max_retries:
         try:
@@ -144,7 +199,29 @@ def send_cot_message(sock, message, multicast_group, port, max_retries=3):
                 raise  # Re-raise the last exception
     return False
 
-"""
+def get_stale_period():
+    """
+    Get the stale period from command line arguments or config file.
+    Command line argument takes precedence if provided.
+
+    Returns:
+    int: The stale period in seconds
+    """
+    parser = argparse.ArgumentParser(description="Send CoT message")
+    parser.add_argument("--stale", type=int, help="Stale period in seconds")
+    args = parser.parse_args()
+    
+    if args.stale is not None:
+        return args.stale
+    elif hasattr(config, 'STALE_PERIOD'):
+        return config.STALE_PERIOD
+    else:
+        return 180  # default to 5 minutes
+
+STALE_PERIOD = get_stale_period()
+
+def create_and_send_cot(lat, lon, alt, le=5.9, theta, image_timestamp, multicast_group='239.2.3.1', port=6969):
+    """
     Create a CoT message and send it over a multicast network.
 
     This function combines the creation and sending of a CoT message into a single call.
@@ -165,9 +242,8 @@ def send_cot_message(sock, message, multicast_group, port, max_retries=3):
     The default ce and le values are conservative estimates and should be replaced
     with more accurate values when available from sensor data or calculations.
     This function will attempt to send the message multiple times in case of network errors.
-"""
-def create_and_send_cot(lat, lon, alt, ce=7.5, le=15.0, multicast_group='239.2.3.1', port=6969):
-    cot_message = build_cot_xml(lat, lon, alt, ce, le)
+    """
+    cot_message = build_cot_xml(lat, lon, alt, le, theta, image_timestamp, STALE_PERIOD)
     sock = setup_multicast_socket(multicast_group, port)
     try:
         result = send_cot_message(sock, cot_message, multicast_group, port)
@@ -180,4 +256,4 @@ def create_and_send_cot(lat, lon, alt, ce=7.5, le=15.0, multicast_group='239.2.3
 
 if __name__ == "__main__":
     # Example usage
-    create_and_send_cot(29.204774, -80.999010, 40.062605, 27.439030, 5.0)
+    create_and_send_cot(40.7128, -74.0060, 10.0, 45, "2023-07-08T12:00:00Z")
