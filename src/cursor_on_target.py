@@ -35,9 +35,9 @@ import config
 
 # NATO phonetic alphabet
 NATO_ALPHABET = [
-    "ALPHA", "BRAVO", "CHARLIE", "DELTA", "ECHO", "FOXTROT", "GOLF", "HOTEL", "INDIA",
-    "JULIET", "KILO", "LIMA", "MIKE", "NOVEMBER", "OSCAR", "PAPA", "QUEBEC", "ROMEO",
-    "SIERRA", "TANGO", "UNIFORM", "VICTOR", "WHISKEY", "XRAY", "YANKEE", "ZULU"
+    "Alfa", "Bravo", "Charlie", "Delta", "Echo", "Foxtrot", "Golf", "Hotel", "India",
+    "Juliet", "Kilo", "Lima", "Mike", "November", "Oscar", "Papa", "Quebec", "Romeo",
+    "Sierra", "Tango", "Uniform", "Victor", "Whiskey", "Xray", "Yankee", "Zulu"
 ]
 
 
@@ -51,7 +51,7 @@ def get_mac_address():
     return ':'.join(['{:02x}'.format((uuid.getnode() >> elements) & 0xff) for elements in range(0,8*6,8)][::-1])
 
 
-def create_uid():
+def create_device_uid():
     """
     Create a unique device identifier based on the MAC address.
     
@@ -66,7 +66,32 @@ def create_uid():
     return f"{NATO_ALPHABET[letter_index]}{number:02d}"
 
 DEVICE_UID = create_device_uid()
-CALCULATION_SERIAL = 0
+SERIAL_FILE = os.path.join(os.path.dirname(__file__), 'calculation_serial.txt')
+
+def get_and_increment_serial():
+    """
+    Read the current serial number from a file, increment it, and write it back.
+    If the file doesn't exist, start with 1.
+    
+    Returns:
+    int: The incremented serial number
+
+    Note: 
+    File is expected to be named calculation_serial.txt and located in the src 
+    directory
+    """
+    try:
+        with open(SERIAL_FILE, 'r') as f:
+            serial = int(f.read().strip())
+    except (FileNotFoundError, ValueError):
+        serial = 0
+    
+    serial += 1
+    
+    with open(SERIAL_FILE, 'w') as f:
+        f.write(str(serial))
+    
+    return serial
 
 
 def create_uid():
@@ -76,9 +101,8 @@ def create_uid():
     Returns:
     str: A unique identifier in the format "OpenAthena-[DEVICE_UID]-[SERIAL_NUMBER]"
     """
-    global CALCULATION_SERIAL
-    CALCULATION_SERIAL += 1
-    return f"OpenAthena-{DEVICE_UID}-{CALCULATION_SERIAL}"
+    serial = get_and_increment_serial()
+    return f"OpenAthena-{DEVICE_UID}-{serial}"
 
 
 def calculate_ce(theta, le=5.9):
@@ -104,6 +128,9 @@ def build_cot_xml(lat, lon, alt, le = 5.9, theta, image_timestamp, stale_period)
     lon (float): Longitude of the target in decimal degrees.
     alt (float): Altitude of the target in meters above WGS84 ellipsoid.
     le (float): Linear error of the altitude estimate in meters.
+    theta (float): Angle of declanation of the camera
+    image_timestamp (string): Timestamp from image's exif metadata
+    stale_period (float): duration that the CoT message is valid for
 
     Returns:
     str: A formatted XML string representing the CoT message.
@@ -216,7 +243,7 @@ def get_stale_period():
     elif hasattr(config, 'STALE_PERIOD'):
         return config.STALE_PERIOD
     else:
-        return 180  # default to 5 minutes
+        return 180  # default to 3 minutes
 
 STALE_PERIOD = get_stale_period()
 
