@@ -447,7 +447,7 @@ def handleDJI( xmp_str, elements=None):
     theta = abs(float(dict[[e for e in elements if "GimbalPitchDegree" in e][0]]))
 
     if azimuth == 0.0 and theta == 0.0:
-        print(f'ERROR: camera orientation invalid. Your modle drone may be incompatible with this software')
+        print(f'ERROR: camera orientation invalid. Your model drone may be incompatible with this software')
         return None
 
     if y is None or x is None or z is None or azimuth is None or theta is None:
@@ -455,7 +455,11 @@ def handleDJI( xmp_str, elements=None):
     else:
         # # debug printout
         # print(f'y: "{y}" x: "{x}" z: "{z}" azimuth: "{azimuth}" theta: "{theta}"')
-        z = EGMtoWGS(y,x,z)
+
+        #if AUTEL do not attempt EGM96 to WGS84 conversion
+        #if RTK do not attempt conversion
+        if not "autel" in xmp_str.lower() and not "rtkflag" in xmp_str.lower():
+            z = EGMtoWGS(y,x,z)
         return (y, x, z, azimuth, theta)
 
 """takes a xmp metadata string from a Skydio drone,
@@ -735,6 +739,8 @@ def handleAUTEL(xmp_str, exifData):
     else:
         # # debug printout
         # print(f'y: "{y}" x: "{x}" z: "{z}" azimuth: "{azimuth}" theta: "{theta}"')
+        #assume old Autel firmware, convert from EGM96 to WGS84 HAE
+        z = EGMtoWGS(y,x,z)
         return (y, x, z, azimuth, theta)
 
 
@@ -803,6 +809,10 @@ def handlePARROT(xmp_str, exifData):
     else:
         # # debug printout
         # print(f'y: "{y}" x: "{x}" z: "{z}" azimuth: "{azimuth}" theta: "{theta}"')
+
+        #if model name contains "anafiai" parrot drone uses EGM96 and needs conversion
+        if "anafiai" in xmp_str.lower():
+            z = EGMtoWGS()
         return (y, x, z, azimuth, theta)
 
 """takes a xmp metadata string and a list of keys
