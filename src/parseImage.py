@@ -810,8 +810,9 @@ def handlePARROT(xmp_str, exifData):
         # # debug printout
         # print(f'y: "{y}" x: "{x}" z: "{z}" azimuth: "{azimuth}" theta: "{theta}"')
 
-        #if model name contains "anafiai" parrot drone uses EGM96 and needs conversion
-        if "anafiai" in xmp_str.lower():
+        #if model name contains "anafiai" parrot drone uses WGS4 HAE
+        #other models need conversion
+        if not"anafiai" in xmp_str.lower():
             z = EGMtoWGS()
         return (y, x, z, azimuth, theta)
 
