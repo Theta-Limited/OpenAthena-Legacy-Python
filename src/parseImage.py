@@ -40,7 +40,7 @@ from geotiff import GeoTiff
 # https://pypi.org/project/mgrs/
 import mgrs # Military Grid ref converter
 # # # https://pypi.org/project/pyproj/
-# from pyproj import Transformer # Python interface to PROJ (cartographic projections and coordinate transformations library)
+from pyproj import CRS, Transformer # Python interface to PROJ (cartographic projections and coordinate transformations library)
 
 from PIL import Image
 from PIL import ExifTags
@@ -244,6 +244,8 @@ def parseImage():
         #
         if target is not None:
             finalDist, tarY, tarX, tarZ, terrainAlt = target
+            #convert WGS to EGM96
+            tarZ = WGStoEGM(tarY, tarX, tarZ)
 
             if headless:
 
@@ -446,7 +448,7 @@ def handleDJI( xmp_str, elements=None):
     theta = abs(float(dict[[e for e in elements if "GimbalPitchDegree" in e][0]]))
 
     if azimuth == 0.0 and theta == 0.0:
-        print(f'ERROR: camera orientation invalid. Your modle drone may be incompatible with this software')
+        print(f'ERROR: camera orientation invalid. Your model drone may be incompatible with this software')
         return None
 
     if y is None or x is None or z is None or azimuth is None or theta is None:
@@ -454,6 +456,11 @@ def handleDJI( xmp_str, elements=None):
     else:
         # # debug printout
         # print(f'y: "{y}" x: "{x}" z: "{z}" azimuth: "{azimuth}" theta: "{theta}"')
+
+        #if AUTEL do not attempt EGM96 to WGS84 conversion
+        #if RTK do not attempt conversion
+        if not "autel" in xmp_str.lower() and not "rtkflag" in xmp_str.lower():
+            z = EGMtoWGS(y,x,z)
         return (y, x, z, azimuth, theta)
 
 """takes a xmp metadata string from a Skydio drone,
@@ -584,6 +591,9 @@ def handleSKYDIO( xmp_str ):
     else:
         # # debug printout
         # print(f'y: "{y}" x: "{x}" z: "{z}" azimuth: "{azimuth}" theta: "{theta}"')
+
+        #convert height from EGM96 to WGS84
+        z = EGMtoWGS(y,x,z)
         return (y, x, z, azimuth, theta)
 
 """takes a xmp metadata string and exifData dictionary from an Autel drone,
@@ -730,6 +740,8 @@ def handleAUTEL(xmp_str, exifData):
     else:
         # # debug printout
         # print(f'y: "{y}" x: "{x}" z: "{z}" azimuth: "{azimuth}" theta: "{theta}"')
+        #assume old Autel firmware, convert from EGM96 to WGS84 HAE
+        z = EGMtoWGS(y,x,z)
         return (y, x, z, azimuth, theta)
 
 
@@ -798,6 +810,11 @@ def handlePARROT(xmp_str, exifData):
     else:
         # # debug printout
         # print(f'y: "{y}" x: "{x}" z: "{z}" azimuth: "{azimuth}" theta: "{theta}"')
+
+        #if model name contains "anafiai" parrot drone uses WGS4 HAE
+        #other models need conversion
+        if not "anafiai" in xmp_str.lower():
+            z = EGMtoWGS()
         return (y, x, z, azimuth, theta)
 
 """takes a xmp metadata string and a list of keys
@@ -935,6 +952,33 @@ def decimalToDegreeMinuteSecond(Lat, Lon):
     lonDMS = str(abs(degrees_x)) + "° " + str(minutes_x) + "' " + str(seconds_x) + "\" " + EorW
 
     return (latDMS, lonDMS)
+
+
+#Converts EGM96 height to WGS84 height above ellipsoid
+def EGMtoWGS(latitude, longitude,height):
+    #Load WGS84 + EGM96 alt CRS
+    egm_crs = CRS.from_epsg(9707)
+    #load WGS84 CRS
+    wgs_crs = CRS.from_epsg(4979)
+    
+    #transform ASML to HAE
+    transformer = Transformer.from_crs(crs_from=egm_crs,crs_to=wgs_crs)
+    new_coords = transformer.transform(latitude,longitude,height)
+    new_lat,new_long,new_height = new_coords
+    return new_height
+
+#convert WGS84 Height above Ellipsoid to EGM96
+def WGStoEGM(latitude, longitude, height):
+    #Load WGS84 + EGM96 alt CRS
+    egm_crs = CRS.from_epsg(9707)
+    #load WGS84 CRS
+    wgs_crs = CRS.from_epsg(4979)
+    
+    #transform HAE to ASML
+    transformer = Transformer.from_crs(crs_from=wgs_crs,crs_to=egm_crs)
+    new_coords = transformer.transform(latitude,longitude,height)
+    new_lat,new_long,new_height = new_coords
+    return new_height
 
 if __name__ == "__main__":
     parseImage()
